@@ -32,6 +32,16 @@ export class NotesService {
       .catch(this.handleError);
   }
 
+  // TODO: return Observable<Note>
+  public editNote(note: any): Observable<any> {
+    return this._http
+      .patch(this._baseUrl + `odata/Notes(${note.Id})`, note)
+      .map(res => {
+        return res;
+      })
+      .catch(this.handleError);
+  }
+
   public deleteNote(note: any): Observable<any> {
     return this._http
       .delete(this._baseUrl + `odata/Notes(${note.Id})`)

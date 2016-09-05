@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, Inject,
-  Input }                                          from "@angular/core";
+  Input, Output, OnChanges, EventEmitter }         from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { NotesItemComponent }                      from "./notes-item.component";
@@ -8,10 +8,11 @@ import { NotesItemComponent }                      from "./notes-item.component"
   selector: 'notes-container',
   template: `
   <notes-add-item *ngIf="isAddNoteEnabled"
-                  (addNoteEmitter)="addNote($event)">
+                  (onAddNote)="handleAddNote($event)">
   </notes-add-item>
   <notes-list [notes]="_notes"
-              (onDeleteNote)="deleteNote($event)">
+              (onDeleteNote)="deleteNote($event)"
+              (onEditNote)="editNote($event)">
   </notes-list>
 
   <!-- Used for delete confirmation -->
@@ -29,13 +30,16 @@ import { NotesItemComponent }                      from "./notes-item.component"
   </div>
   `
 })
-export class NotesContainerComponent implements OnInit {
+export class NotesContainerComponent implements OnInit, OnChanges {
 
   @Input() public isAddNoteEnabled: boolean;
+  @Output() public onAddNoteComponentClosed = new EventEmitter<boolean>();
   public _notes: Note[];
   //public _notes: any;
   private _noteToDelete: NotesItemComponent;
   private _noteToDeleteTitle: string;
+
+  private _notesAddItemEnabled: boolean;
 
   constructor(private _notesService: NotesService,
     private _elRef: ElementRef,
@@ -44,6 +48,11 @@ export class NotesContainerComponent implements OnInit {
 
   ngOnInit() {
     this.getNotes();
+  }
+
+  ngOnChanges() {
+    // this._notesAddItemEnabled = this.isAddNoteEnabled
+    // console.log(`_notesAddItemEnabled: ${this._notesAddItemEnabled} - @Input() isAddNoteEnabled: ${this.isAddNoteEnabled}`);
   }
 
   private getNotes() {
@@ -55,13 +64,24 @@ export class NotesContainerComponent implements OnInit {
       });
   }
 
-  private addNote(note: Note) {
-    this._notesService
-      .addNote(note)
+  // TODO: create addNoteArgs interface. 
+  private handleAddNote(addNoteArgs: any) {
+    // Closing Add Note form.
+    if (addNoteArgs.submitted || addNoteArgs.canceled) {
+      // this._notesAddItemEnabled = false;
+      // this.isAddNoteEnabled = false;
+      this.onAddNoteComponentClosed.emit(false);
+    }
+
+    // Adding to API.
+    if (addNoteArgs.note) {
+      this._notesService
+      .addNote(addNoteArgs.note)
       .subscribe(note => {
         this._notes.push(note);
         // TODO: Subscribe to error and display it.
       });
+    }
   }
 
   public deleteNote(noteComponent: NotesItemComponent) {
@@ -72,7 +92,7 @@ export class NotesContainerComponent implements OnInit {
   }
 
   public delete() {
-    //Deleting from API.
+    // Deleting from API.
     this._notesService
       .deleteNote(this._noteToDelete.note)
       .subscribe(res => {
@@ -81,7 +101,7 @@ export class NotesContainerComponent implements OnInit {
         // TODO: Subscribe to error and display it.
       });
 
-    //Deleting from UI. 
+    // Deleting from UI. 
     console.log(this._noteToDelete);
     let indexToDelete;
     for (let index in this._notes) {
@@ -92,6 +112,17 @@ export class NotesContainerComponent implements OnInit {
     }
     this._notes.splice(indexToDelete, 1);
     console.log(this._notes);
+  }
+
+  public editNote(noteComponent: NotesItemComponent) {
+    // Editing from API, UI has been already updated.
+    this._notesService
+      .editNote(noteComponent.note)
+      .subscribe(res => {
+        console.log("The result of editNote is:");
+        console.log(res);
+        // TODO: Subscribe to error and display it.
+      });
   }
 
   public closeDeleteConfirmationMessage() {

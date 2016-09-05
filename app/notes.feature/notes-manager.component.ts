@@ -21,7 +21,7 @@ import { Note }                                    from "./note.model";
 export class NotesManagerComponent implements OnInit {
 
   @Output() public onAddNote: EventEmitter<boolean> = new EventEmitter<boolean>();
-  private _isAddNoteEnabled: boolean;
+  private _isAddNoteEnabled: boolean = true;
 
   constructor(private _elRef: ElementRef,
     @Inject("$") private $: any) {
@@ -33,7 +33,6 @@ export class NotesManagerComponent implements OnInit {
   }
 
   public setEnableAddNote() {
-    this._isAddNoteEnabled = true;
     this.onAddNote.emit(this._isAddNoteEnabled)
   }
 

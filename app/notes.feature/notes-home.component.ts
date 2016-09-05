@@ -18,7 +18,8 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
 
   <div class="col s12 m8">
     <div class="col s12">
-      <notes-container [isAddNoteEnabled]="_isAddNoteEnabled">                   
+      <notes-container [isAddNoteEnabled]="_isAddNoteEnabled"
+                       (onAddNoteComponentClosed)="handleAddNoteComponentClosed($event)">                   
       </notes-container>
     </div>
   </div>
@@ -30,5 +31,9 @@ export class NotesHomeComponent {
 
   public addNoteToListComponent(isAddNoteEnabled: boolean) {
     this._isAddNoteEnabled = isAddNoteEnabled;
+  }
+
+  public handleAddNoteComponentClosed(noteComponentClosed: boolean) {
+    this._isAddNoteEnabled = noteComponentClosed;
   }
 }
