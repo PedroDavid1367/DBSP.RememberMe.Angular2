@@ -32,6 +32,15 @@ export class NotesService {
       .catch(this.handleError);
   }
 
+  public deleteNote(note: any): Observable<any> {
+    return this._http
+      .delete(this._baseUrl + `odata/Notes(${note.Id})`)
+      .map(res => {
+        return res;
+      })
+      .catch(this.handleError);
+  }
+
   private handleError(error: any) {
     // In a real world app, we might use a remote logging infrastructure
     // We'd also dig deeper into the error to get a better message

@@ -7,16 +7,16 @@ import { NotesItemComponent }                      from "./notes-item.component"
   template: `
   <notes-item *ngFor="let note of notes"
               [note]="note"
-              (deleteEventEmitter)="sendToContainer($event)">
+              (onDeleteNote)="sendToContainer($event)">
   </notes-item>
   `
 })
 export class NotesListComponent {
 
   @Input() public notes: Note[];
-  @Output() public deleteEventEmitter: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
+  @Output() public onDeleteNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
 
   public sendToContainer(event: NotesItemComponent) {
-    this.deleteEventEmitter.emit(event);
+    this.onDeleteNote.emit(event);
   }
 }

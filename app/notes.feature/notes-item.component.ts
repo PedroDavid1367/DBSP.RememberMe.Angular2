@@ -33,9 +33,9 @@ import { Note }                                    from "./note.model";
 export class NotesItemComponent {
 
   @Input() public note: Note;
-  @Output() public deleteEventEmitter: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
+  @Output() public onDeleteNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
 
   public delete() {
-    this.deleteEventEmitter.emit(this);
+    this.onDeleteNote.emit(this);
   }
 }

@@ -24,7 +24,8 @@ export class HttpExtendedService {
 
   public get(url) {
     let headers = new Headers();
-    headers.set('Accept', 'text/json');
+    //headers.set("Accept", "text/json");
+    headers.set("Accept", "application/json");
     return this._http.get(url, {
       headers: this.checkApiCall(url, headers)
     });
@@ -32,9 +33,17 @@ export class HttpExtendedService {
 
   public post(url, data) {
     let headers = new Headers();
-    headers.set("Content-Type", "application/json");
     headers.set("Accept", "application/json");
+    headers.set("Content-Type", "application/json");
     return this._http.post(url, data, {
+      headers: this.checkApiCall(url, headers)
+    });
+  }
+
+  public delete(url) {
+    let headers = new Headers();
+    headers.set("Accept", "application/json");
+    return this._http.delete(url, {
       headers: this.checkApiCall(url, headers)
     });
   }

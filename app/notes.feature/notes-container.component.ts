@@ -11,14 +11,14 @@ import { NotesItemComponent }                      from "./notes-item.component"
                   (addNoteEmitter)="addNote($event)">
   </notes-add-item>
   <notes-list [notes]="_notes"
-              (deleteEventEmitter)="deleteNote($event)">
+              (onDeleteNote)="deleteNote($event)">
   </notes-list>
 
   <!-- Used for delete confirmation -->
   <div id="deleteConfirmationModal" class="modal">
     <div class="modal-content">
       <h4>Delete confirmation</h4>
-      <p>The note with "title-should-be-here" will be deleted</p>
+      <p>The note with title: {{ _noteToDeleteTitle }} will be deleted</p>
     </div>
     <div class="modal-footer">
       <a (click)="closeDeleteConfirmationMessage()"
@@ -32,9 +32,10 @@ import { NotesItemComponent }                      from "./notes-item.component"
 export class NotesContainerComponent implements OnInit {
 
   @Input() public isAddNoteEnabled: boolean;
-  //public _notes: Note[];
-  public _notes: any;
+  public _notes: Note[];
+  //public _notes: any;
   private _noteToDelete: NotesItemComponent;
+  private _noteToDeleteTitle: string;
 
   constructor(private _notesService: NotesService,
     private _elRef: ElementRef,
@@ -55,7 +56,6 @@ export class NotesContainerComponent implements OnInit {
   }
 
   private addNote(note: Note) {
-    debugger;
     this._notesService
       .addNote(note)
       .subscribe(note => {
@@ -66,18 +66,26 @@ export class NotesContainerComponent implements OnInit {
 
   public deleteNote(noteComponent: NotesItemComponent) {
     this._noteToDelete = noteComponent;
+    this._noteToDeleteTitle = noteComponent.note.Title;
     this.$(this._elRef.nativeElement)
       .find("#deleteConfirmationModal").openModal();
   }
 
   public delete() {
+    //Deleting from API.
+    this._notesService
+      .deleteNote(this._noteToDelete.note)
+      .subscribe(res => {
+        console.log("The result of deleteNote is:");
+        console.log(res);
+        // TODO: Subscribe to error and display it.
+      });
 
-    //TODO: Delete from DB.
-
+    //Deleting from UI. 
     console.log(this._noteToDelete);
     let indexToDelete;
     for (let index in this._notes) {
-      if (this._notes[index].id === this._noteToDelete.note.Id) {
+      if (this._notes[index].Id === this._noteToDelete.note.Id) {
         indexToDelete = index;
         break;
       }
