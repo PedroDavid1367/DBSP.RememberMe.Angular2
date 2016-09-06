@@ -13,30 +13,28 @@ import { Note }                                    from "./note.model";
   template: `
   <div class="collection z-depth-1">
     <a href="#" class="collection-item" 
-       (click)="setEnableAddNote()">Add note</a>
+       (click)="openAddNoteSection()">Add note</a>
     <a href="#" class="collection-item">Filter notes</a>
   </div>
   `
 })
 export class NotesManagerComponent implements OnInit {
 
-  @Output() public onAddNote: EventEmitter<boolean> = new EventEmitter<boolean>();
-  private _isAddNoteEnabled: boolean = true;
+  @Output() private onOpenAddNoteSection: EventEmitter<boolean> = new EventEmitter<boolean>();
+  private _isAddNoteSectionEnabled: boolean = true;
 
-  constructor(private _elRef: ElementRef,
+  public constructor(private _elRef: ElementRef,
     @Inject("$") private $: any) {
   }
   
+  // Disabling native click event so that anchor element 
+  // is not able to navigate to "#" 
   public ngOnInit() {
     this.$(this._elRef.nativeElement)
       .find("a").click(() => false);
   }
 
-  public setEnableAddNote() {
-    this.onAddNote.emit(this._isAddNoteEnabled)
-  }
-
-  public greetings() {
-    alert("eg");
+  public openAddNoteSection() {
+    this.onOpenAddNoteSection.emit(this._isAddNoteSectionEnabled)
   }
 }

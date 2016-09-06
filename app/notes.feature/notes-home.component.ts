@@ -11,15 +11,17 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
     <div class="col s12 offset-m1">
       <h1 class="center-align">Options</h1>
       <br />
-      <notes-manager (onAddNote)="addNoteToListComponent($event)">               
+      <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->
+      <!-- $event is a boolean -->
+      <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)">               
       </notes-manager>
     </div>
   </div>
 
   <div class="col s12 m8">
     <div class="col s12">
-      <notes-container [isAddNoteEnabled]="_isAddNoteEnabled"
-                       (onAddNoteComponentClosed)="handleAddNoteComponentClosed($event)">                   
+      <notes-container [isAddNoteSectionEnabled]="_isAddNoteSectionEnabled"
+                       (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
       </notes-container>
     </div>
   </div>
@@ -27,13 +29,9 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
 })
 export class NotesHomeComponent {
 
-  private _isAddNoteEnabled: boolean;
+  public _isAddNoteSectionEnabled: boolean;
 
-  public addNoteToListComponent(isAddNoteEnabled: boolean) {
-    this._isAddNoteEnabled = isAddNoteEnabled;
-  }
-
-  public handleAddNoteComponentClosed(noteComponentClosed: boolean) {
-    this._isAddNoteEnabled = noteComponentClosed;
+  public setIsAddNoteSectionEnabled(isAddNoteSectionEnabled: boolean) {
+    this._isAddNoteSectionEnabled = isAddNoteSectionEnabled;
   }
 }

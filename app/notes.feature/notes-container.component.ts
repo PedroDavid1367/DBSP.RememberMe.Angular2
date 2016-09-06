@@ -1,14 +1,15 @@
 import { Component, OnInit, ElementRef, Inject,
-  Input, Output, OnChanges, EventEmitter }         from "@angular/core";
+  Input, Output, EventEmitter }                    from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { NotesItemComponent }                      from "./notes-item.component";
+import { AddNoteArgs }                             from "./notes-add-item.component";
 
 @Component({
   selector: 'notes-container',
   template: `
-  <notes-add-item *ngIf="isAddNoteEnabled"
-                  (onAddNote)="handleAddNote($event)">
+  <notes-add-item *ngIf="isAddNoteSectionEnabled"
+                  (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
   <notes-list [notes]="_notes"
               (onDeleteNote)="deleteNote($event)"
@@ -30,14 +31,14 @@ import { NotesItemComponent }                      from "./notes-item.component"
   </div>
   `
 })
-export class NotesContainerComponent implements OnInit, OnChanges {
+export class NotesContainerComponent implements OnInit {
 
-  @Input() public isAddNoteEnabled: boolean;
-  @Output() public onAddNoteComponentClosed = new EventEmitter<boolean>();
+  @Input() public isAddNoteSectionEnabled: boolean;
+  @Output() private onCloseAddNoteSection: EventEmitter<boolean> = new EventEmitter<boolean>();
   public _notes: Note[];
-  //public _notes: any;
   private _noteToDelete: NotesItemComponent;
   private _noteToDeleteTitle: string;
+  private _isAddNoteSectionDisabled: boolean = false;
 
   private _notesAddItemEnabled: boolean;
 
@@ -50,11 +51,6 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     this.getNotes();
   }
 
-  ngOnChanges() {
-    // this._notesAddItemEnabled = this.isAddNoteEnabled
-    // console.log(`_notesAddItemEnabled: ${this._notesAddItemEnabled} - @Input() isAddNoteEnabled: ${this.isAddNoteEnabled}`);
-  }
-
   private getNotes() {
     this._notesService
       .getNotes()
@@ -63,14 +59,11 @@ export class NotesContainerComponent implements OnInit, OnChanges {
         // TODO: Subscribe to error and display it.
       });
   }
-
-  // TODO: create addNoteArgs interface. 
-  private handleAddNote(addNoteArgs: any) {
-    // Closing Add Note form.
+ 
+  private handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
+    // Send event to notes-home component 
     if (addNoteArgs.submitted || addNoteArgs.canceled) {
-      // this._notesAddItemEnabled = false;
-      // this.isAddNoteEnabled = false;
-      this.onAddNoteComponentClosed.emit(false);
+      this.onCloseAddNoteSection.emit(this._isAddNoteSectionDisabled);
     }
 
     // Adding to API.
@@ -83,6 +76,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
       });
     }
   }
+
 
   public deleteNote(noteComponent: NotesItemComponent) {
     this._noteToDelete = noteComponent;
