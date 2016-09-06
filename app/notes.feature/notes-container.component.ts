@@ -5,12 +5,15 @@ import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
 
 @Component({
-  selector: 'notes-container',
+  selector: "notes-container",
   template: `
   <notes-add-item *ngIf="isAddNoteSectionEnabled"
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
   
+  Diagnostic: _count = {{ _count }}
+  <notes-pagination></notes-pagination>
+
   <notes-list [notes]="_notes"
               (onDeleteNote)="openDeleteNoteConfirmation($event)"
               (onEditNote)="editNote($event)">
@@ -38,6 +41,7 @@ export class NotesContainerComponent implements OnInit {
   public _notes: Note[];
   public _noteToDelete: Note;
   private _isAddNoteSectionDisabled: boolean;
+  public _count: number;
 
   private _notesAddItemEnabled: boolean;
 
@@ -48,6 +52,7 @@ export class NotesContainerComponent implements OnInit {
     this.onCloseAddNoteSection = new EventEmitter<boolean>();
     this._noteToDelete = new Note("", "", "", "", "");
     this._isAddNoteSectionDisabled = false;
+    this._count = 0;
   }
 
   ngOnInit() {
@@ -57,8 +62,9 @@ export class NotesContainerComponent implements OnInit {
   private getNotes() {
     this._notesService
       .getNotes()
-      .subscribe(notes => {
-        this._notes = notes;
+      .subscribe(res => {
+        this._notes = res.value;
+        this._count = res["@odata.count"];
         // TODO: Subscribe to error and display it.
       });
   }

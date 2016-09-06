@@ -10,18 +10,19 @@ export class NotesService {
   constructor(private _http: HttpExtendedService,
     @Inject("BASE_URL") private _baseUrl: string) { }
 
-  // TODO: return Observable<Note>
-  public getNotes(): Observable<Note[]> {
+  // TODO: return Observable<OdataResponse>
+  public getNotes(): Observable<any> {
     return this._http
-      .get(this._baseUrl + "odata/Notes")
+      .get(this._baseUrl + "odata/Notes?$count=true")
       .map(res => {
         let body = res.json();
-        return body.value || {};
+        // The body has context, count and value
+        return body || {};
       })
       .catch(this.handleError);
   }
 
-  // TODO: return Observable<Note>
+  // TODO: return Observable<OdataResponse>
   public addNote(note: any): Observable<any> {
     return this._http
       .post(this._baseUrl + "odata/Notes", note)
@@ -32,7 +33,7 @@ export class NotesService {
       .catch(this.handleError);
   }
 
-  // TODO: return Observable<Note>
+  // TODO: return Observable<OdataResponse>
   public editNote(note: any): Observable<any> {
     return this._http
       .patch(this._baseUrl + `odata/Notes(${note.Id})`, note)
@@ -42,6 +43,7 @@ export class NotesService {
       .catch(this.handleError);
   }
 
+  // TODO: return Observable<OdataResponse>
   public deleteNote(note: any): Observable<any> {
     return this._http
       .delete(this._baseUrl + `odata/Notes(${note.Id})`)

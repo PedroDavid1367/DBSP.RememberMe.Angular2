@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter,
 import { Note }                                    from "./note.model";
 
 @Component({
-  selector: 'notes-item',
+  selector: "notes-item",
   styles: [`
   div span {
     color:#263238;
