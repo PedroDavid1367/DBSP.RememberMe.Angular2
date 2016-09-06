@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef, Inject,
   Input, Output, EventEmitter }                    from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
-import { NotesItemComponent }                      from "./notes-item.component";
 import { AddNoteArgs }                             from "./notes-add-item.component";
 
 @Component({
@@ -11,8 +10,9 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
   <notes-add-item *ngIf="isAddNoteSectionEnabled"
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
+  
   <notes-list [notes]="_notes"
-              (onDeleteNote)="deleteNote($event)"
+              (onDeleteNote)="openDeleteNoteConfirmation($event)"
               (onEditNote)="editNote($event)">
   </notes-list>
 
@@ -20,12 +20,12 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
   <div id="deleteConfirmationModal" class="modal">
     <div class="modal-content">
       <h4>Delete confirmation</h4>
-      <p>The note with title: {{ _noteToDeleteTitle }} will be deleted</p>
+      <p>The note with title: {{ _noteToDelete.Title }} will be deleted</p>
     </div>
     <div class="modal-footer">
       <a (click)="closeDeleteConfirmationMessage()"
          class="modal-action modal-close waves-effect waves-green btn btn-flat">Cancel</a>
-      <a (click)="delete()"
+      <a (click)="deleteNote()"
          class="modal-action modal-close waves-effect waves-green btn btn-flat">Yes</a>
     </div>
   </div>
@@ -34,17 +34,20 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
 export class NotesContainerComponent implements OnInit {
 
   @Input() public isAddNoteSectionEnabled: boolean;
-  @Output() private onCloseAddNoteSection: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
   public _notes: Note[];
-  private _noteToDelete: NotesItemComponent;
-  private _noteToDeleteTitle: string;
-  private _isAddNoteSectionDisabled: boolean = false;
+  public _noteToDelete: Note;
+  private _isAddNoteSectionDisabled: boolean;
 
   private _notesAddItemEnabled: boolean;
 
   constructor(private _notesService: NotesService,
     private _elRef: ElementRef,
     @Inject("$") private $: any) {
+
+    this.onCloseAddNoteSection = new EventEmitter<boolean>();
+    this._noteToDelete = new Note("", "", "", "", "");
+    this._isAddNoteSectionDisabled = false;
   }
 
   ngOnInit() {
@@ -78,17 +81,16 @@ export class NotesContainerComponent implements OnInit {
   }
 
 
-  public deleteNote(noteComponent: NotesItemComponent) {
-    this._noteToDelete = noteComponent;
-    this._noteToDeleteTitle = noteComponent.note.Title;
+  public openDeleteNoteConfirmation(note: Note) {
+    this._noteToDelete = note;
     this.$(this._elRef.nativeElement)
       .find("#deleteConfirmationModal").openModal();
   }
 
-  public delete() {
+  public deleteNote() {
     // Deleting from API.
     this._notesService
-      .deleteNote(this._noteToDelete.note)
+      .deleteNote(this._noteToDelete)
       .subscribe(res => {
         console.log("The result of deleteNote is:");
         console.log(res);
@@ -99,7 +101,7 @@ export class NotesContainerComponent implements OnInit {
     console.log(this._noteToDelete);
     let indexToDelete;
     for (let index in this._notes) {
-      if (this._notes[index].Id === this._noteToDelete.note.Id) {
+      if (this._notes[index].Id === this._noteToDelete.Id) {
         indexToDelete = index;
         break;
       }
@@ -108,10 +110,10 @@ export class NotesContainerComponent implements OnInit {
     console.log(this._notes);
   }
 
-  public editNote(noteComponent: NotesItemComponent) {
+  public editNote(note: Note) {
     // Editing from API, UI has been already updated.
     this._notesService
-      .editNote(noteComponent.note)
+      .editNote(note)
       .subscribe(res => {
         console.log("The result of editNote is:");
         console.log(res);

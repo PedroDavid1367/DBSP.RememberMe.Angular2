@@ -17,6 +17,8 @@ import { Note }                                    from "./note.model";
 })
 export class NotesAddItemComponent implements OnInit {
 
+  // onAddNote event actually emits an AddNoteArgs that represents
+  // either a note submission or a note cancelation. 
   @Output() private onAddNote: EventEmitter<AddNoteArgs>; 
   public _model: Note;
 

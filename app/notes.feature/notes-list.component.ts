@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter }  from "@angular/core";
 import { Note }                                    from "./note.model"; 
-import { NotesItemComponent }                      from "./notes-item.component";
 
 @Component({
   selector: 'notes-list',
@@ -15,14 +14,19 @@ import { NotesItemComponent }                      from "./notes-item.component"
 export class NotesListComponent {
 
   @Input() public notes: Note[];
-  @Output() public onDeleteNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
-  @Output() public onEditNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
+  @Output() private onDeleteNote: EventEmitter<Note>;
+  @Output() private onEditNote: EventEmitter<Note>;
 
-  public sendNoteToDelete(event: NotesItemComponent) {
-    this.onDeleteNote.emit(event);
+  public constructor () {
+    this.onDeleteNote = new EventEmitter<Note>();
+    this.onEditNote = new EventEmitter<Note>();
   }
 
-  public sendNoteToEdit(event: NotesItemComponent) {
-    this.onEditNote.emit(event);
+  public sendNoteToDelete(note: Note) {
+    this.onDeleteNote.emit(note);
+  }
+
+  public sendNoteToEdit(note: Note) {
+    this.onEditNote.emit(note);
   }
 }

@@ -39,7 +39,9 @@ import { Note }                                    from "./note.model";
 
   <div *ngIf="_isEditable" class="card lime lighten-5 z-depth-4">
     <div class="card-content row" style="background-color:white;">
-      <form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">
+      <!-- This should work, but currently is not, it might be an angular2 issue -->
+      <!--<form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">-->
+      <form class="col s12" #noteForm="ngForm">
         <div class="row">
           <div class="input-field col s12">
             <input id="title" type="text" class="validate" required
@@ -83,11 +85,15 @@ import { Note }                                    from "./note.model";
               <sup style="color:red;">Priority is required</sup>
             </div>
           </div>
+
+          Diagnostic: noteForm.form.valid = {{ noteForm.form.valid }}
         </div>
       </form>
     </div> 
     <div class="card-action blue-grey lighten-1">
-      <input class="btn-flat" type="submit" style="color:white;" [disabled]="!noteForm.form.valid" value="Save" />
+      <!--<input class="btn-flat" type="submit" style="color:white;" [disabled]="!noteForm.form.valid" value="Save" />-->
+      <input class="btn-flat" type="button" style="color:white;" [disabled]="!noteForm.form.valid" 
+             value="Save" (click)="submit()" />
       <input class="btn-flat" type="button" style="color:white;" value="Reset" (click)="resetChanges()" />
       <input class="btn-flat" type="button" style="color:white;" value="Cancel" (click)="cancelEditMode()" />
     </div>
@@ -97,12 +103,21 @@ import { Note }                                    from "./note.model";
 export class NotesItemComponent implements OnInit{
 
   @Input() public note: Note;
-  @Output() public onDeleteNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
-  @Output() public onEditNote: EventEmitter<NotesItemComponent> = new EventEmitter<NotesItemComponent>();
-  private _isEditable: boolean = false;
+  @Output() private onDeleteNote: EventEmitter<Note>;
+  @Output() private onEditNote: EventEmitter<Note>;
+  public _isEditable: boolean = false;
   private _backupNote: Note;
 
-  ngOnInit() {
+  public constructor () {
+    this.onDeleteNote = new EventEmitter<Note>();
+    this.onEditNote = new EventEmitter<Note>();
+  }
+
+  public ngOnInit() {
+    this.cloneNote();
+  }
+
+  private cloneNote() {
     this._backupNote = new Note(
       this.note.Title,
       this.note.Category,
@@ -114,7 +129,7 @@ export class NotesItemComponent implements OnInit{
   }
 
   public delete() {
-    this.onDeleteNote.emit(this);
+    this.onDeleteNote.emit(this.note);
   }
 
   public edit() {
@@ -123,8 +138,8 @@ export class NotesItemComponent implements OnInit{
 
   public submit() {
     // TODO: Send to parent to save in the db.
-    this._backupNote = this.note;
-    this.onEditNote.emit(this);
+    this.cloneNote();
+    this.onEditNote.emit(this.note);
 
     // Save the changes on UI and close the editing form.
     this._isEditable = false; 

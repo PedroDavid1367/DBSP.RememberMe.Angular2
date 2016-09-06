@@ -12,9 +12,9 @@ import { Note }                                    from "./note.model";
   `],
   template: `
   <div class="collection z-depth-1">
-    <a href="#" class="collection-item" 
+    <a href="#" class="collection-item waves-effect waves-teal" 
        (click)="openAddNoteSection()">Add note</a>
-    <a href="#" class="collection-item">Filter notes</a>
+    <a href="#" class="collection-item waves-effect waves-teal">Filter notes</a>
   </div>
   `
 })
