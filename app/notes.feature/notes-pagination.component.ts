@@ -3,6 +3,7 @@ import { Component, OnInit, OnChanges, ElementRef, Inject,
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
+import { NotesPaginationItemComponent }            from "./notes-pagination-item.component";
 
 @Component({
   selector: "notes-pagination",
@@ -31,16 +32,22 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
     <li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>
     <li *ngFor="let pageData of paginationOptions.pagesData"
         (click)="sendNotesToContainer(pageData.skip)" 
-        [ngClass]="{blue-grey: pageClicked}">
+        [ngClass]="{blue-grey: pageSelected}">
       <a>{{ pageData.index }}</a>
     </li>
     <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
   </ul>-->
 
-  <ul class="pagination">
+  <!--<ul class="pagination">
     <notes-pagination-item *ngFor="let _pageData of paginationOptions.pagesData"
                            [pageData]="_pageData"
-                           >
+                           (onSelect)="selectPage($event)">
+    </notes-pagination-item>
+  </ul>-->
+  <ul class="pagination">
+    <notes-pagination-item *ngFor="let _pageData of pagesData"
+                           [pageData]="_pageData"
+                           (onSelect)="selectPage($event)">
     </notes-pagination-item>
   </ul>
   `
@@ -51,28 +58,55 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
   @Output() private onPageClicked: EventEmitter<number>;   
   private _pageSize: number;
   public paginationOptions: PaginationOptions;
-  // Maybe li should be a new component
-  public pageClicked: boolean;
+  public pagesData: PageData[];
 
-  public constructor() {
+  public constructor () {
     this.onPageClicked = new EventEmitter<number>();
     this._pageSize = 4;
+    this.pagesData = [];
   }
 
-  public ngOnInit() {
+  public ngOnInit () {
   }
 
   public ngOnChanges () {
     this.paginationOptions = this.paginationOptionsFactory();
   }
 
+  public storePageItems (pageItem: NotesPaginationItemComponent) {
+    console.log(pageItem.pageData.index);
+  }
+
+  public selectPage (pageData: PageData) {
+    // Reseting all PageData.selected to false.
+    // this.paginationOptions.pagesData.forEach(pd => {
+    //   pd.selected = false;
+    // });
+
+    for (let pd of this.pagesData) {
+      pd.selected = false;
+    }
+
+    // Setting up selected PageData.selected to true.
+    // this.paginationOptions.pagesData.filter(pd => {
+    //   return pd.index == pageData.index;  
+    // })
+    // .map(pd => pd.selected = true);
+
+    for (let pd of this.pagesData) {
+      if (pd.index === pageData.index) {
+        pd.selected = true;
+        break;
+      }
+    }
+  }
+
   public sendNotesToContainer(skip: number) {
-    this.pageClicked = true;
     this.onPageClicked.emit(skip);
   }
 
   // This should be in a service.
-  private paginationOptionsFactory() {
+  private paginationOptionsFactory () {
     let paginationOptions = new PaginationOptions();
 
     let pageNumber = 0;
@@ -87,11 +121,14 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
       let pageData = new PageData();
       pageData.index = x + 1;
       pageData.skip = x * this._pageSize;
+      pageData.selected = x == 0 ? true : false;
       pagesData[x] = pageData;
     }
 
     paginationOptions.pageNumber = pageNumber;
     paginationOptions.pagesData = pagesData;
+
+    this.pagesData = pagesData;
 
     return paginationOptions;
   }
@@ -104,5 +141,6 @@ class PaginationOptions {
 
 export class PageData {
   public index: number;
-  public skip: number; 
+  public skip: number;
+  public selected: boolean; 
 }

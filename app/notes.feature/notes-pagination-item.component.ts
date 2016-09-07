@@ -16,26 +16,38 @@ import { PageData }  from "./notes-pagination.component";
     <a>{{ pageData.index }}</a>
   </li>-->
 
-  <li (click)="eg()">
+  <li class="waves-effect" (click)="selectPage()">
     <a>{{ pageData.index }}</a>
   </li>
   `
 })
-export class NotesPaginationItemComponent {
+export class NotesPaginationItemComponent implements OnInit, OnChanges {
 
   @Input() public pageData: PageData;
+  @Output() private onSelect: EventEmitter<PageData>;
 
-  public constructor(private _elRef: ElementRef,
+  public constructor (private _elRef: ElementRef,
     @Inject("$") private $: any) {
+
+    this.onSelect = new EventEmitter<PageData>();
   }
 
-  // public ngOnInit() {
-  //   this.$(this._elRef.nativeElement)
-  //     .find("a").click(() => false);
-  // }
+  public ngOnInit () {
 
-  public eg () {
-    this.$(this._elRef.nativeElement)
+  }
+
+  public ngOnChanges () {
+    console.log(this.pageData);
+    if (this.pageData.selected) {
+      this.$(this._elRef.nativeElement)
       .find("a").addClass("active blue-grey lighten-1");
-  } 
+    } else {
+      this.$(this._elRef.nativeElement)
+      .find("a").removeClass("active blue-grey lighten-1");
+    }
+  }
+
+  public selectPage () {
+    this.onSelect.emit(this.pageData);
+  }
 }
