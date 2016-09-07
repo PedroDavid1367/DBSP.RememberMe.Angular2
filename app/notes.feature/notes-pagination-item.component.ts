@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ElementRef, Inject,
+import { Component, OnInit, OnChanges, ElementRef, Inject, DoCheck,
   Input, Output, EventEmitter }                    from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
@@ -10,12 +10,6 @@ import { PageData }  from "./notes-pagination.component";
   styles: [`
   `],
   template: `
-  <!--<li *ngFor="let pageData of paginationOptions.pagesData"
-      (click)="sendNotesToContainer(pageData.skip)" 
-      [ngClass]="{blue-grey: pageClicked}">
-    <a>{{ pageData.index }}</a>
-  </li>-->
-
   <li class="waves-effect" (click)="selectPage()">
     <a>{{ pageData.index }}</a>
   </li>
@@ -23,6 +17,7 @@ import { PageData }  from "./notes-pagination.component";
 })
 export class NotesPaginationItemComponent implements OnInit, OnChanges {
 
+  @Input() public clicked: boolean;
   @Input() public pageData: PageData;
   @Output() private onSelect: EventEmitter<PageData>;
 
@@ -37,8 +32,7 @@ export class NotesPaginationItemComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges () {
-    console.log(this.pageData);
-    if (this.pageData.selected) {
+    if (this.clicked) {
       this.$(this._elRef.nativeElement)
       .find("a").addClass("active blue-grey lighten-1");
     } else {

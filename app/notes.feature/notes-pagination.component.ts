@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ElementRef, Inject,
+import { Component, OnInit, OnChanges, ElementRef, Inject, 
   Input, Output, EventEmitter }                    from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
@@ -16,39 +16,18 @@ import { NotesPaginationItemComponent }            from "./notes-pagination-item
   }
   `],
   template: `
-  Diagnostic: noteCount = {{ noteCount }} <br />
-  Diagnostic: noteCount = {{ paginationOptions | json }}
-  <!--<ul class="pagination">
-    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-    <li class="active blue-grey lighten-1"><a href="#!">1</a></li>
-    <li class="waves-effect"><a href="#!">2</a></li>
-    <li class="waves-effect"><a href="#!">3</a></li>
-    <li class="waves-effect"><a href="#!">4</a></li>
-    <li class="waves-effect"><a href="#!">5</a></li>
-    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-  </ul>-->
-
-  <!--<ul class="pagination">
-    <li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>
-    <li *ngFor="let pageData of paginationOptions.pagesData"
-        (click)="sendNotesToContainer(pageData.skip)" 
-        [ngClass]="{blue-grey: pageSelected}">
-      <a>{{ pageData.index }}</a>
-    </li>
-    <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
-  </ul>-->
-
-  <!--<ul class="pagination">
-    <notes-pagination-item *ngFor="let _pageData of paginationOptions.pagesData"
-                           [pageData]="_pageData"
-                           (onSelect)="selectPage($event)">
-    </notes-pagination-item>
-  </ul>-->
   <ul class="pagination">
-    <notes-pagination-item *ngFor="let _pageData of pagesData"
+    <li class="waves-effect" (click)="moveLeft()">
+      <a><i class="material-icons">chevron_left</i></a>
+    </li>
+    <notes-pagination-item *ngFor="let _pageData of paginationOptions.pagesData"
+                           [clicked]="_pageData.selected"
                            [pageData]="_pageData"
                            (onSelect)="selectPage($event)">
     </notes-pagination-item>
+    <li class="waves-effect" (click)="moveRight()">
+      <a><i class="material-icons">chevron_right</i></a>
+    </li>
   </ul>
   `
 })
@@ -58,12 +37,10 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
   @Output() private onPageClicked: EventEmitter<number>;   
   private _pageSize: number;
   public paginationOptions: PaginationOptions;
-  public pagesData: PageData[];
 
   public constructor () {
     this.onPageClicked = new EventEmitter<number>();
     this._pageSize = 4;
-    this.pagesData = [];
   }
 
   public ngOnInit () {
@@ -71,6 +48,11 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
   public ngOnChanges () {
     this.paginationOptions = this.paginationOptionsFactory();
+    if (this.paginationOptions !== null) {
+      if (this.paginationOptions.pagesData.length > 0) {
+        this.sendNotesToContainer(this.paginationOptions.pagesData[0].skip);
+      }
+    }
   }
 
   public storePageItems (pageItem: NotesPaginationItemComponent) {
@@ -79,29 +61,49 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
   public selectPage (pageData: PageData) {
     // Reseting all PageData.selected to false.
-    // this.paginationOptions.pagesData.forEach(pd => {
-    //   pd.selected = false;
-    // });
-
-    for (let pd of this.pagesData) {
+    this.paginationOptions.pagesData.forEach(pd => {
       pd.selected = false;
-    }
+    });
 
     // Setting up selected PageData.selected to true.
-    // this.paginationOptions.pagesData.filter(pd => {
-    //   return pd.index == pageData.index;  
-    // })
-    // .map(pd => pd.selected = true);
+    this.paginationOptions.pagesData.filter(pd => {
+      return pd.index == pageData.index;  
+    })
+    .map(pd => {
+      pd.selected = true;
+      // Send the number of skiped notes.
+      this.sendNotesToContainer(pd.skip);
+    });
+  }
 
-    for (let pd of this.pagesData) {
-      if (pd.index === pageData.index) {
-        pd.selected = true;
-        break;
-      }
+  public moveLeft () {
+    let selectedPageData: PageData;
+    this.paginationOptions.pagesData.filter(pd => {
+      return pd.selected == true;
+    })
+    .map(pd => selectedPageData = pd);
+    if (selectedPageData.index > 1) {
+      let leftPageData: PageData = this.paginationOptions
+        .pagesData[selectedPageData.index - 2];
+      this.selectPage(leftPageData);
     }
   }
 
-  public sendNotesToContainer(skip: number) {
+  public moveRight () {
+    let selectedPageData: PageData;
+    this.paginationOptions.pagesData.filter(pd => {
+      return pd.selected == true;
+    })
+    .map(pd => selectedPageData = pd);
+    if (selectedPageData.index < this.paginationOptions
+        .pagesData.length) {
+      let rightPageData: PageData = this.paginationOptions
+        .pagesData[selectedPageData.index];
+      this.selectPage(rightPageData);
+    }
+  }
+
+  private sendNotesToContainer(skip: number) {
     this.onPageClicked.emit(skip);
   }
 
@@ -127,8 +129,6 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
     paginationOptions.pageNumber = pageNumber;
     paginationOptions.pagesData = pagesData;
-
-    this.pagesData = pagesData;
 
     return paginationOptions;
   }
