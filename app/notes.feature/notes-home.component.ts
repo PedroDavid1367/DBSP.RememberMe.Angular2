@@ -11,9 +11,14 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
     <div class="col s12 offset-m1">
       <h1 class="center-align">Options</h1>
       <br />
+      
+      <div>
+      </div>
+
       <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->
       <!-- $event is a boolean -->
-      <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)">               
+      <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)"
+                     (onOpenFilterNoteSection)="setIsFilterNoteSectionEnabled($event)">               
       </notes-manager>
     </div>
   </div>
@@ -30,8 +35,14 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
 export class NotesHomeComponent {
 
   public _isAddNoteSectionEnabled: boolean;
+  public _isFilterNoteSectionEnabled: boolean;
 
-  public setIsAddNoteSectionEnabled(isAddNoteSectionEnabled: boolean) {
+  public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
     this._isAddNoteSectionEnabled = isAddNoteSectionEnabled;
+  }
+
+  public setIsFilterNoteSectionEnabled (isFilterNoteSectionEnabled: boolean) {
+    this._isFilterNoteSectionEnabled = isFilterNoteSectionEnabled;
+    console.log("^_^");
   }
 }

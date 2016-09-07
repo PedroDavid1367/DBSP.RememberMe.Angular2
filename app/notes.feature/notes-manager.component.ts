@@ -14,17 +14,23 @@ import { Note }                                    from "./note.model";
   <div class="collection z-depth-1">
     <a href="#" class="collection-item waves-effect waves-teal" 
        (click)="openAddNoteSection()">Add note</a>
-    <a href="#" class="collection-item waves-effect waves-teal">Filter notes</a>
+    <a href="#" class="collection-item waves-effect waves-teal"
+       (click)="openFilterNoteSection()">Filter notes</a>
   </div>
   `
 })
 export class NotesManagerComponent implements OnInit {
 
-  @Output() private onOpenAddNoteSection: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() private onOpenAddNoteSection: EventEmitter<boolean>;
+  @Output() private onOpenFilterNoteSection: EventEmitter<boolean>;
   private _isAddNoteSectionEnabled: boolean = true;
+  private _isFilterNoteSectionEnabled: boolean = true;
 
   public constructor(private _elRef: ElementRef,
     @Inject("$") private $: any) {
+
+    this.onOpenAddNoteSection = new EventEmitter<boolean>();
+    this.onOpenFilterNoteSection = new EventEmitter<boolean>();
   }
   
   // Disabling native click event so that anchor element 
@@ -36,5 +42,9 @@ export class NotesManagerComponent implements OnInit {
 
   public openAddNoteSection() {
     this.onOpenAddNoteSection.emit(this._isAddNoteSectionEnabled)
+  }
+
+  public openFilterNoteSection () {
+    this.onOpenFilterNoteSection.emit(this._isFilterNoteSectionEnabled);
   }
 }

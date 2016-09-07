@@ -101,7 +101,7 @@ export class NotesContainerComponent implements OnInit {
       this._notesService
       .addNote(addNoteArgs.note)
       .subscribe(note => {
-        this._notes.push(note);
+        this._notes.unshift(note);
         // TODO: Subscribe to error and display it.
       });
     }
