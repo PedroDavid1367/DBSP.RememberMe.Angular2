@@ -13,11 +13,35 @@ export class NotesService {
   // TODO: return Observable<OdataResponse>
   public getNotes(): Observable<any> {
     return this._http
-      .get(this._baseUrl + "odata/Notes?$count=true")
+      // .get(this._baseUrl + "odata/Notes?$count=true")
+      .get(this._baseUrl + "odata/Notes")
       .map(res => {
         let body = res.json();
         // The body has context, count and value
         return body || {};
+      })
+      .catch(this.handleError);
+  }
+
+  public getNotesWithSkip(skip: number) {
+    return this._http
+      .get(this._baseUrl + `odata/Notes?$skip=${skip}`)
+      .map(res => {
+        let body = res.json();
+        // The body has context and value
+        return body.value || {};
+      })
+      .catch(this.handleError);
+  }
+
+  // TODO: return Observable<OdataResponse>
+  public getNotesCount(): Observable<any> {
+    return this._http
+      .get(this._baseUrl + "odata/Notes/RememberMe.Functions.GetNotesCount()")
+      .map(res => {
+        let body = res.json();
+        // The body has context and value
+        return body.value;
       })
       .catch(this.handleError);
   }

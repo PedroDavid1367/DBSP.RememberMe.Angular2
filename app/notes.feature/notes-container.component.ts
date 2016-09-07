@@ -11,8 +11,9 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
   
-  Diagnostic: _count = {{ _count }}
-  <notes-pagination></notes-pagination>
+  <notes-pagination [noteCount]="_noteCount"
+                    (onPageClicked)="getNotesWithSkip($event)">
+  </notes-pagination>
 
   <notes-list [notes]="_notes"
               (onDeleteNote)="openDeleteNoteConfirmation($event)"
@@ -41,7 +42,7 @@ export class NotesContainerComponent implements OnInit {
   public _notes: Note[];
   public _noteToDelete: Note;
   private _isAddNoteSectionDisabled: boolean;
-  public _count: number;
+  public _noteCount: number;
 
   private _notesAddItemEnabled: boolean;
 
@@ -52,22 +53,42 @@ export class NotesContainerComponent implements OnInit {
     this.onCloseAddNoteSection = new EventEmitter<boolean>();
     this._noteToDelete = new Note("", "", "", "", "");
     this._isAddNoteSectionDisabled = false;
-    this._count = 0;
+    this._noteCount = 0;
   }
 
-  ngOnInit() {
-    this.getNotes();
+  public ngOnInit () {
+    this.getNotesCount();
+    //this.getNotes();
   }
 
-  private getNotes() {
+  private getNotesCount() {
     this._notesService
-      .getNotes()
+      .getNotesCount()
       .subscribe(res => {
-        this._notes = res.value;
-        this._count = res["@odata.count"];
+        this._noteCount = res;
         // TODO: Subscribe to error and display it.
       });
   }
+  
+  private getNotesWithSkip(skip: number) {
+    this._notesService
+      .getNotesWithSkip(skip)
+      .subscribe(res => {
+        this._notes = res;
+        // TODO: Subscribe to error and display it.
+      });
+  }
+
+  // TODO: handle res.value and res["@odata.count"] on NotesService.
+  // private getNotes() {
+  //   this._notesService
+  //     .getNotes()
+  //     .subscribe(res => {
+  //       this._notes = res.value;
+  //       this._noteCount = res["@odata.count"];
+  //       // TODO: Subscribe to error and display it.
+  //     });
+  // }
  
   private handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
     // Send event to notes-home component 
