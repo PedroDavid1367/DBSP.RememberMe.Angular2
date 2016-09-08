@@ -28,7 +28,6 @@ export class NotesPaginationItemComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit () {
-
   }
 
   public ngOnChanges () {

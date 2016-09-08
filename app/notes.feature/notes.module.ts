@@ -12,7 +12,7 @@ import { NotesListComponent }       from "./notes-list.component";
 import { NotesItemComponent }       from "./notes-item.component";
 import { NotesManagerComponent }    from "./notes-manager.component";
 import { NotesFilterContainerComponent }     from "./notes-filter-container.component";
-import { NotesFilterTitleComponent }     from "./notes-filter-title.component";
+import { NotesFilterItemComponent }     from "./notes-filter-item.component";
 import { NotesService }             from "./notes.service"; 
 
 import { FormsModule }  from "@angular/forms";
@@ -33,7 +33,7 @@ import { FormsModule }  from "@angular/forms";
     NotesItemComponent,
     NotesManagerComponent,
     NotesFilterContainerComponent,
-    NotesFilterTitleComponent
+    NotesFilterItemComponent
   ],
   providers: [
     NotesService,

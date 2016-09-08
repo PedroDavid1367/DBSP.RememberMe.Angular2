@@ -35,6 +35,7 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
   @Input() public noteCount: number;
   @Input() public searchString: string;
+  @Input() public filterType: string;
   @Output() private onPageClicked: EventEmitter<PageClickedEventArgs>;   
   private _pageSize: number;
   public paginationOptions: PaginationOptions;
@@ -47,7 +48,9 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
   public ngOnInit () {
   }
 
+  // Each time there's a change a new PaginationOptions object is created.
   public ngOnChanges () {
+    let x = this.filterType;
     this.paginationOptions = this.paginationOptionsFactory();
     if (this.paginationOptions !== null) {
       if (this.paginationOptions.pagesData.length > 0) {
@@ -108,6 +111,7 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
     let pageClickedEventArgs = new PageClickedEventArgs();
     pageClickedEventArgs.skip = skip;
     pageClickedEventArgs.searchString = this.searchString;
+    pageClickedEventArgs.searchString = this.filterType;
     this.onPageClicked.emit(pageClickedEventArgs);
   }
 
@@ -152,4 +156,5 @@ export class PageData {
 export class PageClickedEventArgs {
   public skip: number;
   public searchString: string;
+  public filterType: string;
 }

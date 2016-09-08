@@ -1,5 +1,6 @@
 import { Component }                from "@angular/core";
 import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
+import { SearchStringEventArgs }    from "./notes-filter-item.component";
 
 @Component({
   selector: 'notes-home',
@@ -32,6 +33,7 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
     <div class="col s12">
       <notes-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                        [searchString]="searchString"
+                       [filterType]="filterType"
                        (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
       </notes-container>
     </div>
@@ -43,9 +45,12 @@ export class NotesHomeComponent {
   public isAddNoteSectionEnabled: boolean;
   public isFilterNoteSectionEnabled: boolean;
   public searchString: string;
+  public filterType: string; 
 
   public constructor () {
     this.searchString = "";
+    // Default filtering type.
+    this.filterType = "Title"; 
   }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
@@ -56,7 +61,8 @@ export class NotesHomeComponent {
     this.isFilterNoteSectionEnabled = isFilterNoteSectionEnabled;
   }
 
-  public toNotesContainer (searchString: string) {
-    this.searchString = searchString;
+  public toNotesContainer (searchStringEventArgs: SearchStringEventArgs) {
+    this.searchString = searchStringEventArgs.searchString;
+    this.filterType = searchStringEventArgs.filterType;
   }
 }

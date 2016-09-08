@@ -3,29 +3,15 @@ import { Component, OnInit, ElementRef, Inject,
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
+import { SearchStringEventArgs }                   from "./notes-filter-item.component";
 
 @Component({
   selector: "notes-filter-container",
   template: `
   <div class="blue-grey lighten-4 z-depth-1">
-    <!--<div class="row">
-      <div class="input-field col m12">
-        <input id="title" type="text" class="">  
-        <label for="title"> 
-          Filter by Title
-        </label>
-      </div>
-      <div class="input-field col m12">
-        <input class="btn-flat"
-               type="button" value="Go" 
-               (click)="closeNotesFilterSection()" />
-        <input class="btn-flat" 
-               type="button" value="Reset" 
-               (click)="closeNotesFilterSection()" />
-      </div>
-    </div>-->
-    <notes-filter-title (onSendSearchString)="sendSearchString($event)">
-    </notes-filter-title>
+    <notes-filter-item [filterType]="Title"
+                       (onSendSearchString)="sendSearchString($event)">
+    </notes-filter-item>
 
     <br />
     <br />
@@ -63,12 +49,12 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
 export class NotesFilterContainerComponent implements OnInit {
 
   @Output() private onCloseFilterNoteSection: EventEmitter<boolean>;
-  @Output() private onSendSearchString: EventEmitter<string>;
+  @Output() private onSendSearchString: EventEmitter<SearchStringEventArgs>;
   private _isFilterNoteSectionEnabled: boolean;
 
   public constructor () {
     this.onCloseFilterNoteSection = new EventEmitter<boolean>();
-    this.onSendSearchString = new EventEmitter<string>();
+    this.onSendSearchString = new EventEmitter<SearchStringEventArgs>();
     this._isFilterNoteSectionEnabled = false;
   }
 
@@ -80,7 +66,7 @@ export class NotesFilterContainerComponent implements OnInit {
     this.onCloseFilterNoteSection.emit(this._isFilterNoteSectionEnabled);
   }
 
-  public sendSearchString (searchString: string) {
-    this.onSendSearchString.emit(searchString);
+  public sendSearchString (searchStringEventArgs: SearchStringEventArgs) {
+    this.onSendSearchString.emit(searchStringEventArgs);
   }
 }

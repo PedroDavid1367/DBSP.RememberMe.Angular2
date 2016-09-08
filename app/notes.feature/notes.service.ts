@@ -2,17 +2,17 @@
 import { Response, Headers, RequestOptions }        from "@angular/http";
 import { Note }                                     from "./note.model";
 import { Observable }                               from "rxjs/Observable";
-import { HttpExtendedService }  from "../common.services/http-extended.service";
-import { PageClickedEventArgs }  from "./notes-pagination.component";
+import { HttpExtendedService }                      from "../common.services/http-extended.service";
+import { PageClickedEventArgs }                     from "./notes-pagination.component";
 
 @Injectable()
 export class NotesService {
 
-  constructor(private _http: HttpExtendedService,
+  constructor (private _http: HttpExtendedService,
     @Inject("BASE_URL") private _baseUrl: string) { }
 
   // TODO: return Observable<OdataResponse>
-  public getNotes(): Observable<any> {
+  public getNotes (): Observable<any> {
     return this._http
       // .get(this._baseUrl + "odata/Notes?$count=true")
       .get(this._baseUrl + "odata/Notes")
@@ -24,7 +24,7 @@ export class NotesService {
       .catch(this.handleError);
   }
 
-  public getNotesWithSkip(skip: number) {
+  public getNotesWithSkip (skip: number) {
     return this._http
       .get(this._baseUrl + `odata/Notes?$skip=${skip}`)
       .map(res => {
@@ -38,8 +38,9 @@ export class NotesService {
   public getNotesWithSkipAndFilter (pageClickedEventArgs: PageClickedEventArgs) {
     let skip = pageClickedEventArgs.skip;
     let searchString = pageClickedEventArgs.searchString;
+    let filterType = pageClickedEventArgs.filterType;
     return this._http
-      .get(this._baseUrl + `odata/Notes?$skip=${skip}&$filter=contains(Title,'${searchString}')`)
+      .get(`${this._baseUrl}odata/Notes?$skip=${skip}&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {
         let body = res.json();
         // The body has context and value
@@ -48,9 +49,9 @@ export class NotesService {
       .catch(this.handleError);
   }
 
-  public getNotesCountForFilter (searchString: string) {
+  public getNotesCountForFilter (searchString: string, filterType: string) {
     return this._http
-      .get(this._baseUrl + `odata/Notes?$count=true&$filter=contains(Title,'${searchString}')`)
+      .get(`${this._baseUrl}odata/Notes?$count=true&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {
         let body = res.json();
         // The body has context, count and value
@@ -62,7 +63,7 @@ export class NotesService {
   // TODO: return Observable<OdataResponse>
   public getNotesCount (): Observable<any> {
     return this._http
-      .get(this._baseUrl + "odata/Notes/RememberMe.Functions.GetNotesCount()")
+      .get(`${this._baseUrl}odata/Notes/RememberMe.Functions.GetNotesCount()`)
       .map(res => {
         let body = res.json();
         // The body has context and value
@@ -72,9 +73,9 @@ export class NotesService {
   }
 
   // TODO: return Observable<OdataResponse>
-  public addNote(note: any): Observable<any> {
+  public addNote (note: any): Observable<any> {
     return this._http
-      .post(this._baseUrl + "odata/Notes", note)
+      .post(`${this._baseUrl}odata/Notes`, note)
       .map(res => {
         let body = res.json();
         return body || {};
@@ -83,9 +84,9 @@ export class NotesService {
   }
 
   // TODO: return Observable<OdataResponse>
-  public editNote(note: any): Observable<any> {
+  public editNote (note: any): Observable<any> {
     return this._http
-      .patch(this._baseUrl + `odata/Notes(${note.Id})`, note)
+      .patch(`${this._baseUrl}odata/Notes(${note.Id})`, note)
       .map(res => {
         return res;
       })
@@ -93,16 +94,16 @@ export class NotesService {
   }
 
   // TODO: return Observable<OdataResponse>
-  public deleteNote(note: any): Observable<any> {
+  public deleteNote (note: any): Observable<any> {
     return this._http
-      .delete(this._baseUrl + `odata/Notes(${note.Id})`)
+      .delete(`${this._baseUrl}odata/Notes(${note.Id})`)
       .map(res => {
         return res;
       })
       .catch(this.handleError);
   }
 
-  private handleError(error: any) {
+  private handleError (error: any) {
     // In a real world app, we might use a remote logging infrastructure
     // We'd also dig deeper into the error to get a better message
     let errMsg = (error.message) ? error.message :

@@ -14,6 +14,7 @@ import { PageClickedEventArgs }                    from "./notes-pagination.comp
   
   <notes-pagination [noteCount]="noteCount"
                     [searchString]="searchString"
+                    [filterType]="filterType"
                     (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
@@ -41,6 +42,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
 
   @Input() public isAddNoteSectionEnabled: boolean;
   @Input() private searchString: string;
+  @Input() private filterType: string;
   @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
   public _notes: Note[];
   public _noteToDelete: Note;
@@ -69,7 +71,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     // Controlling to not trigger on first ngOnChanges call.
     if (this.searchString !== "") {
       this._notesService
-      .getNotesCountForFilter(this.searchString)
+      .getNotesCountForFilter(this.searchString, this.filterType)
       .subscribe(res => {
         this.noteCount = res;
         // TODO: Subscribe to error and display it.
