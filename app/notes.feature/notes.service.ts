@@ -3,6 +3,7 @@ import { Response, Headers, RequestOptions }        from "@angular/http";
 import { Note }                                     from "./note.model";
 import { Observable }                               from "rxjs/Observable";
 import { HttpExtendedService }  from "../common.services/http-extended.service";
+import { PageClickedEventArgs }  from "./notes-pagination.component";
 
 @Injectable()
 export class NotesService {
@@ -34,8 +35,32 @@ export class NotesService {
       .catch(this.handleError);
   }
 
+  public getNotesWithSkipAndFilter (pageClickedEventArgs: PageClickedEventArgs) {
+    let skip = pageClickedEventArgs.skip;
+    let searchString = pageClickedEventArgs.searchString;
+    return this._http
+      .get(this._baseUrl + `odata/Notes?$skip=${skip}&$filter=contains(Title,'${searchString}')`)
+      .map(res => {
+        let body = res.json();
+        // The body has context and value
+        return body.value || {};
+      })
+      .catch(this.handleError);
+  }
+
+  public getNotesCountForFilter (searchString: string) {
+    return this._http
+      .get(this._baseUrl + `odata/Notes?$count=true&$filter=contains(Title,'${searchString}')`)
+      .map(res => {
+        let body = res.json();
+        // The body has context, count and value
+        return body["@odata.count"];
+      })
+      .catch(this.handleError);
+  }
+
   // TODO: return Observable<OdataResponse>
-  public getNotesCount(): Observable<any> {
+  public getNotesCount (): Observable<any> {
     return this._http
       .get(this._baseUrl + "odata/Notes/RememberMe.Functions.GetNotesCount()")
       .map(res => {

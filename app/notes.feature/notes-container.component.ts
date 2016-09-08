@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef, Inject, OnChanges,
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
+import { PageClickedEventArgs }                    from "./notes-pagination.component";
 
 @Component({
   selector: "notes-container",
@@ -11,8 +12,9 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
   
-  <notes-pagination [noteCount]="_noteCount"
-                    (onPageClicked)="getNotesWithSkip($event)">
+  <notes-pagination [noteCount]="noteCount"
+                    [searchString]="searchString"
+                    (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
   <notes-list [notes]="_notes"
@@ -43,7 +45,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   public _notes: Note[];
   public _noteToDelete: Note;
   private _isAddNoteSectionDisabled: boolean;
-  public _noteCount: number;
+  public noteCount: number;
 
   private _notesAddItemEnabled: boolean;
 
@@ -54,7 +56,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     this.onCloseAddNoteSection = new EventEmitter<boolean>();
     this._noteToDelete = new Note("", "", "", "", "");
     this._isAddNoteSectionDisabled = false;
-    this._noteCount = 0;
+    this.noteCount = 0;
   }
 
   public ngOnInit () {
@@ -66,7 +68,12 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   public ngOnChanges () {
     // Controlling to not trigger on first ngOnChanges call.
     if (this.searchString !== "") {
-      console.log(this.searchString);
+      this._notesService
+      .getNotesCountForFilter(this.searchString)
+      .subscribe(res => {
+        this.noteCount = res;
+        // TODO: Subscribe to error and display it.
+      });
     }
   }
 
@@ -74,14 +81,14 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     this._notesService
       .getNotesCount()
       .subscribe(res => {
-        this._noteCount = res;
+        this.noteCount = res;
         // TODO: Subscribe to error and display it.
       });
   }
   
-  private getNotesWithSkip(skip: number) {
+  private getNotesWithSkipAndFilter(pageClickedEventArgs: PageClickedEventArgs) {
     this._notesService
-      .getNotesWithSkip(skip)
+      .getNotesWithSkipAndFilter(pageClickedEventArgs)
       .subscribe(res => {
         this._notes = res;
         // TODO: Subscribe to error and display it.
@@ -94,7 +101,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   //     .getNotes()
   //     .subscribe(res => {
   //       this._notes = res.value;
-  //       this._noteCount = res["@odata.count"];
+  //       this.noteCount = res["@odata.count"];
   //       // TODO: Subscribe to error and display it.
   //     });
   // }

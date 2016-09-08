@@ -34,12 +34,13 @@ import { NotesPaginationItemComponent }            from "./notes-pagination-item
 export class NotesPaginationComponent implements OnInit, OnChanges {
 
   @Input() public noteCount: number;
-  @Output() private onPageClicked: EventEmitter<number>;   
+  @Input() public searchString: string;
+  @Output() private onPageClicked: EventEmitter<PageClickedEventArgs>;   
   private _pageSize: number;
   public paginationOptions: PaginationOptions;
 
   public constructor () {
-    this.onPageClicked = new EventEmitter<number>();
+    this.onPageClicked = new EventEmitter<PageClickedEventArgs>();
     this._pageSize = 4;
   }
 
@@ -104,7 +105,10 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
   }
 
   private sendNotesToContainer(skip: number) {
-    this.onPageClicked.emit(skip);
+    let pageClickedEventArgs = new PageClickedEventArgs();
+    pageClickedEventArgs.skip = skip;
+    pageClickedEventArgs.searchString = this.searchString;
+    this.onPageClicked.emit(pageClickedEventArgs);
   }
 
   // This should be in a service.
@@ -143,4 +147,9 @@ export class PageData {
   public index: number;
   public skip: number;
   public selected: boolean; 
+}
+
+export class PageClickedEventArgs {
+  public skip: number;
+  public searchString: string;
 }
