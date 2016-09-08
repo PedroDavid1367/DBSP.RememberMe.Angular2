@@ -15,6 +15,8 @@ import { Note }                                    from "./note.model";
     <a href="#" class="collection-item waves-effect waves-teal" 
        (click)="openAddNoteSection()">Add note</a>
     <a href="#" class="collection-item waves-effect waves-teal"
+       (click)="sendSearchString()">Show all</a>
+    <a href="#" class="collection-item waves-effect waves-teal"
        (click)="openFilterNoteSection()">Filter notes</a>
   </div>
   `
@@ -46,5 +48,9 @@ export class NotesManagerComponent implements OnInit {
 
   public openFilterNoteSection () {
     this.onOpenFilterNoteSection.emit(this._isFilterNoteSectionEnabled);
+  }
+
+  public sendSearchString () {
+    console.log("571");
   }
 }
