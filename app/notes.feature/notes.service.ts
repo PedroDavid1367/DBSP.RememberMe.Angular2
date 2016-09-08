@@ -39,6 +39,21 @@ export class NotesService {
     let skip = pageClickedEventArgs.skip;
     let searchString = pageClickedEventArgs.searchString;
     let filterType = pageClickedEventArgs.filterType;
+
+    if (filterType === "Priority") {
+      let testedNumber = parseInt(searchString);
+      if (testedNumber !== NaN) {
+        return this._http
+          .get(`${this._baseUrl}odata/Notes?$skip=${skip}&$filter=${filterType} eq ${searchString}`)
+          .map(res => {
+            let body = res.json();
+            // The body has context and value
+            return body.value || {};
+          })
+          .catch(this.handleError);
+      }
+    }
+
     return this._http
       .get(`${this._baseUrl}odata/Notes?$skip=${skip}&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {
@@ -50,6 +65,20 @@ export class NotesService {
   }
 
   public getNotesCountForFilter (searchString: string, filterType: string) {
+    if (filterType === "Priority") {
+      let testedNumber = parseInt(searchString);
+      if (testedNumber !== NaN) {
+        return this._http
+          .get(`${this._baseUrl}odata/Notes?$count=true&$filter=${filterType} eq ${searchString}`)
+          .map(res => {
+            let body = res.json();
+            // The body has context, count and value
+            return body["@odata.count"];
+          })
+          .catch(this.handleError);
+      }
+    }
+
     return this._http
       .get(`${this._baseUrl}odata/Notes?$count=true&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {

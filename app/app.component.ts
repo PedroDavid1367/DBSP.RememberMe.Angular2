@@ -10,6 +10,19 @@ import { OidcTokenManagerService }                from "./common.services/oidc-t
  */
 @Component({
   selector: "app",
+  styles: [`
+  .brand-logo{
+    display: block;
+  }
+
+  @media (max-width: 800px) 
+  {
+      .brand-logo
+      {
+          display: none;
+      }
+  }
+  `],
   template: require("./app.component.html")
 })
 export class AppComponent implements OnInit {

@@ -68,6 +68,9 @@ export class NotesContainerComponent implements OnInit, OnChanges {
 
   // ngOnChanges manage if a filtering has been made.
   public ngOnChanges () {
+    let x = this.searchString;
+    let y = this.filterType;
+
     // Controlling to not trigger on first ngOnChanges call.
     if (this.searchString !== "") {
       this._notesService

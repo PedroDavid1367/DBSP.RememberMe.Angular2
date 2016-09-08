@@ -9,29 +9,27 @@ import { SearchStringEventArgs }                   from "./notes-filter-item.com
   selector: "notes-filter-container",
   template: `
   <div class="blue-grey lighten-4 z-depth-1">
-    <notes-filter-item [filterType]="Title"
+    <notes-filter-item [filterType]="'Title'"
                        (onSendSearchString)="sendSearchString($event)">
     </notes-filter-item>
 
     <br />
+
+    <notes-filter-item [filterType]="'Category'"
+                       (onSendSearchString)="sendSearchString($event)">
+    </notes-filter-item>
+
     <br />
 
-    <div class="row">
-      <div class="input-field col m12">
-        <input id="title" type="text" class="">  
-        <label for="title"> 
-          Filter by Title
-        </label>
-      </div>
-      <div class="input-field col m12">
-        <input class="btn-flat" 
-               type="button" value="Go" 
-               (click)="closeNotesFilterSection()" />
-        <input class="btn-flat" 
-               type="button" value="Reset" 
-               (click)="closeNotesFilterSection()" />
-      </div>
-    </div>
+    <notes-filter-item [filterType]="'Priority'"
+                       (onSendSearchString)="sendSearchString($event)">
+    </notes-filter-item>
+
+    <br />
+
+    <notes-filter-item [filterType]="'Content'"
+                       (onSendSearchString)="sendSearchString($event)">
+    </notes-filter-item>
 
     <br />
     

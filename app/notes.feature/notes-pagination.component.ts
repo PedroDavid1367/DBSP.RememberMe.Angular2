@@ -50,7 +50,6 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
   // Each time there's a change a new PaginationOptions object is created.
   public ngOnChanges () {
-    let x = this.filterType;
     this.paginationOptions = this.paginationOptionsFactory();
     if (this.paginationOptions !== null) {
       if (this.paginationOptions.pagesData.length > 0) {
@@ -111,7 +110,7 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
     let pageClickedEventArgs = new PageClickedEventArgs();
     pageClickedEventArgs.skip = skip;
     pageClickedEventArgs.searchString = this.searchString;
-    pageClickedEventArgs.searchString = this.filterType;
+    pageClickedEventArgs.filterType = this.filterType;
     this.onPageClicked.emit(pageClickedEventArgs);
   }
 
