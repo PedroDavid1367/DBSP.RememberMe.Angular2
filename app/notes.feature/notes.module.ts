@@ -11,6 +11,8 @@ import { NotesAddItemComponent }    from "./notes-add-item.component";
 import { NotesListComponent }       from "./notes-list.component";
 import { NotesItemComponent }       from "./notes-item.component";
 import { NotesManagerComponent }    from "./notes-manager.component";
+import { NotesFilterContainerComponent }     from "./notes-filter-container.component";
+import { NotesFilterTitleComponent }     from "./notes-filter-title.component";
 import { NotesService }             from "./notes.service"; 
 
 import { FormsModule }  from "@angular/forms";
@@ -29,7 +31,9 @@ import { FormsModule }  from "@angular/forms";
     NotesAddItemComponent,
     NotesListComponent,
     NotesItemComponent,
-    NotesManagerComponent
+    NotesManagerComponent,
+    NotesFilterContainerComponent,
+    NotesFilterTitleComponent
   ],
   providers: [
     NotesService,

@@ -30,7 +30,7 @@ import { Note }                                    from "./note.model";
       <p>Category: {{ note.Category }}</p>
       <p>Priority: {{ note.Priority }}</p>
     </div> 
-    <div class="card-action blue-grey lighten-1">
+    <div class="card-action blue-grey lighten-2">
       <input type="button" class="btn-flat" style="color:white;" value="Edit" (click)="edit()" />
       <input type="button" class="btn-flat" style="color:white;" value="To reminder" />
       <input type="button" class="btn-flat" style="color:white;" value="Delete" (click)="delete()" />
@@ -90,7 +90,7 @@ import { Note }                                    from "./note.model";
         </div>
       </form>
     </div> 
-    <div class="card-action blue-grey lighten-1">
+    <div class="card-action blue-grey lighten-2">
       <!--<input class="btn-flat" type="submit" style="color:white;" [disabled]="!noteForm.form.valid" value="Save" />-->
       <input class="btn-flat" type="button" style="color:white;" [disabled]="!noteForm.form.valid" 
              value="Save" (click)="submit()" />

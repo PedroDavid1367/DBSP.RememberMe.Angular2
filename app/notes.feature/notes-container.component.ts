@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Inject,
+import { Component, OnInit, ElementRef, Inject, OnChanges,
   Input, Output, EventEmitter }                    from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
@@ -35,9 +35,10 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
   </div>
   `
 })
-export class NotesContainerComponent implements OnInit {
+export class NotesContainerComponent implements OnInit, OnChanges {
 
   @Input() public isAddNoteSectionEnabled: boolean;
+  @Input() private searchString: string;
   @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
   public _notes: Note[];
   public _noteToDelete: Note;
@@ -59,6 +60,14 @@ export class NotesContainerComponent implements OnInit {
   public ngOnInit () {
     this.getNotesCount();
     //this.getNotes();
+  }
+
+  // ngOnChanges manage if a filtering has been made.
+  public ngOnChanges () {
+    // Controlling to not trigger on first ngOnChanges call.
+    if (this.searchString !== "") {
+      console.log(this.searchString);
+    }
   }
 
   private getNotesCount() {

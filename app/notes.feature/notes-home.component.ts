@@ -20,12 +20,18 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
       <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)"
                      (onOpenFilterNoteSection)="setIsFilterNoteSectionEnabled($event)">               
       </notes-manager>
+
+      <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
+                    (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
+                    (onSendSearchString)="toNotesContainer($event)">                   
+      </notes-filter-container>
     </div>
   </div>
 
   <div class="col s12 m8">
     <div class="col s12">
-      <notes-container [isAddNoteSectionEnabled]="_isAddNoteSectionEnabled"
+      <notes-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
+                       [searchString]="searchString"
                        (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
       </notes-container>
     </div>
@@ -34,15 +40,23 @@ import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.
 })
 export class NotesHomeComponent {
 
-  public _isAddNoteSectionEnabled: boolean;
-  public _isFilterNoteSectionEnabled: boolean;
+  public isAddNoteSectionEnabled: boolean;
+  public isFilterNoteSectionEnabled: boolean;
+  public searchString: string;
+
+  public constructor () {
+    this.searchString = "";
+  }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
-    this._isAddNoteSectionEnabled = isAddNoteSectionEnabled;
+    this.isAddNoteSectionEnabled = isAddNoteSectionEnabled;
   }
 
   public setIsFilterNoteSectionEnabled (isFilterNoteSectionEnabled: boolean) {
-    this._isFilterNoteSectionEnabled = isFilterNoteSectionEnabled;
-    console.log("^_^");
+    this.isFilterNoteSectionEnabled = isFilterNoteSectionEnabled;
+  }
+
+  public toNotesContainer (searchString: string) {
+    this.searchString = searchString;
   }
 }
