@@ -69,7 +69,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   // ngOnChanges manage if a filtering has been made.
   public ngOnChanges () {
     // Controlling to not trigger on first ngOnChanges call.
-    if (this.searchString !== "") {
+    if (this.searchString !== undefined) {
       this._notesService
         .getNotesCountForFilter(this.searchString, this.filterType)
         .subscribe(res => {

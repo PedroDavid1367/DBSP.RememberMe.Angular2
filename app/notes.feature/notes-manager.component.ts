@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter,
   Inject, ElementRef }   from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model"; 
+import { SearchStringEventArgs }                   from "./notes-filter-item.component";
 
 @Component({
   selector: 'notes-manager',
@@ -25,6 +26,7 @@ export class NotesManagerComponent implements OnInit {
 
   @Output() private onOpenAddNoteSection: EventEmitter<boolean>;
   @Output() private onOpenFilterNoteSection: EventEmitter<boolean>;
+  @Output() private onSendSearchString: EventEmitter<SearchStringEventArgs>;
   private _isAddNoteSectionEnabled: boolean = true;
   private _isFilterNoteSectionEnabled: boolean = true;
 
@@ -33,6 +35,7 @@ export class NotesManagerComponent implements OnInit {
 
     this.onOpenAddNoteSection = new EventEmitter<boolean>();
     this.onOpenFilterNoteSection = new EventEmitter<boolean>();
+    this.onSendSearchString = new EventEmitter<SearchStringEventArgs>();
   }
   
   // Disabling native click event so that anchor element 
@@ -50,7 +53,11 @@ export class NotesManagerComponent implements OnInit {
     this.onOpenFilterNoteSection.emit(this._isFilterNoteSectionEnabled);
   }
 
+  // Sending search for all notes (default).
   public sendSearchString () {
-    console.log("571");
+    let searchStringEventArgs = new SearchStringEventArgs();
+    searchStringEventArgs.searchString = "";
+    searchStringEventArgs.filterType = "Title";
+    this.onSendSearchString.emit(searchStringEventArgs);
   }
 }

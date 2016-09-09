@@ -10,16 +10,13 @@ import { SearchStringEventArgs }    from "./notes-filter-item.component";
   template: `
   <div class="col s12 m4">
     <div class="col s12 offset-m1">
-      <h1 class="center-align">Options</h1>
-      <br />
-      
-      <div>
-      </div>
+      <notes-help></notes-help>
 
       <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->
       <!-- $event is a boolean -->
       <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)"
-                     (onOpenFilterNoteSection)="setIsFilterNoteSectionEnabled($event)">               
+                     (onOpenFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
+                     (onSendSearchString)="toNotesContainer($event)">               
       </notes-manager>
 
       <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
@@ -47,9 +44,9 @@ export class NotesHomeComponent {
   public searchString: string;
   public filterType: string; 
 
+  // Sending search for all notes (default).
   public constructor () {
     this.searchString = "";
-    // Default filtering type.
     this.filterType = "Title"; 
   }
 

@@ -33,10 +33,10 @@ export class NotesPaginationItemComponent implements OnInit, OnChanges {
   public ngOnChanges () {
     if (this.clicked) {
       this.$(this._elRef.nativeElement)
-      .find("a").addClass("active blue-grey lighten-1");
+      .find("a").addClass("active blue-grey lighten-2");
     } else {
       this.$(this._elRef.nativeElement)
-      .find("a").removeClass("active blue-grey lighten-1");
+      .find("a").removeClass("active blue-grey lighten-2");
     }
   }
 

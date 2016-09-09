@@ -13,6 +13,11 @@ import { AppComponent }        from "./app.component";
 /* Feature Modules */
 import { HomeModule }          from "./home.feature/home.module";
 import { NotesModule }         from "./notes.feature/notes.module";
+//import { HeaderModule }        from "./header.feature/header.module"
+
+/* Header features */
+import { UserInfoComponent }        from "./header.feature/user-info.component"
+import { HeadContainerComponent }   from "./header.feature/head-container.component"
 
 import { routing }             from "./app.routing";
 
@@ -22,6 +27,7 @@ import { routing }             from "./app.routing";
     //CommonModule,
     HttpModule,
     //FormsModule,
+    //HeaderModule,
     HomeModule,
     NotesModule,
     routing
@@ -30,7 +36,9 @@ import { routing }             from "./app.routing";
     APP_PROVIDERS
   ],
   declarations: [
-    AppComponent
+    AppComponent,
+    UserInfoComponent,
+    HeadContainerComponent
   ],
   bootstrap: [
     AppComponent

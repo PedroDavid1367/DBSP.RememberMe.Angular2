@@ -7,6 +7,11 @@ import { SearchStringEventArgs }                   from "./notes-filter-item.com
 
 @Component({
   selector: "notes-filter-container",
+  styles: [`
+  div.blue-grey {
+    padding: 20px;
+  }
+  `],
   template: `
   <div class="blue-grey lighten-4 z-depth-1">
     <notes-filter-item [filterType]="'Title'"

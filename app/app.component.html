@@ -11,31 +11,24 @@
       <li><a (click)="openNotesSecurityMessage()">Notes</a></li>
     </ul>
     <ul class="right">
-      <li *ngIf="_mgr.expired"><a (click)="login()">Log in</a></li>
-      <li *ngIf="!_mgr.expired"><a (click)="openLogoutMessage()">You're logged as {{ _mgr.profile.given_name }}</a></li>
+      <li *ngIf="mgr.expired"><a (click)="login()">Log in</a></li>
+      <li *ngIf="!mgr.expired"><a (click)="openLogoutMessage()">You're logged as {{ mgr.profile.given_name }}</a></li>
     </ul>
   </div>
 </nav>
 
+<br />
+
 <div class="row">
   <div class="col s12 m4">
     <div class="col s12 offset-m1">
-      <h1 class="center-align">Options</h1>
-      <br />
-      <p>
-        Tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod,
-        iaculis eu lacus nunc mi elit, vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel.
-      </p>
+      <user-info></user-info>
     </div>
   </div>
 
   <div class="col s12 m8">
     <div class="col s12">
-      <h1 class="center-align">Banner or Reminders carousel</h1>
-      <p>
-        Tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod,
-        iaculis eu lacus nunc mi elit, vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel.
-      </p>
+      <head-container></head-container>
     </div>
   </div>
 </div>

@@ -106,6 +106,8 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
     }
   }
 
+  // This method needs a better name since it not just is fired when
+  // a click's been made, it's also fired on the first ngOnChanges.
   private sendNotesToContainer(skip: number) {
     let pageClickedEventArgs = new PageClickedEventArgs();
     pageClickedEventArgs.skip = skip;
