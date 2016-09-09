@@ -5,10 +5,12 @@
     <ul class="left hide-on-med-and-down">
       <li><a [routerLink]="['/home']">Home</a></li>
       <li><a (click)="openNotesSecurityMessage()">Notes</a></li>
+      <li><a (click)="openContactsSecurityMessage()">Contacts</a></li>
     </ul>
     <ul class="side-nav" id="mobile-demo">
       <li><a [routerLink]="['/home']">Home</a></li>
       <li><a (click)="openNotesSecurityMessage()">Notes</a></li>
+      <li><a (click)="openContactsSecurityMessage()">Contacts</a></li>
     </ul>
     <ul class="right">
       <li *ngIf="mgr.expired"><a (click)="login()">Log in</a></li>
@@ -38,14 +40,28 @@
 </div>
 
 
-<!-- Used for asking to log in -->
+<!-- Used for asking to log in on Notes -->
 <div id="notesAccessModal" class="modal">
   <div class="modal-content">
     <h4>Log in is required</h4>
     <p>You must be logged in to view this section.</p>
   </div>
   <div class="modal-footer">
-    <a (click)="cancel()"
+    <a (click)="cancelToNotes()"
+       class="modal-action modal-close waves-effect waves-green btn btn-flat">Discard</a>
+    <a (click)="toNotes()"
+       class="modal-action modal-close waves-effect waves-green btn btn-flat">Agree</a>
+  </div>
+</div>
+
+<!-- Used for asking to log in on Contacts -->
+<div id="contactsAccessModal" class="modal">
+  <div class="modal-content">
+    <h4>Log in is required</h4>
+    <p>You must be logged in to view this section.</p>
+  </div>
+  <div class="modal-footer">
+    <a (click)="cancelToContacts()"
        class="modal-action modal-close waves-effect waves-green btn btn-flat">Discard</a>
     <a (click)="toNotes()"
        class="modal-action modal-close waves-effect waves-green btn btn-flat">Agree</a>

@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
     this.mgr = this._oidcmanager.mgr;
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.$(this._elRef.nativeElement)
       .find(".button-collapse")
       .sideNav({
@@ -75,9 +75,27 @@ export class AppComponent implements OnInit {
     this._router.navigate(["/notes"]);
   }
 
-  public cancel() {
+  public cancelToNotes() {
     this.$(this._elRef.nativeElement)
-      .find("#tripsAccessModal").closeModal();
+      .find("#notesAccessModal").closeModal();
+  }
+
+    public openContactsSecurityMessage() {
+    if (this.mgr.expired) {
+      this.$(this._elRef.nativeElement)
+        .find("#contactsAccessModal").openModal();
+    } else {
+      this.toContacts();
+    }
+  }
+
+  public toContacts() {
+    this._router.navigate(["/contacts"]);
+  }
+
+  public cancelToContacts() {
+    this.$(this._elRef.nativeElement)
+      .find("#contactsAccessModal").closeModal();
   }
 
   public openLogoutMessage() {

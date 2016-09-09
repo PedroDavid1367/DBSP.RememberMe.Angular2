@@ -30,10 +30,10 @@ import { Note }                                    from "./note.model";
       <p>Category: {{ note.Category }}</p>
       <p>Priority: {{ note.Priority }}</p>
     </div> 
-    <div class="card-action blue-grey lighten-2">
-      <input type="button" class="btn-flat" style="color:white;" value="Edit" (click)="edit()" />
-      <input type="button" class="btn-flat" style="color:white;" value="To reminder" />
-      <input type="button" class="btn-flat" style="color:white;" value="Delete" (click)="delete()" />
+    <div class="card-action lime lighten-5">
+      <input type="button" class="btn-flat" style="color:black;" value="Edit" (click)="edit()" />
+      <input type="button" class="btn-flat" style="color:black;" value="To reminder" />
+      <input type="button" class="btn-flat" style="color:black;" value="Delete" (click)="delete()" />
     </div>
   </div>
 
