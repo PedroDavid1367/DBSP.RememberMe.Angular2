@@ -1,67 +1,65 @@
 import { Component }                from "@angular/core";
 import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
-//import { SearchStringEventArgs }    from "./notes-filter-item.component";
+import { SearchStringEventArgs }    from "./contacts-filter-item.component";
 
 @Component({
-  selector: 'notes-home',
+  selector: 'contacts-home',
   styles: [`
 
   `],
   template: `
+  <div class="col s12 m4">
+    <div class="col s12 offset-m1">
+      <contacts-help></contacts-help>
+
+      <!-- The Event onOpenAddContactSection is generated when contacts-manager component is clicked -->
+      <!-- $event is a boolean -->
+      <contacts-manager (onOpenAddContactSection)="setIsAddContactSectionEnabled($event)"
+                        (onOpenFilterContactSection)="setIsFilterContactSectionEnabled($event)"
+                        (onSendSearchString)="toContactsContainer($event)">               
+      </contacts-manager>
+
+      <contacts-filter-container *ngIf="isFilterContactSectionEnabled"
+                                 (onCloseFilterContactsSection)="setIsFilterContactSectionEnabled($event)"
+                                 (onSendSearchString)="toContactsContainer($event)">                   
+      </contacts-filter-container>
+    </div>
+  </div>
+
+  <div class="col s12 m8">
+    <div class="col s12">
+      <contacts-container [isAddContactSectionEnabled]="isAddContactSectionEnabled"
+                          [searchString]="searchString"
+                          [filterType]="filterType"
+                          (onCloseAddContactSection)="setIsAddContactSectionEnabled($event)">                   
+      </contacts-container>
+    </div>
+  </div>
   `
 })
 export class ContactsHomeComponent {
 
-  // public isAddNoteSectionEnabled: boolean;
-  // public isFilterNoteSectionEnabled: boolean;
-  // public searchString: string;
-  // public filterType: string; 
+  public isAddContactSectionEnabled: boolean;
+  public isFilterContactSectionEnabled: boolean;
+  public searchString: string;
+  public filterType: string; 
 
-  // // Sending search for all notes (default).
-  // public constructor () {
-  //   this.searchString = "";
-  //   this.filterType = "Title"; 
-  // }
+  // Sending search for all contacts (default).
+  public constructor () {
+    this.searchString = "";
+    this.filterType = "Name"; 
+  }
 
-  // public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
-  //   this.isAddNoteSectionEnabled = isAddNoteSectionEnabled;
-  // }
+  public setIsAddContactSectionEnabled (isAddContactSectionEnabled: boolean) {
+    this.isAddContactSectionEnabled = isAddContactSectionEnabled;
+  }
 
-  // public setIsFilterNoteSectionEnabled (isFilterNoteSectionEnabled: boolean) {
-  //   this.isFilterNoteSectionEnabled = isFilterNoteSectionEnabled;
-  // }
+  public setIsFilterContactSectionEnabled (isFilterContactSectionEnabled: boolean) {
+    this.isFilterContactSectionEnabled = isFilterContactSectionEnabled;
+  }
 
-  // public toNotesContainer (searchStringEventArgs: SearchStringEventArgs) {
-  //   this.searchString = searchStringEventArgs.searchString;
-  //   this.filterType = searchStringEventArgs.filterType;
-  // }
+  public toContactsContainer (searchStringEventArgs: SearchStringEventArgs) {
+    this.searchString = searchStringEventArgs.searchString;
+    this.filterType = searchStringEventArgs.filterType;
+  }
 }
-
-
-  // <div class="col s12 m4">
-  //   <div class="col s12 offset-m1">
-  //     <notes-help></notes-help>
-
-  //     <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->
-  //     <!-- $event is a boolean -->
-  //     <notes-manager (onOpenAddNoteSection)="setIsAddNoteSectionEnabled($event)"
-  //                    (onOpenFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-  //                    (onSendSearchString)="toNotesContainer($event)">               
-  //     </notes-manager>
-
-  //     <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
-  //                   (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-  //                   (onSendSearchString)="toNotesContainer($event)">                   
-  //     </notes-filter-container>
-  //   </div>
-  // </div>
-
-  // <div class="col s12 m8">
-  //   <div class="col s12">
-  //     <notes-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
-  //                      [searchString]="searchString"
-  //                      [filterType]="filterType"
-  //                      (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
-  //     </notes-container>
-  //   </div>
-  // </div>
