@@ -46,6 +46,24 @@
     </div>
 
     <div class="row">
+      <div class="input-field col s12 m6">
+        <input id="schedule" type="date" class="datepicker" required
+               [(ngModel)]="eg.schedule" name="schedule"
+               #schedule="ngModel">
+        <label for="schedule" data-error="invalid" data-success="valid">Schedule</label>
+        <div [hidden]="schedule.touched" 
+              class="alert alert-danger">
+          <sup style="color:red;">Schedule time is required</sup>
+        </div>
+      </div>
+      Diagnostic: schedule.valid = {{ schedule.valid }} <br />
+      Diagnostic: schedule.pristine = {{ schedule.pristine }} <br />
+      Diagnostic: schedule.touched = {{ schedule.touched }} <br />
+      Diagnostic: schedule.dirty = {{ schedule.dirty }} <br />
+      Diagnostic: schedule = {{ schedule.toString() }}
+    </div>
+
+    <div class="row">
       <input class="btn-flat" type="submit" [disabled]="!noteForm.form.valid" value="Save" />
       <input class="btn-flat" type="button" value="Reset note" (click)="resetNote()" />
       <input class="btn-flat" type="button" value="Cancel" (click)="cancel()" />

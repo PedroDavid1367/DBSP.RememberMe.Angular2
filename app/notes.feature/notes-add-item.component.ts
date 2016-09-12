@@ -9,6 +9,10 @@ import { Note }                                    from "./note.model";
     border-bottom: 1px solid #42A948; /* green */
   }
 
+  #schedule.ng-touched[required] {
+    border-bottom: 1px solid #42A948; /* green */
+  }
+
   .ng-invalid {
     border-bottom: 1px solid #a94442; /* red */
   }
@@ -21,13 +25,27 @@ export class NotesAddItemComponent implements OnInit {
   // either a note submission or a note cancelation. 
   @Output() private onAddNote: EventEmitter<AddNoteArgs>; 
   public _model: Note;
+  public eg = { schedule: "" };
 
-  public constructor () {
+  public constructor ( private _elRef: ElementRef, 
+    @Inject("$") private $: any) {
+
     this.onAddNote = new EventEmitter<AddNoteArgs>();
   }
 
   public ngOnInit() {
     this._model = new Note("", "", "", "", "");
+
+  //   $('.datepicker').pickadate({
+  //   selectMonths: true, // Creates a dropdown to control month
+  //   selectYears: 15 // Creates a dropdown of 15 years to control year
+  // });
+
+    this.$(this._elRef.nativeElement)
+      .find("#schedule").pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+      });
   }
 
   public submit() {
