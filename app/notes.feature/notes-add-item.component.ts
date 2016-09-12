@@ -25,7 +25,8 @@ export class NotesAddItemComponent implements OnInit {
   // either a note submission or a note cancelation. 
   @Output() private onAddNote: EventEmitter<AddNoteArgs>; 
   public _model: Note;
-  public eg = { schedule: "" };
+
+  public scheduleDatepicker: any;
 
   public constructor ( private _elRef: ElementRef, 
     @Inject("$") private $: any) {
@@ -35,11 +36,6 @@ export class NotesAddItemComponent implements OnInit {
 
   public ngOnInit() {
     this._model = new Note("", "", "", "", "");
-
-  //   $('.datepicker').pickadate({
-  //   selectMonths: true, // Creates a dropdown to control month
-  //   selectYears: 15 // Creates a dropdown of 15 years to control year
-  // });
 
     this.$(this._elRef.nativeElement)
       .find("#schedule").pickadate({
@@ -72,6 +68,13 @@ export class NotesAddItemComponent implements OnInit {
 
   public get diagnostic(): string {
     return JSON.stringify(this._model);
+  }
+
+  public comeOn () {
+    let scheduleText = this.$(this._elRef.nativeElement)
+      .find("#schedule").val();
+    let scheduleDate = new Date(scheduleText);
+    console.log(scheduleDate);
   }
 }
 
