@@ -5,6 +5,7 @@
     public Priority: string,
     public Content: string,
     public OwnerId: string,
+    public ScheduleTime?: number,
     public Id?: number
   ) { }
 }

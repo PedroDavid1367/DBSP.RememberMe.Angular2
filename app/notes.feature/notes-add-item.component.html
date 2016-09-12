@@ -3,10 +3,10 @@
     <div class="row">
       <div class="input-field col s12">
         <input id="title" type="text" class="validate" required
-                [(ngModel)]="_model.Title" name="title"
+                [(ngModel)]="model.Title" name="title"
                 #title="ngModel">  
         <label for="title" data-error="invalid" data-success="valid">Title</label>
-        <div [hidden]="title.valid" 
+        <div [hidden]="title.valid || title.untouched" 
               class="alert alert-danger">
           <sup style="color:red;">Title is required</sup>
         </div>
@@ -16,7 +16,7 @@
     <div class="row">
       <div class="input-field col s12">
         <textarea id="content" class="materialize-textarea"
-                  [(ngModel)]="_model.Content" name="content"></textarea>
+                  [(ngModel)]="model.Content" name="content"></textarea>
         <label for="content">Content</label>
       </div>
     </div>
@@ -24,10 +24,10 @@
     <div class="row">
       <div class="input-field col s12 m6">
         <input id="category" type="text" class="validate" required
-                [(ngModel)]="_model.Category" name="category"
+                [(ngModel)]="model.Category" name="category"
                 #category="ngModel">
         <label for="category" data-error="invalid" data-success="valid">Category</label>
-        <div [hidden]="category.valid" 
+        <div [hidden]="category.valid || category.untouched" 
               class="alert alert-danger">
           <sup style="color:red;">Category is required</sup>
         </div>
@@ -35,10 +35,10 @@
 
       <div class="input-field col s12 m6">
         <input id="priority" type="number" class="validate" required
-                [(ngModel)]="_model.Priority" name="priority"
+                [(ngModel)]="model.Priority" name="priority"
                 #priority="ngModel">
         <label for="priority" data-error="invalid" data-success="valid">Priority</label>
-        <div [hidden]="priority.valid" 
+        <div [hidden]="priority.valid || priority.untouched" 
               class="alert alert-danger">
           <sup style="color:red;">Priority is required</sup>
         </div>
@@ -51,8 +51,6 @@
         <label for="schedule">Schedule</label>
       </div>
     </div>
-
-    <input class="btn" type="button" value="eg" (click)="comeOn()" />
 
     <div class="row">
       <input class="btn-flat" type="submit" [disabled]="!noteForm.form.valid" value="Save" />

@@ -8,11 +8,6 @@ import { Note }                                    from "./note.model";
   .ng-valid[required] {
     border-bottom: 1px solid #42A948; /* green */
   }
-
-  #schedule.ng-touched[required] {
-    border-bottom: 1px solid #42A948; /* green */
-  }
-
   .ng-invalid {
     border-bottom: 1px solid #a94442; /* red */
   }
@@ -24,9 +19,7 @@ export class NotesAddItemComponent implements OnInit {
   // onAddNote event actually emits an AddNoteArgs that represents
   // either a note submission or a note cancelation. 
   @Output() private onAddNote: EventEmitter<AddNoteArgs>; 
-  public _model: Note;
-
-  public scheduleDatepicker: any;
+  public model: Note;
 
   public constructor ( private _elRef: ElementRef, 
     @Inject("$") private $: any) {
@@ -35,20 +28,32 @@ export class NotesAddItemComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this._model = new Note("", "", "", "", "");
+    this.model = new Note("", "", "", "", "");
 
     this.$(this._elRef.nativeElement)
       .find("#schedule").pickadate({
         selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
+        selectYears: 15     // Creates a dropdown of 15 years to control year
       });
   }
 
   public submit() {
+    let scheduleText = this.$(this._elRef.nativeElement)
+      .find("#schedule").val();
+    // Creating a date based on the pickdate element selection or 
+    // the default current creation time.
+    let scheduleTime: number;
+    if (scheduleText) {
+      scheduleTime = new Date(scheduleText).getTime();
+    } else {
+      scheduleTime = new Date().getTime();
+    }
+    this.model.ScheduleTime = scheduleTime;
+
     let addNoteArgs = new AddNoteArgs();
     addNoteArgs.submitted = true,
     addNoteArgs.canceled = false,
-    addNoteArgs.note = this._model
+    addNoteArgs.note = this.model
     
     this.onAddNote.emit(addNoteArgs);
   }
@@ -63,18 +68,11 @@ export class NotesAddItemComponent implements OnInit {
   }
 
   public resetNote() {
-    this._model = new Note("", "", "", "", "");
+    this.model = new Note("", "", "", "", "");
   }
 
   public get diagnostic(): string {
-    return JSON.stringify(this._model);
-  }
-
-  public comeOn () {
-    let scheduleText = this.$(this._elRef.nativeElement)
-      .find("#schedule").val();
-    let scheduleDate = new Date(scheduleText);
-    console.log(scheduleDate);
+    return JSON.stringify(this.model);
   }
 }
 
