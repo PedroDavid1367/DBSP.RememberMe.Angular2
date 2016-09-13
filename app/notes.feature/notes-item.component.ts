@@ -6,18 +6,29 @@ import { Note }                                    from "./note.model";
   selector: "notes-item",
   styles: [`
   div span {
-    color:#263238;
+    color: #263238;
   }  
   div p {
-    color:#546e7a;
+    color: #546e7a;
   }
   .ng-valid[required] {
     border-bottom: 1px solid #42A948; /* green */
   }
-
   .ng-invalid {
     border-bottom: 1px solid #a94442; /* red */
-  }  
+  }
+  .ontime {
+    color: green;
+  } 
+  .nearschedule {
+    color: red;
+  }
+  .red {
+    color: red;
+  }
+  .small-text {
+    font-size: 10px;
+  } 
   `],
   template: `
   <div *ngIf="!_isEditable" class="card lime lighten-5">
@@ -29,6 +40,11 @@ import { Note }                                    from "./note.model";
       <br />  
       <p>Category: {{ note.Category }}</p>
       <p>Priority: {{ note.Priority }}</p>
+      <p>Schedule Time: 
+        <span [ngStyle]="{'color': scheduleColor}">
+          <strong> {{ scheduleTimeString }}</strong>
+        </span>
+      </p>
     </div> 
     <div class="card-action lime lighten-5">
       <input type="button" class="btn-flat" style="color:black;" value="Edit" (click)="edit()" />
@@ -107,6 +123,8 @@ export class NotesItemComponent implements OnInit{
   @Output() private onEditNote: EventEmitter<Note>;
   public _isEditable: boolean = false;
   private _backupNote: Note;
+  public scheduleTimeString: string;
+  public scheduleColor: string;
 
   public constructor () {
     this.onDeleteNote = new EventEmitter<Note>();
@@ -114,7 +132,19 @@ export class NotesItemComponent implements OnInit{
   }
 
   public ngOnInit() {
+    // TODO: Add ScheduleTime to cloneNote()
     this.cloneNote();
+    // Adding default values to this.scheduleColor.
+    this.scheduleColor = "seagreen";
+    // Parsing epoch time to human readable value.
+    let scheduleTime = new Date(this.note.ScheduleTime);
+    this.scheduleTimeString = scheduleTime.toDateString();
+    // Evaluating if the schedule time is on time or near complition.
+    let bufferTime = 2; // Default 2 days.
+    let actualTime = new Date();
+    if (actualTime.getDate() + bufferTime >= scheduleTime.getDate()) {
+      this.scheduleColor = "tomato";
+    }
   }
 
   private cloneNote() {
