@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, 
-  OnInit }                                         from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
+  ElementRef, Inject, OnInit }                     from "@angular/core";
 import { Note }                                    from "./note.model";
 
 @Component({
@@ -31,7 +31,7 @@ import { Note }                                    from "./note.model";
   } 
   `],
   template: `
-  <div *ngIf="!_isEditable" class="card lime lighten-5">
+  <div *ngIf="!isEditable" class="card lime lighten-5">
     <div class="card-content">
       <span class="card-title">{{ note.Title }}</span>
       <p>
@@ -53,7 +53,7 @@ import { Note }                                    from "./note.model";
     </div>
   </div>
 
-  <div *ngIf="_isEditable" class="card lime lighten-5 z-depth-4">
+  <div *ngIf="isEditable" class="card lime lighten-5 z-depth-4">
     <div class="card-content row" style="background-color:white;">
       <!-- This should work, but currently is not, it might be an angular2 issue -->
       <!--<form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">-->
@@ -101,8 +101,13 @@ import { Note }                                    from "./note.model";
               <sup style="color:red;">Priority is required</sup>
             </div>
           </div>
+        </div>
 
-          Diagnostic: noteForm.form.valid = {{ noteForm.form.valid }}
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="schedule" type="date" class="datepicker">
+            <label for="schedule">Schedule</label>
+          </div>
         </div>
       </form>
     </div> 
@@ -116,23 +121,28 @@ import { Note }                                    from "./note.model";
   </div>
   `
 })
-export class NotesItemComponent implements OnInit{
+export class NotesItemComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @Input() public note: Note;
   @Output() private onDeleteNote: EventEmitter<Note>;
   @Output() private onEditNote: EventEmitter<Note>;
-  public _isEditable: boolean = false;
+  public isEditable: boolean = false;
   private _backupNote: Note;
   public scheduleTimeString: string;
   public scheduleColor: string;
+  private _scheduleTimeEvaluator: any;
+  private _scheduleTimeSpanTime: number;
 
-  public constructor () {
+  public constructor (private _elRef: ElementRef, 
+    @Inject("$") private $: any) {
+
     this.onDeleteNote = new EventEmitter<Note>();
     this.onEditNote = new EventEmitter<Note>();
+    this._scheduleTimeSpanTime = 21600000;  // 6 hours
   }
 
-  public ngOnInit() {
-    // TODO: Add ScheduleTime to cloneNote()
+  public ngOnInit () {
+
     this.cloneNote();
     // Adding default values to this.scheduleColor.
     this.scheduleColor = "seagreen";
@@ -140,6 +150,14 @@ export class NotesItemComponent implements OnInit{
     let scheduleTime = new Date(this.note.ScheduleTime);
     this.scheduleTimeString = scheduleTime.toDateString();
     // Evaluating if the schedule time is on time or near complition.
+    this.evaluateScheduleTime(scheduleTime);
+    // Firing up the scheduler
+    this._scheduleTimeEvaluator = setInterval(() => {
+      this.evaluateScheduleTime(scheduleTime);
+    }, this._scheduleTimeSpanTime); 
+  }
+
+  private evaluateScheduleTime (scheduleTime: Date) {
     let bufferTime = 2; // Default 2 days.
     let actualTime = new Date();
     if (actualTime.getDate() + bufferTime >= scheduleTime.getDate()) {
@@ -147,13 +165,27 @@ export class NotesItemComponent implements OnInit{
     }
   }
 
-  private cloneNote() {
+  // I'm not sure about this implementation (it's fired too many times).
+  public ngAfterViewChecked () {
+    this.$(this._elRef.nativeElement)
+      .find("#schedule").pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15     // Creates a dropdown of 15 years to control year
+      }).set("select", this.note.ScheduleTime);
+  }
+
+  public ngOnDestroy () {
+    clearInterval(this._scheduleTimeEvaluator);
+  }
+
+  private cloneNote () {
     this._backupNote = new Note(
       this.note.Title,
       this.note.Category,
       this.note.Priority,
       this.note.Content,
       this.note.OwnerId,
+      this.note.ScheduleTime,
       this.note.Id
     );
   }
@@ -163,16 +195,27 @@ export class NotesItemComponent implements OnInit{
   }
 
   public edit() {
-    this._isEditable = true;
+    this.isEditable = true;
   }
 
   public submit() {
-    // TODO: Send to parent to save in the db.
+    let scheduleText = this.$(this._elRef.nativeElement)
+      .find("#schedule").val();
+    // Creating a date based on the pickdate element selection or 
+    // the default current creation time.
+    let scheduleTime: number;
+    if (scheduleText) {
+      scheduleTime = new Date(scheduleText).getTime();
+    } else {
+      scheduleTime = new Date().getTime();
+    }
+    this.note.ScheduleTime = scheduleTime;
+
     this.cloneNote();
     this.onEditNote.emit(this.note);
 
     // Save the changes on UI and close the editing form.
-    this._isEditable = false; 
+    this.isEditable = false; 
   }
 
   public resetChanges() {
@@ -181,11 +224,15 @@ export class NotesItemComponent implements OnInit{
     this.note.Priority = this._backupNote.Priority;
     this.note.Content = this._backupNote.Content;
     this.note.OwnerId = this._backupNote.OwnerId;
+    this.note.ScheduleTime = this._backupNote.ScheduleTime;
     this.note.Id = this._backupNote.Id;
+    // Parsing epoch time to human readable value.
+    let scheduleTime = new Date(this.note.ScheduleTime);
+    this.scheduleTimeString = scheduleTime.toDateString();
   }
 
   public cancelEditMode() {
     this.resetChanges();
-    this._isEditable = false;
+    this.isEditable = false;
   }
 }

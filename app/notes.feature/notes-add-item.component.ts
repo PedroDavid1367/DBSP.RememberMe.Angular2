@@ -21,7 +21,7 @@ export class NotesAddItemComponent implements OnInit {
   @Output() private onAddNote: EventEmitter<AddNoteArgs>; 
   public model: Note;
 
-  public constructor ( private _elRef: ElementRef, 
+  public constructor (private _elRef: ElementRef, 
     @Inject("$") private $: any) {
 
     this.onAddNote = new EventEmitter<AddNoteArgs>();
@@ -67,8 +67,11 @@ export class NotesAddItemComponent implements OnInit {
     this.onAddNote.emit(addNoteArgs);
   }
 
-  public resetNote() {
+  public restartNote() {
     this.model = new Note("", "", "", "", "");
+
+    this.$(this._elRef.nativeElement)
+      .find("#schedule").pickadate("picker").clear();
   }
 
   public get diagnostic(): string {
