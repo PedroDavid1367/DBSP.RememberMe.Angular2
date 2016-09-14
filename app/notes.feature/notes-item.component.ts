@@ -121,7 +121,7 @@ import { Note }                                    from "./note.model";
   </div>
   `
 })
-export class NotesItemComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class NotesItemComponent implements OnInit, OnDestroy {
 
   @Input() public note: Note;
   @Output() private onDeleteNote: EventEmitter<Note>;
@@ -166,13 +166,13 @@ export class NotesItemComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   // I'm not sure about this implementation (it's fired too many times).
-  public ngAfterViewChecked () {
-    this.$(this._elRef.nativeElement)
-      .find("#schedule").pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15     // Creates a dropdown of 15 years to control year
-      }).set("select", this.note.ScheduleTime);
-  }
+  // public ngAfterViewChecked () {
+  //   this.$(this._elRef.nativeElement)
+  //     .find("#schedule").pickadate({
+  //       selectMonths: true, // Creates a dropdown to control month
+  //       selectYears: 15     // Creates a dropdown of 15 years to control year
+  //     });
+  // }
 
   public ngOnDestroy () {
     clearInterval(this._scheduleTimeEvaluator);
@@ -194,7 +194,20 @@ export class NotesItemComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.onDeleteNote.emit(this.note);
   }
 
+  // A way better implementation than using ngAfterViewChecked.
   public edit() {
+    setTimeout(() => {
+      this.$(this._elRef.nativeElement)
+        .find("#schedule").pickadate({
+          selectMonths: true, // Creates a dropdown to control month
+          selectYears: 15     // Creates a dropdown of 15 years to control year
+        });
+
+      this.$(this._elRef.nativeElement)
+        .find("#schedule")
+        .pickadate("picker")
+        .set("select", this.note.ScheduleTime)
+    }, 0);
     this.isEditable = true;
   }
 
