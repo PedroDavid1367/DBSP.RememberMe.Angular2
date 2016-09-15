@@ -145,7 +145,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
 
     this.cloneNote();
     // Adding default values to this.scheduleColor.
-    this.scheduleColor = "seagreen";
+    // this.scheduleColor = "seagreen";
     // Parsing epoch time to human readable value.
     let scheduleTime = new Date(this.note.ScheduleTime);
     this.scheduleTimeString = scheduleTime.toDateString();
@@ -158,6 +158,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   }
 
   private evaluateScheduleTime (scheduleTime: Date) {
+    this.scheduleColor = "seagreen";
     let bufferTime = 2; // Default 2 days.
     let actualTime = new Date();
     if (actualTime.getDate() + bufferTime >= scheduleTime.getDate()) {
@@ -194,7 +195,8 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.onDeleteNote.emit(this.note);
   }
 
-  // A way better implementation than using ngAfterViewChecked.
+  // A way better implementation than using the previous 
+  // implementation with ngAfterViewChecked.
   public edit() {
     setTimeout(() => {
       this.$(this._elRef.nativeElement)
@@ -206,7 +208,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
       this.$(this._elRef.nativeElement)
         .find("#schedule")
         .pickadate("picker")
-        .set("select", this.note.ScheduleTime)
+        .set("select", this.note.ScheduleTime);
     }, 0);
     this.isEditable = true;
   }
@@ -227,6 +229,11 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.cloneNote();
     this.onEditNote.emit(this.note);
 
+    // Parsing epoch time to human readable value.
+    let scheduleDate = new Date(this.note.ScheduleTime);
+    this.scheduleTimeString = scheduleDate.toDateString();
+    this.evaluateScheduleTime(scheduleDate);
+
     // Save the changes on UI and close the editing form.
     this.isEditable = false; 
   }
@@ -242,6 +249,11 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     // Parsing epoch time to human readable value.
     let scheduleTime = new Date(this.note.ScheduleTime);
     this.scheduleTimeString = scheduleTime.toDateString();
+    // Restarting datepicker value.
+    this.$(this._elRef.nativeElement)
+      .find("#schedule")
+      .pickadate("picker")
+      .set("select", this.note.ScheduleTime);
   }
 
   public cancelEditMode() {
