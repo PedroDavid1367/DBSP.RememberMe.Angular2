@@ -18,7 +18,7 @@ module.exports = {
     extensions: ["", ".ts", ".js", ".jpg", ".jpeg", ".gif", ".png", ".css"],
     alias: {
       materializecss: "materialize-css/dist/css/materialize.css",
-      materialize: "materialize-css/dist/js/materialize.js",
+      materialize: "materialize-css/dist/js/materialize.js"
     }
   },
   module: {

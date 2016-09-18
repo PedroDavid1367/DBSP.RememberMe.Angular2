@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
   ElementRef, Inject, OnInit }                     from "@angular/core";
+import { AutoLinkerService }                       from "../common.services/auto-linker.service";
 import { Note }                                    from "./note.model";
 
 @Component({
@@ -28,14 +29,16 @@ import { Note }                                    from "./note.model";
   }
   .small-text {
     font-size: 10px;
-  } 
+  }
+  #contentDisplayer {
+    white-space: pre-wrap;
+  }
   `],
   template: `
   <div *ngIf="!isEditable" class="card lime lighten-5">
     <div class="card-content">
       <span class="card-title">{{ note.Title }}</span>
-      <p>
-        {{ note.Content }}    
+      <p id="contentDisplayer" [innerHTML]="addAnchors(note.Content)">
       </p>
       <br />  
       <p>Category: {{ note.Category }}</p>
@@ -133,7 +136,8 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   private _scheduleTimeEvaluator: any;
   private _scheduleTimeSpanTime: number;
 
-  public constructor (private _elRef: ElementRef, 
+  public constructor (private _elRef: ElementRef,
+    private _autoLinker: AutoLinkerService, 
     @Inject("$") private $: any) {
 
     this.onDeleteNote = new EventEmitter<Note>();
@@ -259,5 +263,9 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   public cancelEditMode() {
     this.resetChanges();
     this.isEditable = false;
+  }
+
+  public addAnchors (content: string) {
+    return this._autoLinker.setAnchors(content);
   }
 }

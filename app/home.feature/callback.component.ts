@@ -16,6 +16,7 @@ export class CallbackComponent implements OnInit {
   private _config = {
     client_id: "remembermeimplicit",
     redirect_uri: "http://localhost:8888/callback",
+    post_logout_redirect_uri: "http://localhost:8888/home",
     load_user_profile: false,
     authority: "http://localhost:1693/identity",
   };
