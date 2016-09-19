@@ -15,13 +15,13 @@ export class CallbackComponent implements OnInit {
 
   private _config = {
     client_id: "remembermeimplicit",
-    //redirect_uri: "http://localhost:8888/callback",
-    redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
-    //post_logout_redirect_uri: "http://localhost:8888/home",
-    post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+    redirect_uri: "http://localhost:8888/callback",
+    //redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
+    post_logout_redirect_uri: "http://localhost:8888/home",
+    //post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
     load_user_profile: false,
-    //authority: "http://localhost:1693/identity",
-    authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
+    authority: "http://localhost:1693/identity",
+    //authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
   };
 
   private _mgr: any; 

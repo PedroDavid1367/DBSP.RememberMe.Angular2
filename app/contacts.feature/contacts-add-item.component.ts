@@ -19,7 +19,7 @@ import { Contact }                                 from "./contact.model";
       <div class="row">
         <div class="input-field col s12">
           <input id="name" type="text" class="validate" required
-                  [(ngModel)]="_model.name" name="name"
+                  [(ngModel)]="model.Name" name="name"
                   #name="ngModel">  
           <label for="name" data-error="invalid" data-success="valid">Name</label>
           <div [hidden]="name.valid" 
@@ -32,13 +32,13 @@ import { Contact }                                 from "./contact.model";
       <div class="row">
         <div class="input-field col s12 m6">
           <textarea id="email" class="materialize-textarea"
-                    [(ngModel)]="_model.email" name="email"></textarea>
+                    [(ngModel)]="model.Email" name="email"></textarea>
           <label for="email">Email</label>
         </div>
 
         <div class="input-field col s12 m6">
           <textarea id="phone" class="materialize-textarea"
-                    [(ngModel)]="_model.phone" name="phone"></textarea>
+                    [(ngModel)]="model.Phone" name="phone"></textarea>
           <label for="phone">Phone</label>
         </div>
       </div>
@@ -46,7 +46,7 @@ import { Contact }                                 from "./contact.model";
       <div class="row">
         <div class="input-field col s12">
           <textarea id="organization" class="materialize-textarea"
-                    [(ngModel)]="_model.organization" name="organization"></textarea>
+                    [(ngModel)]="model.Organization" name="organization"></textarea>
           <label for="organization">Organization</label>
         </div>
       </div>
@@ -54,7 +54,7 @@ import { Contact }                                 from "./contact.model";
       <div class="row">
         <div class="input-field col s12">
           <textarea id="misc" class="materialize-textarea"
-                    [(ngModel)]="_model.misc" name="misc"></textarea>
+                    [(ngModel)]="model.Misc" name="misc"></textarea>
           <label for="misc">Misc</label>
         </div>
       </div>
@@ -73,21 +73,21 @@ export class ContactsAddItemComponent implements OnInit {
   // onAddContact event actually emits an AddContactsArgs that represents
   // either a contact submission or a contact cancelation. 
   @Output() private onAddContact: EventEmitter<AddContactsArgs>; 
-  public _model: Contact;
+  public model: Contact;
 
   public constructor () {
     this.onAddContact = new EventEmitter<AddContactsArgs>();
   }
 
   public ngOnInit() {
-    this._model = new Contact("", "", "", "", "", "");
+    this.model = new Contact("", "", "", "", "", "");
   }
 
   public submit() {
     let addContactArgs = new AddContactsArgs();
     addContactArgs.submitted = true,
     addContactArgs.canceled = false,
-    addContactArgs.contact = this._model
+    addContactArgs.contact = this.model
     
     this.onAddContact.emit(addContactArgs);
   }
@@ -102,11 +102,11 @@ export class ContactsAddItemComponent implements OnInit {
   }
 
   public resetContact() {
-    this._model = new Contact("", "", "", "", "", "");
+    this.model = new Contact("", "", "", "", "", "");
   }
 
   public get diagnostic(): string {
-    return JSON.stringify(this._model);
+    return JSON.stringify(this.model);
   }
 }
 

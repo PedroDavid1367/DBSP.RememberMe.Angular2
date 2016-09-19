@@ -94,7 +94,7 @@ export class ContactsContainerComponent implements OnInit, OnChanges {
       });
   }
  
-  private handleAddContactEvent(addContactArgs: AddContactsArgs) {
+  public handleAddContactEvent(addContactArgs: AddContactsArgs) {
     // Send event to contacts-home component 
     if (addContactArgs.submitted || addContactArgs.canceled) {
       this.onCloseAddContactSection.emit(this._isAddContactSectionDisabled);
@@ -103,14 +103,13 @@ export class ContactsContainerComponent implements OnInit, OnChanges {
     // Adding to API.
     if (addContactArgs.contact) {
       this._contactsService
-      .addContact(addContactArgs.contact)
-      .subscribe(contact => {
-        this.contacts.unshift(contact);
-        // TODO: Subscribe to error and display it.
+        .addContact(addContactArgs.contact)
+        .subscribe(contact => {
+          this.contacts.unshift(contact);
+          // TODO: Subscribe to error and display it.
       });
     }
   }
-
 
   public openDeleteContactConfirmation(contact: Contact) {
     this.contactToDelete = contact;

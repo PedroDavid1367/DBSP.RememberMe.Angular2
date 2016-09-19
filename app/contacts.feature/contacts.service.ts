@@ -72,7 +72,7 @@ export class ContactsService {
   }
 
   // TODO: return Observable<OdataResponse>
-  public addContact (contact: any): Observable<any> {
+  public addContact (contact: Contact): Observable<any> {
     return this._http
       .post(`${this._baseUrl}odata/Contacts`, contact)
       .map(res => {

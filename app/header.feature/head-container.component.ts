@@ -12,7 +12,7 @@ import { OidcTokenManagerService }        from "../common.services/oidc-token-ma
   template: `
   <div class="dbsp-header blue-grey lighten-5 z-depth-1">
     <br />
-    <h3 class="center-align">Logo and/or Reminder carousel</h3>
+    <h3 class="center-align">Logo and/or important Reminders</h3>
   </div>
   `
 })
