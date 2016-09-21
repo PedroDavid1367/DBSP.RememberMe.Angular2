@@ -13,14 +13,21 @@
       </div>
     </div>
 
-    <div class="row">
+    <!--<div class="row">
       <div class="input-field col s12">
         <textarea id="content" class="materialize-textarea"
                   [(ngModel)]="model.Content" name="content"></textarea>
         <label for="content">Content</label>
       </div>
+    </div>-->
+
+    <div class="row">
+      <div class="input-field col s12">
+        <div id="content"></div>
+      </div>
     </div>
 
+    Diagnostic: model.Content = {{ model.Content }}<br />
     <input type="button" class="btn-flat" value="Diagnostic" (click)="contentDiagnostic()" /><br />
 
     <div class="row">

@@ -1,7 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
   ElementRef, Inject, OnInit }                     from "@angular/core";
-import { AutoLinkerService }                       from "../common.services/auto-linker.service";
+//import { AutoLinkerService }                       from "../common.services/auto-linker.service";
 import { Note }                                    from "./note.model";
+
+declare let tinymce: any;
+declare let tinyMCE: any;
 
 @Component({
   selector: "notes-item",
@@ -74,11 +77,17 @@ import { Note }                                    from "./note.model";
           </div>
         </div>
 
-        <div class="row">
+        <!--<div class="row">
           <div class="input-field col s12">
             <textarea id="content" class="materialize-textarea"
                       [(ngModel)]="note.Content" name="content"></textarea>
             <label class="active" for="content">Content</label>
+          </div>
+        </div>-->
+
+        <div class="row">
+          <div class="input-field col s12">
+            <div id="content"></div>
           </div>
         </div>
 
@@ -137,7 +146,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   private _scheduleTimeSpanTime: number;
 
   public constructor (private _elRef: ElementRef,
-    private _autoLinker: AutoLinkerService, 
+    //private _autoLinker: AutoLinkerService, 
     @Inject("$") private $: any) {
 
     this.onDeleteNote = new EventEmitter<Note>();
@@ -213,6 +222,15 @@ export class NotesItemComponent implements OnInit, OnDestroy {
         .find("#schedule")
         .pickadate("picker")
         .set("select", this.note.ScheduleTime);
+
+      if(tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
+        tinymce.init({
+          selector: "#content"
+        });
+      }
+      
+      tinyMCE.get("content").setContent(this.note.Content);
+
     }, 0);
     this.isEditable = true;
   }
@@ -229,6 +247,10 @@ export class NotesItemComponent implements OnInit, OnDestroy {
       scheduleTime = new Date().getTime();
     }
     this.note.ScheduleTime = scheduleTime;
+
+    // Retrieving the content contained into tinymce.
+    let content = tinyMCE.get("content").getContent();
+    this.note.Content = content;
 
     this.cloneNote();
     this.onEditNote.emit(this.note);
@@ -266,6 +288,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   }
 
   public addAnchors (content: string) {
-    return this._autoLinker.setAnchors(content);
+    //return this._autoLinker.setAnchors(content);
+    return content;
   }
 }

@@ -2,6 +2,9 @@ import { Component, Input, Output, EventEmitter,
   ElementRef, Inject, OnInit }                     from "@angular/core";
 import { Note }                                    from "./note.model";
 
+declare let tinymce: any;
+declare let tinyMCE: any;
+
 @Component({
   selector: 'notes-add-item',
   styles: [`
@@ -30,6 +33,12 @@ export class NotesAddItemComponent implements OnInit {
   public ngOnInit() {
     this.model = new Note("", "", "", "", "");
 
+    if(tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
+      tinymce.init({
+        selector: "#content"
+      });
+    }
+
     this.$(this._elRef.nativeElement)
       .find("#schedule").pickadate({
         selectMonths: true, // Creates a dropdown to control month
@@ -49,6 +58,10 @@ export class NotesAddItemComponent implements OnInit {
       scheduleTime = new Date().getTime();
     }
     this.model.ScheduleTime = scheduleTime;
+
+    // Retrieving the content contained into tinymce.
+    let content = tinyMCE.get("content").getContent();
+    this.model.Content = content;
 
     let addNoteArgs = new AddNoteArgs();
     addNoteArgs.submitted = true,
@@ -74,8 +87,10 @@ export class NotesAddItemComponent implements OnInit {
       .find("#schedule").pickadate("picker").clear();
   }
 
-  public get diagnostic(): string {
-    return JSON.stringify(this.model);
+  public contentDiagnostic() {
+    let content = tinyMCE.get("content").getContent()
+
+    console.log(content);
   }
 }
 
