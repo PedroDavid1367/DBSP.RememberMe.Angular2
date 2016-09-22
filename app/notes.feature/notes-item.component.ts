@@ -87,7 +87,7 @@ declare let tinyMCE: any;
 
         <div class="row">
           <div class="input-field col s12">
-            <div id="content"></div>
+            <div [id]="editContentId"></div>
           </div>
         </div>
 
@@ -152,6 +152,10 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.onDeleteNote = new EventEmitter<Note>();
     this.onEditNote = new EventEmitter<Note>();
     this._scheduleTimeSpanTime = 21600000;  // 6 hours
+  }
+
+  public get editContentId () {
+    return "content-" + this.note.Id;
   }
 
   public ngOnInit () {
@@ -223,13 +227,20 @@ export class NotesItemComponent implements OnInit, OnDestroy {
         .pickadate("picker")
         .set("select", this.note.ScheduleTime);
 
-      if(tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
+      if(tinyMCE.execCommand('mceRemoveEditor', false, this.editContentId)) {
         tinymce.init({
-          selector: "#content"
+          //selector: ".edit-note-content"
+          selector: "#" + this.editContentId,
+          plugins: [
+            'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+            'save table contextmenu directionality emoticons template paste textcolor'
+          ],
+          toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons'
         });
       }
       
-      tinyMCE.get("content").setContent(this.note.Content);
+      tinyMCE.get(this.editContentId).setContent(this.note.Content);
 
     }, 0);
     this.isEditable = true;
@@ -249,7 +260,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.note.ScheduleTime = scheduleTime;
 
     // Retrieving the content contained into tinymce.
-    let content = tinyMCE.get("content").getContent();
+    let content = tinyMCE.get(this.editContentId).getContent();
     this.note.Content = content;
 
     this.cloneNote();
