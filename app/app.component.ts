@@ -16,7 +16,6 @@ import { NotesHelpComponent }  from "./notes.feature/notes-help.component";
   .brand-logo{
     display: block;
   }
-
   @media (max-width: 800px) 
   {
       .brand-logo
@@ -24,11 +23,17 @@ import { NotesHelpComponent }  from "./notes.feature/notes-help.component";
           display: none;
       }
   }
+  .nav-link-active {
+    background-color: #b0bec5;
+  }
   `],
   template: require("./app.component.html")
 })
 export class AppComponent implements OnInit {
 
+  public homeIsActive: boolean;
+  public notesIsActive: boolean;
+  public contactsIsActive: boolean;
   private mgr;
 
   constructor(private _oidcmanager: OidcTokenManagerService,
@@ -40,6 +45,8 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.homeIsActive = true;
+
     this.$(this._elRef.nativeElement)
       .find(".button-collapse")
       .sideNav({
@@ -73,6 +80,11 @@ export class AppComponent implements OnInit {
 
   public toNotes() {
     this._router.navigate(["/notes"]);
+    if (this._router.isActive) {
+      this.contactsIsActive = false;
+      this.notesIsActive = true;
+      this.homeIsActive = false;
+    }
   }
 
   public cancelToNotes() {
@@ -80,7 +92,7 @@ export class AppComponent implements OnInit {
       .find("#notesAccessModal").closeModal();
   }
 
-    public openContactsSecurityMessage() {
+  public openContactsSecurityMessage() {
     if (this.mgr.expired) {
       this.$(this._elRef.nativeElement)
         .find("#contactsAccessModal").openModal();
@@ -91,6 +103,20 @@ export class AppComponent implements OnInit {
 
   public toContacts() {
     this._router.navigate(["/contacts"]);
+    if (this._router.isActive) {
+      this.contactsIsActive = true;
+      this.notesIsActive = false;
+      this.homeIsActive = false;
+    }
+  }
+
+  public toHome() {
+    this._router.navigate(["/home"]);
+    if (this._router.isActive) {
+      this.contactsIsActive = false;
+      this.notesIsActive = false;
+      this.homeIsActive = true;
+    }
   }
 
   public cancelToContacts() {
