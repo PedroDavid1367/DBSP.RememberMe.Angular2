@@ -1,14 +1,14 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
-  ElementRef, Inject, OnInit }                     from "@angular/core";
+  ElementRef, Inject, OnChanges }                     from "@angular/core";
 //import { AutoLinkerService }                       from "../common.services/auto-linker.service";
 import { Note }                                    from "./note.model";
-import { Router }                                  from "@angular/router";
+import { Router, ActivatedRoute, Params }          from "@angular/router";
 
 declare let tinymce: any;
 declare let tinyMCE: any;
 
 @Component({
-  selector: "notes-item",
+  selector: "notes-item-details",
   styles: [`
   div span {
     color: #263238;
@@ -39,9 +39,12 @@ declare let tinyMCE: any;
   }
   `],
   template: `
-  <div class="card lime lighten-5" (click)="view()">
+  <div *ngIf="!isEditable" class="card lime lighten-5">
     <div class="card-content">
-      <p>Title: {{ note.Title }}</p>  
+      <span class="card-title">{{ note.Title }}</span>
+      <p id="contentDisplayer" [innerHTML]="addAnchors(note.Content)">
+      </p>
+      <br />  
       <p>Category: {{ note.Category }}</p>
       <p>Priority: {{ note.Priority }}</p>
       <p>Schedule Time: 
@@ -50,14 +53,93 @@ declare let tinyMCE: any;
         </span>
       </p>
     </div> 
+    <div class="card-action lime lighten-5">
+      <input type="button" class="btn-flat" style="color:black;" value="Edit" (click)="edit()" />
+      <input type="button" class="btn-flat" style="color:black;" value="To reminder" />
+      <input type="button" class="btn-flat" style="color:black;" value="Delete" (click)="delete()" />
+    </div>
+  </div>
+
+  <div *ngIf="isEditable" class="card lime lighten-5 z-depth-4">
+    <div class="card-content row" style="background-color:white;">
+      <!-- This should work, but currently is not, it might be an angular2 issue -->
+      <!--<form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">-->
+      <form class="col s12" #noteForm="ngForm">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="title" type="text" class="validate" required
+                   [(ngModel)]="note.Title" name="title"
+                   #title="ngModel">  
+            <label class="active" for="title" data-error="invalid" data-success="valid">Title</label>
+            <div [hidden]="title.valid" 
+                class="alert alert-danger">
+              <sup style="color:red;">Title is required</sup>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="row">
+          <div class="input-field col s12">
+            <textarea id="content" class="materialize-textarea"
+                      [(ngModel)]="note.Content" name="content"></textarea>
+            <label class="active" for="content">Content</label>
+          </div>
+        </div>-->
+
+        <div class="row">
+          <div class="input-field col s12">
+            <div [id]="editContentId"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="category" type="text" class="validate" required
+                  [(ngModel)]="note.Category" name="category"
+                  #category="ngModel">
+            <label class="active" for="category" data-error="invalid" data-success="valid">Category</label>
+            <div [hidden]="category.valid" 
+                class="alert alert-danger">
+              <sup style="color:red;">Category is required</sup>
+            </div>
+          </div>
+
+          <div class="input-field col s12 m6">
+            <input id="priority" type="number" class="validate" required
+                  [(ngModel)]="note.Priority" name="priority"
+                  #priority="ngModel">
+            <label class="active" for="priority" data-error="invalid" data-success="valid">Priority</label>
+            <div [hidden]="priority.valid" 
+                class="alert alert-danger">
+              <sup style="color:red;">Priority is required</sup>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="schedule" type="date" class="datepicker">
+            <label for="schedule">Schedule</label>
+          </div>
+        </div>
+      </form>
+    </div> 
+    <div class="card-action blue-grey lighten-2">
+      <!--<input class="btn-flat" type="submit" style="color:white;" [disabled]="!noteForm.form.valid" value="Save" />-->
+      <input class="btn-flat" type="button" style="color:white;" [disabled]="!noteForm.form.valid" 
+             value="Save" (click)="submit()" />
+      <input class="btn-flat" type="button" style="color:white;" value="Reset" (click)="resetChanges()" />
+      <input class="btn-flat" type="button" style="color:white;" value="Cancel" (click)="cancelEditMode()" />
+    </div>
   </div>
   `
 })
-export class NotesItemComponent implements OnInit, OnDestroy {
+export class NotesItemDetailsComponent implements OnChanges, OnDestroy {
 
   @Input() public note: Note;
   @Output() private onDeleteNote: EventEmitter<Note>;
   @Output() private onEditNote: EventEmitter<Note>;
+  private _selectedId: number;
   public isEditable: boolean = false;
   private _backupNote: Note;
   public scheduleTimeString: string;
@@ -66,8 +148,9 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   private _scheduleTimeSpanTime: number;
 
   public constructor (private _elRef: ElementRef,
-    //private _autoLinker: AutoLinkerService, 
+    private _activatedRoute: ActivatedRoute,
     private _router: Router,
+    //private _autoLinker: AutoLinkerService, 
     @Inject("$") private $: any) {
 
     this.onDeleteNote = new EventEmitter<Note>();
@@ -79,20 +162,37 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     return "content-" + this.note.Id;
   }
 
-  public ngOnInit () {
+  // public ngOnInit () {
 
-    this.cloneNote();
-    // Adding default values to this.scheduleColor.
-    // this.scheduleColor = "seagreen";
-    // Parsing epoch time to human readable value.
-    let scheduleTime = new Date(this.note.ScheduleTime);
-    this.scheduleTimeString = scheduleTime.toDateString();
-    // Evaluating if the schedule time is on time or near complition.
-    this.evaluateScheduleTime(scheduleTime);
-    // Firing up the scheduler
-    this._scheduleTimeEvaluator = setInterval(() => {
+  //   this.cloneNote();
+  //   // Adding default values to this.scheduleColor.
+  //   // this.scheduleColor = "seagreen";
+  //   // Parsing epoch time to human readable value.
+  //   let scheduleTime = new Date(this.note.ScheduleTime);
+  //   this.scheduleTimeString = scheduleTime.toDateString();
+  //   // Evaluating if the schedule time is on time or near complition.
+  //   this.evaluateScheduleTime(scheduleTime);
+  //   // Firing up the scheduler
+  //   this._scheduleTimeEvaluator = setInterval(() => {
+  //     this.evaluateScheduleTime(scheduleTime);
+  //   }, this._scheduleTimeSpanTime); 
+  // }
+
+  public ngOnChanges () {
+    if (this.note.Title) {
+      this.cloneNote();
+      // Adding default values to this.scheduleColor.
+      // this.scheduleColor = "seagreen";
+      // Parsing epoch time to human readable value.
+      let scheduleTime = new Date(this.note.ScheduleTime);
+      this.scheduleTimeString = scheduleTime.toDateString();
+      // Evaluating if the schedule time is on time or near complition.
       this.evaluateScheduleTime(scheduleTime);
-    }, this._scheduleTimeSpanTime); 
+      // Firing up the scheduler
+      this._scheduleTimeEvaluator = setInterval(() => {
+        this.evaluateScheduleTime(scheduleTime);
+      }, this._scheduleTimeSpanTime); 
+    }  
   }
 
   private evaluateScheduleTime (scheduleTime: Date) {
@@ -129,13 +229,13 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  public delete () {
+  public delete() {
     this.onDeleteNote.emit(this.note);
   }
 
   // A way better implementation than using the previous 
   // implementation with ngAfterViewChecked.
-  public edit () {
+  public edit() {
     setTimeout(() => {
       this.$(this._elRef.nativeElement)
         .find("#schedule").pickadate({
@@ -167,7 +267,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.isEditable = true;
   }
 
-  public submit () {
+  public submit() {
     let scheduleText = this.$(this._elRef.nativeElement)
       .find("#schedule").val();
     // Creating a date based on the pickdate element selection or 
@@ -196,7 +296,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
     this.isEditable = false; 
   }
 
-  public resetChanges () {
+  public resetChanges() {
     this.note.Title = this._backupNote.Title;
     this.note.Category = this._backupNote.Category;
     this.note.Priority = this._backupNote.Priority;
@@ -214,11 +314,7 @@ export class NotesItemComponent implements OnInit, OnDestroy {
       .set("select", this.note.ScheduleTime);
   }
 
-  public view () {
-    this._router.navigate(["/notes", this.note.Id]);
-  }
-
-  public cancelEditMode () {
+  public cancelEditMode() {
     this.resetChanges();
     this.isEditable = false;
   }

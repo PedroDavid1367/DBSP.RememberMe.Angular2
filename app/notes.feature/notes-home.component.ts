@@ -23,16 +23,19 @@ import { SearchStringEventArgs }    from "./notes-filter-item.component";
                     (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
                     (onSendSearchString)="toNotesContainer($event)">                   
       </notes-filter-container>
-    </div>
-  </div>
 
-  <div class="col s12 m8">
-    <div class="col s12">
       <notes-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                        [searchString]="searchString"
                        [filterType]="filterType"
                        (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
       </notes-container>
+    </div>
+  </div>
+
+
+  <div class="col s12 m8">
+    <div class="col s12">
+      <router-outlet></router-outlet>
     </div>
   </div>
   `

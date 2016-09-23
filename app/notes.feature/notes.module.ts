@@ -14,7 +14,10 @@ import { NotesHelpComponent }       from "./notes-help.component";
 import { NotesManagerComponent }    from "./notes-manager.component";
 import { NotesFilterContainerComponent }     from "./notes-filter-container.component";
 import { NotesFilterItemComponent }     from "./notes-filter-item.component";
-import { NotesService }             from "./notes.service"; 
+import { NotesService }             from "./notes.service";
+import { NotesItemDetailsComponent }  from "./notes-item-details.component"; 
+import { NotesItemDetailsContainerComponent }  from "./notes-item-details-container.component"; 
+import { NotesSharedItemsDateilsService }  from "./notes-shared-items-details.service";
 
 import { FormsModule }  from "@angular/forms";
 
@@ -35,11 +38,14 @@ import { FormsModule }  from "@angular/forms";
     NotesHelpComponent,
     NotesManagerComponent,
     NotesFilterContainerComponent,
-    NotesFilterItemComponent
+    NotesFilterItemComponent,
+    NotesItemDetailsComponent,
+    NotesItemDetailsContainerComponent
   ],
   providers: [
     NotesService,
-    NotesHomegGuard
+    NotesHomegGuard,
+    NotesSharedItemsDateilsService
   ]
 })
 export class NotesModule { }

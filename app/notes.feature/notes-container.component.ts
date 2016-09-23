@@ -4,6 +4,7 @@ import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
 import { PageClickedEventArgs }                    from "./notes-pagination.component";
+import { NotesSharedItemsDateilsService }          from "./notes-shared-items-details.service";
 
 @Component({
   selector: "notes-container",
@@ -18,7 +19,7 @@ import { PageClickedEventArgs }                    from "./notes-pagination.comp
                     (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
-  <notes-list [notes]="_notes"
+  <notes-list [notes]="notes"
               (onDeleteNote)="openDeleteNoteConfirmation($event)"
               (onEditNote)="editNote($event)">
   </notes-list>
@@ -44,7 +45,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   @Input() private searchString: string;
   @Input() private filterType: string;
   @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
-  public _notes: Note[];
+  public notes: Note[];
   public _noteToDelete: Note;
   private _isAddNoteSectionDisabled: boolean;
   public noteCount: number;
@@ -52,6 +53,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
   private _notesAddItemEnabled: boolean;
 
   constructor(private _notesService: NotesService,
+    private _notesSharedItemsDateils: NotesSharedItemsDateilsService,
     private _elRef: ElementRef,
     @Inject("$") private $: any) {
 
@@ -92,7 +94,8 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     this._notesService
       .getNotesWithSkipAndFilter(pageClickedEventArgs)
       .subscribe(res => {
-        this._notes = res;
+        this.notes = res;
+        this._notesSharedItemsDateils.notes = this.notes;
         // TODO: Subscribe to error and display it.
       });
   }
@@ -119,7 +122,7 @@ export class NotesContainerComponent implements OnInit, OnChanges {
       this._notesService
       .addNote(addNoteArgs.note)
       .subscribe(note => {
-        this._notes.unshift(note);
+        this.notes.unshift(note);
         // TODO: Subscribe to error and display it.
       });
     }
@@ -145,14 +148,14 @@ export class NotesContainerComponent implements OnInit, OnChanges {
     // Deleting from UI. 
     console.log(this._noteToDelete);
     let indexToDelete;
-    for (let index in this._notes) {
-      if (this._notes[index].Id === this._noteToDelete.Id) {
+    for (let index in this.notes) {
+      if (this.notes[index].Id === this._noteToDelete.Id) {
         indexToDelete = index;
         break;
       }
     }
-    this._notes.splice(indexToDelete, 1);
-    console.log(this._notes);
+    this.notes.splice(indexToDelete, 1);
+    console.log(this.notes);
   }
 
   public editNote(note: Note) {

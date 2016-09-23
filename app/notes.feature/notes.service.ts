@@ -24,6 +24,18 @@ export class NotesService {
       .catch(this.handleError);
   }
 
+  // TODO: return Observable<OdataResponse>
+  public getNote (id: number): Observable<any> {
+    return this._http
+      .get(this._baseUrl + `odata/Notes(${id})`)
+      .map(res => {
+        let body = res.json();
+        // The body has context, count and value
+        return body || {};
+      })
+      .catch(this.handleError);
+  }
+
   public getNotesWithSkip (skip: number) {
     return this._http
       .get(this._baseUrl + `odata/Notes?$skip=${skip}`)
