@@ -39,11 +39,11 @@ webpackJsonp([0],{
 	/* Feature Modules */
 	var home_module_1 = __webpack_require__(437);
 	var notes_module_1 = __webpack_require__(444);
-	var contacts_module_1 = __webpack_require__(499);
+	var contacts_module_1 = __webpack_require__(502);
 	/* Header features */
-	var user_info_component_1 = __webpack_require__(514);
-	var head_container_component_1 = __webpack_require__(515);
-	var app_routing_1 = __webpack_require__(516);
+	var user_info_component_1 = __webpack_require__(517);
+	var head_container_component_1 = __webpack_require__(518);
+	var app_routing_1 = __webpack_require__(519);
 	var AppModule = (function () {
 	    function AppModule() {
 	    }
@@ -119,16 +119,20 @@ webpackJsonp([0],{
 	    function OidcTokenManagerService() {
 	        this._config = {
 	            client_id: "remembermeimplicit",
-	            //redirect_uri: "http://localhost:8888/callback",
+	            // redirect_uri: "http://localhost:8888/callback", 
+	            // post_logout_redirect_uri: "http://localhost:8888/home",
+	            // authority: "http://localhost:1693/identity",   
+	            // silent_redirect_uri: "http://localhost:8888/silent-refresh",
+	            // redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
+	            // post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+	            // authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
+	            // silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
 	            redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
-	            //post_logout_redirect_uri: "http://localhost:8888/home",
 	            post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+	            authority: "http://localhost:1693/identity",
+	            silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
 	            response_type: "id_token token",
 	            scope: "openid profile addresses notesmanagement roles",
-	            //authority: "http://localhost:1693/identity",
-	            authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
-	            //silent_redirect_uri: "http://localhost:8888/silent-refresh",
-	            silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
 	            silent_renew: true
 	        };
 	        this._mgr = new OidcTokenManager(this._config);
@@ -15242,6 +15246,7 @@ webpackJsonp([0],{
 	        this.mgr = this._oidcmanager.mgr;
 	    }
 	    AppComponent.prototype.ngOnInit = function () {
+	        this.homeIsActive = true;
 	        this.$(this._elRef.nativeElement)
 	            .find(".button-collapse")
 	            .sideNav({
@@ -15271,6 +15276,11 @@ webpackJsonp([0],{
 	    };
 	    AppComponent.prototype.toNotes = function () {
 	        this._router.navigate(["/notes"]);
+	        if (this._router.isActive) {
+	            this.contactsIsActive = false;
+	            this.notesIsActive = true;
+	            this.homeIsActive = false;
+	        }
 	    };
 	    AppComponent.prototype.cancelToNotes = function () {
 	        this.$(this._elRef.nativeElement)
@@ -15287,6 +15297,19 @@ webpackJsonp([0],{
 	    };
 	    AppComponent.prototype.toContacts = function () {
 	        this._router.navigate(["/contacts"]);
+	        if (this._router.isActive) {
+	            this.contactsIsActive = true;
+	            this.notesIsActive = false;
+	            this.homeIsActive = false;
+	        }
+	    };
+	    AppComponent.prototype.toHome = function () {
+	        this._router.navigate(["/home"]);
+	        if (this._router.isActive) {
+	            this.contactsIsActive = false;
+	            this.notesIsActive = false;
+	            this.homeIsActive = true;
+	        }
 	    };
 	    AppComponent.prototype.cancelToContacts = function () {
 	        this.$(this._elRef.nativeElement)
@@ -15303,7 +15326,7 @@ webpackJsonp([0],{
 	    AppComponent = __decorate([
 	        core_1.Component({
 	            selector: "app",
-	            styles: ["\n  .brand-logo{\n    display: block;\n  }\n\n  @media (max-width: 800px) \n  {\n      .brand-logo\n      {\n          display: none;\n      }\n  }\n  "],
+	            styles: ["\n  .brand-logo{\n    display: block;\n  }\n  @media (max-width: 800px) \n  {\n      .brand-logo\n      {\n          display: none;\n      }\n  }\n  .nav-link-active {\n    background-color: #b0bec5;\n  }\n  "],
 	            template: __webpack_require__(436)
 	        }),
 	        __param(3, core_1.Inject("$")), 
@@ -15320,7 +15343,7 @@ webpackJsonp([0],{
 /***/ 436:
 /***/ function(module, exports) {
 
-	module.exports = "<nav>\r\n  <div class=\"nav-wrapper blue-grey darken-1\">\r\n    <a href=\"#!\" class=\"brand-logo center\">DBSP Remember Me</a>\r\n    <a href=\"#\" data-activates=\"mobile-demo\" class=\"button-collapse\"><i class=\"material-icons\">menu</i></a>\r\n    <ul class=\"left hide-on-med-and-down\">\r\n      <li><a [routerLink]=\"['/home']\">Home</a></li>\r\n      <li><a (click)=\"openNotesSecurityMessage()\">Notes</a></li>\r\n      <li><a (click)=\"openContactsSecurityMessage()\">Contacts</a></li>\r\n    </ul>\r\n    <ul class=\"side-nav\" id=\"mobile-demo\">\r\n      <li><a [routerLink]=\"['/home']\">Home</a></li>\r\n      <li><a (click)=\"openNotesSecurityMessage()\">Notes</a></li>\r\n      <li><a (click)=\"openContactsSecurityMessage()\">Contacts</a></li>\r\n    </ul>\r\n    <ul class=\"right\">\r\n      <li *ngIf=\"mgr.expired\"><a (click)=\"login()\">Log in</a></li>\r\n      <li *ngIf=\"!mgr.expired\"><a (click)=\"openLogoutMessage()\">You're logged as {{ mgr.profile.given_name }}</a></li>\r\n    </ul>\r\n  </div>\r\n</nav>\r\n\r\n<br />\r\n\r\n<div class=\"row\">\r\n  <div class=\"col s12 m4\">\r\n    <div class=\"col s12 offset-m1\">\r\n      <user-info></user-info>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"col s12 m8\">\r\n    <div class=\"col s12\">\r\n      <head-container></head-container>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"row\">\r\n  <router-outlet></router-outlet>\r\n</div>\r\n\r\n\r\n<!-- Used for asking to log in on Notes -->\r\n<div id=\"notesAccessModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log in is required</h4>\r\n    <p>You must be logged in to view this section.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"cancelToNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Discard</a>\r\n    <a (click)=\"toNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Agree</a>\r\n  </div>\r\n</div>\r\n\r\n<!-- Used for asking to log in on Contacts -->\r\n<div id=\"contactsAccessModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log in is required</h4>\r\n    <p>You must be logged in to view this section.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"cancelToContacts()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Discard</a>\r\n    <a (click)=\"toNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Agree</a>\r\n  </div>\r\n</div>\r\n\r\n<!-- Used for asking to log out -->\r\n<div id=\"logoutModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log out confirmation</h4>\r\n    <p>Are you sure to log out of the application?</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"closeLogoutMessage()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Cancel</a>\r\n    <a (click)=\"logOutOfIdSrv()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Yes</a>\r\n  </div>\r\n</div>\r\n\r\n";
+	module.exports = "<nav>\r\n  <div class=\"nav-wrapper blue-grey darken-1\">\r\n    <a href=\"#!\" class=\"brand-logo center\">DBSP Remember Me</a>\r\n    <a href=\"#\" data-activates=\"mobile-demo\" class=\"button-collapse\"><i class=\"material-icons\">menu</i></a>\r\n    <ul class=\"left hide-on-med-and-down\">\r\n      <li><a (click)=\"toHome()\" [ngClass]=\"{'nav-link-active': homeIsActive}\">Home</a></li>\r\n      <li><a (click)=\"openNotesSecurityMessage()\" [ngClass]=\"{'nav-link-active': notesIsActive}\">Notes</a></li>\r\n      <li><a (click)=\"openContactsSecurityMessage()\" [ngClass]=\"{'nav-link-active': contactsIsActive}\">Contacts</a></li>\r\n    </ul>\r\n    <ul class=\"side-nav\" id=\"mobile-demo\">\r\n      <li><a (click)=\"toHome()\" [ngClass]=\"{'nav-link-active': homeIsActive}\">Home</a></li>\r\n      <li><a (click)=\"openNotesSecurityMessage()\" [ngClass]=\"{'nav-link-active': notesIsActive}\">Notes</a></li>\r\n      <li><a (click)=\"openContactsSecurityMessage()\" [ngClass]=\"{'nav-link-active': contactsIsActive}\">Contacts</a></li>\r\n    </ul>\r\n    <ul class=\"right\">\r\n      <li *ngIf=\"mgr.expired\"><a (click)=\"login()\">Log in</a></li>\r\n      <li *ngIf=\"!mgr.expired\"><a (click)=\"openLogoutMessage()\">You're logged as {{ mgr.profile.given_name }}</a></li>\r\n    </ul>\r\n  </div>\r\n</nav>\r\n\r\n<br />\r\n\r\n<div class=\"row\">\r\n  <div class=\"col s12 m4\">\r\n    <div class=\"col s12 offset-m1\">\r\n      <user-info></user-info>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"col s12 m8\">\r\n    <div class=\"col s12\">\r\n      <head-container></head-container>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"row\">\r\n  <router-outlet></router-outlet>\r\n</div>\r\n\r\n\r\n<!-- Used for asking to log in on Notes -->\r\n<div id=\"notesAccessModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log in is required</h4>\r\n    <p>You must be logged in to view this section.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"cancelToNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Discard</a>\r\n    <a (click)=\"toNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Agree</a>\r\n  </div>\r\n</div>\r\n\r\n<!-- Used for asking to log in on Contacts -->\r\n<div id=\"contactsAccessModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log in is required</h4>\r\n    <p>You must be logged in to view this section.</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"cancelToContacts()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Discard</a>\r\n    <a (click)=\"toNotes()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Agree</a>\r\n  </div>\r\n</div>\r\n\r\n<!-- Used for asking to log out -->\r\n<div id=\"logoutModal\" class=\"modal\">\r\n  <div class=\"modal-content\">\r\n    <h4>Log out confirmation</h4>\r\n    <p>Are you sure to log out of the application?</p>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <a (click)=\"closeLogoutMessage()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Cancel</a>\r\n    <a (click)=\"logOutOfIdSrv()\"\r\n       class=\"modal-action modal-close waves-effect waves-teal btn btn-flat\">Yes</a>\r\n  </div>\r\n</div>\r\n\r\n";
 
 /***/ },
 
@@ -15448,13 +15471,16 @@ webpackJsonp([0],{
 	        this._oidcTokenManager = _oidcTokenManager;
 	        this._config = {
 	            client_id: "remembermeimplicit",
-	            //redirect_uri: "http://localhost:8888/callback",
+	            // redirect_uri: "http://localhost:8888/callback",
+	            // post_logout_redirect_uri: "http://localhost:8888/home",
+	            // authority: "http://localhost:1693/identity",
+	            // redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",   
+	            // post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+	            // authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
 	            redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
-	            //post_logout_redirect_uri: "http://localhost:8888/home",
 	            post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+	            authority: "http://localhost:1693/identity",
 	            load_user_profile: false,
-	            //authority: "http://localhost:1693/identity",
-	            authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
 	        };
 	        this._mgr = _oidcTokenManager.mgr;
 	        this._mgr.oidcClient = new OidcClient(this._config);
@@ -15610,18 +15636,21 @@ webpackJsonp([0],{
 	var notes_routing_1 = __webpack_require__(445);
 	var notes_home_component_1 = __webpack_require__(446);
 	var notes_home_guard_1 = __webpack_require__(447);
-	var notes_container_component_1 = __webpack_require__(448);
-	var notes_pagination_component_1 = __webpack_require__(451);
-	var notes_pagination_item_component_1 = __webpack_require__(452);
-	var notes_add_item_component_1 = __webpack_require__(453);
-	var notes_list_component_1 = __webpack_require__(455);
-	var notes_item_component_1 = __webpack_require__(456);
-	var notes_help_component_1 = __webpack_require__(457);
-	var notes_manager_component_1 = __webpack_require__(458);
-	var notes_filter_container_component_1 = __webpack_require__(460);
-	var notes_filter_item_component_1 = __webpack_require__(459);
-	var notes_service_1 = __webpack_require__(449);
-	var forms_1 = __webpack_require__(461);
+	var notes_container_component_1 = __webpack_require__(454);
+	var notes_pagination_component_1 = __webpack_require__(455);
+	var notes_pagination_item_component_1 = __webpack_require__(456);
+	var notes_add_item_component_1 = __webpack_require__(448);
+	var notes_list_component_1 = __webpack_require__(457);
+	var notes_item_component_1 = __webpack_require__(458);
+	var notes_help_component_1 = __webpack_require__(459);
+	var notes_manager_component_1 = __webpack_require__(460);
+	var notes_filter_container_component_1 = __webpack_require__(462);
+	var notes_filter_item_component_1 = __webpack_require__(461);
+	var notes_service_1 = __webpack_require__(452);
+	var notes_item_details_component_1 = __webpack_require__(463);
+	var notes_item_details_container_component_1 = __webpack_require__(451);
+	var notes_shared_items_details_service_1 = __webpack_require__(453);
+	var forms_1 = __webpack_require__(464);
 	var NotesModule = (function () {
 	    function NotesModule() {
 	    }
@@ -15643,11 +15672,14 @@ webpackJsonp([0],{
 	                notes_help_component_1.NotesHelpComponent,
 	                notes_manager_component_1.NotesManagerComponent,
 	                notes_filter_container_component_1.NotesFilterContainerComponent,
-	                notes_filter_item_component_1.NotesFilterItemComponent
+	                notes_filter_item_component_1.NotesFilterItemComponent,
+	                notes_item_details_component_1.NotesItemDetailsComponent,
+	                notes_item_details_container_component_1.NotesItemDetailsContainerComponent
 	            ],
 	            providers: [
 	                notes_service_1.NotesService,
-	                notes_home_guard_1.NotesHomegGuard
+	                notes_home_guard_1.NotesHomegGuard,
+	                notes_shared_items_details_service_1.NotesSharedItemsDateilsService
 	            ]
 	        }), 
 	        __metadata('design:paramtypes', [])
@@ -15666,8 +15698,24 @@ webpackJsonp([0],{
 	var router_1 = __webpack_require__(375);
 	var notes_home_component_1 = __webpack_require__(446);
 	var notes_home_guard_1 = __webpack_require__(447);
+	var notes_add_item_component_1 = __webpack_require__(448);
+	var notes_item_details_container_component_1 = __webpack_require__(451);
 	exports.routes = [
-	    { path: "notes", component: notes_home_component_1.NotesHomeComponent, canActivate: [notes_home_guard_1.NotesHomegGuard] }
+	    {
+	        path: "notes",
+	        component: notes_home_component_1.NotesHomeComponent,
+	        canActivate: [notes_home_guard_1.NotesHomegGuard],
+	        children: [
+	            {
+	                path: "",
+	                component: notes_add_item_component_1.NotesAddItemComponent
+	            },
+	            {
+	                path: ":id",
+	                component: notes_item_details_container_component_1.NotesItemDetailsContainerComponent
+	            }
+	        ]
+	    }
 	];
 	exports.routing = router_1.RouterModule.forChild(exports.routes);
 
@@ -15708,7 +15756,7 @@ webpackJsonp([0],{
 	        core_1.Component({
 	            selector: 'notes-home',
 	            styles: ["\n\n  "],
-	            template: "\n  <div class=\"col s12 m4\">\n    <div class=\"col s12 offset-m1\">\n      <notes-help></notes-help>\n\n      <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->\n      <!-- $event is a boolean -->\n      <notes-manager (onOpenAddNoteSection)=\"setIsAddNoteSectionEnabled($event)\"\n                     (onOpenFilterNoteSection)=\"setIsFilterNoteSectionEnabled($event)\"\n                     (onSendSearchString)=\"toNotesContainer($event)\">               \n      </notes-manager>\n\n      <notes-filter-container *ngIf=\"isFilterNoteSectionEnabled\"\n                    (onCloseFilterNoteSection)=\"setIsFilterNoteSectionEnabled($event)\"\n                    (onSendSearchString)=\"toNotesContainer($event)\">                   \n      </notes-filter-container>\n    </div>\n  </div>\n\n  <div class=\"col s12 m8\">\n    <div class=\"col s12\">\n      <notes-container [isAddNoteSectionEnabled]=\"isAddNoteSectionEnabled\"\n                       [searchString]=\"searchString\"\n                       [filterType]=\"filterType\"\n                       (onCloseAddNoteSection)=\"setIsAddNoteSectionEnabled($event)\">                   \n      </notes-container>\n    </div>\n  </div>\n  "
+	            template: "\n  <div class=\"col s12 m4\">\n    <div class=\"col s12 offset-m1\">\n      <notes-help></notes-help>\n\n      <!-- The Event onOpenAddNoteSection is generated when notes-manager component is clicked -->\n      <!-- $event is a boolean -->\n      <notes-manager (onOpenAddNoteSection)=\"setIsAddNoteSectionEnabled($event)\"\n                     (onOpenFilterNoteSection)=\"setIsFilterNoteSectionEnabled($event)\"\n                     (onSendSearchString)=\"toNotesContainer($event)\">               \n      </notes-manager>\n\n      <notes-filter-container *ngIf=\"isFilterNoteSectionEnabled\"\n                    (onCloseFilterNoteSection)=\"setIsFilterNoteSectionEnabled($event)\"\n                    (onSendSearchString)=\"toNotesContainer($event)\">                   \n      </notes-filter-container>\n\n      <notes-container [isAddNoteSectionEnabled]=\"isAddNoteSectionEnabled\"\n                       [searchString]=\"searchString\"\n                       [filterType]=\"filterType\"\n                       (onCloseAddNoteSection)=\"setIsAddNoteSectionEnabled($event)\">                   \n      </notes-container>\n    </div>\n  </div>\n\n\n  <div class=\"col s12 m8\">\n    <div class=\"col s12\">\n      <router-outlet></router-outlet>\n    </div>\n  </div>\n  "
 	        }), 
 	        __metadata('design:paramtypes', [])
 	    ], NotesHomeComponent);
@@ -15778,152 +15826,186 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var notes_service_1 = __webpack_require__(449);
-	var note_model_1 = __webpack_require__(450);
-	var NotesContainerComponent = (function () {
-	    function NotesContainerComponent(_notesService, _elRef, $) {
-	        this._notesService = _notesService;
+	var note_model_1 = __webpack_require__(449);
+	var NotesAddItemComponent = (function () {
+	    function NotesAddItemComponent(_elRef, $) {
 	        this._elRef = _elRef;
 	        this.$ = $;
-	        this.onCloseAddNoteSection = new core_1.EventEmitter();
-	        this._noteToDelete = new note_model_1.Note("", "", "", "", "");
-	        this._isAddNoteSectionDisabled = false;
-	        this.noteCount = 0;
+	        this.onAddNote = new core_1.EventEmitter();
 	    }
-	    NotesContainerComponent.prototype.ngOnInit = function () {
-	        this.getNotesCount();
-	        //this.getNotes();
-	    };
-	    // ngOnChanges manage if a filtering has been made.
-	    NotesContainerComponent.prototype.ngOnChanges = function () {
-	        var _this = this;
-	        // Controlling to not trigger on first ngOnChanges call.
-	        if (this.searchString !== undefined) {
-	            this._notesService
-	                .getNotesCountForFilter(this.searchString, this.filterType)
-	                .subscribe(function (res) {
-	                _this.noteCount = res;
-	                // TODO: Subscribe to error and display it.
+	    NotesAddItemComponent.prototype.ngOnInit = function () {
+	        this.model = new note_model_1.Note("", "", "", "", "");
+	        if (tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
+	            tinymce.init({
+	                selector: '#content',
+	                plugins: [
+	                    'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+	                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+	                    'save table contextmenu directionality emoticons template paste textcolor'
+	                ],
+	                toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons'
 	            });
 	        }
-	    };
-	    NotesContainerComponent.prototype.getNotesCount = function () {
-	        var _this = this;
-	        this._notesService
-	            .getNotesCount()
-	            .subscribe(function (res) {
-	            _this.noteCount = res;
-	            // TODO: Subscribe to error and display it.
-	        });
-	    };
-	    NotesContainerComponent.prototype.getNotesWithSkipAndFilter = function (pageClickedEventArgs) {
-	        var _this = this;
-	        this._notesService
-	            .getNotesWithSkipAndFilter(pageClickedEventArgs)
-	            .subscribe(function (res) {
-	            _this._notes = res;
-	            // TODO: Subscribe to error and display it.
-	        });
-	    };
-	    // TODO: handle res.value and res["@odata.count"] on NotesService.
-	    // private getNotes() {
-	    //   this._notesService
-	    //     .getNotes()
-	    //     .subscribe(res => {
-	    //       this._notes = res.value;
-	    //       this.noteCount = res["@odata.count"];
-	    //       // TODO: Subscribe to error and display it.
-	    //     });
-	    // }
-	    NotesContainerComponent.prototype.handleAddNoteEvent = function (addNoteArgs) {
-	        var _this = this;
-	        // Send event to notes-home component 
-	        if (addNoteArgs.submitted || addNoteArgs.canceled) {
-	            this.onCloseAddNoteSection.emit(this._isAddNoteSectionDisabled);
-	        }
-	        // Adding to API.
-	        if (addNoteArgs.note) {
-	            this._notesService
-	                .addNote(addNoteArgs.note)
-	                .subscribe(function (note) {
-	                _this._notes.unshift(note);
-	                // TODO: Subscribe to error and display it.
-	            });
-	        }
-	    };
-	    NotesContainerComponent.prototype.openDeleteNoteConfirmation = function (note) {
-	        this._noteToDelete = note;
 	        this.$(this._elRef.nativeElement)
-	            .find("#deleteConfirmationModal").openModal();
-	    };
-	    NotesContainerComponent.prototype.deleteNote = function () {
-	        // Deleting from API.
-	        this._notesService
-	            .deleteNote(this._noteToDelete)
-	            .subscribe(function (res) {
-	            console.log("The result of deleteNote is:");
-	            console.log(res);
-	            // TODO: Subscribe to error and display it.
+	            .find("#schedule").pickadate({
+	            selectMonths: true,
+	            selectYears: 15 // Creates a dropdown of 15 years to control year
 	        });
-	        // Deleting from UI. 
-	        console.log(this._noteToDelete);
-	        var indexToDelete;
-	        for (var index in this._notes) {
-	            if (this._notes[index].Id === this._noteToDelete.Id) {
-	                indexToDelete = index;
-	                break;
-	            }
+	    };
+	    NotesAddItemComponent.prototype.submit = function () {
+	        var scheduleText = this.$(this._elRef.nativeElement)
+	            .find("#schedule").val();
+	        // Creating a date based on the pickdate element selection or 
+	        // the default current creation time.
+	        var scheduleTime;
+	        if (scheduleText) {
+	            scheduleTime = new Date(scheduleText).getTime();
 	        }
-	        this._notes.splice(indexToDelete, 1);
-	        console.log(this._notes);
+	        else {
+	            scheduleTime = new Date().getTime();
+	        }
+	        this.model.ScheduleTime = scheduleTime;
+	        // Retrieving the content contained into tinymce.
+	        var content = tinyMCE.get("content").getContent();
+	        this.model.Content = content;
+	        var addNoteArgs = new AddNoteArgs();
+	        addNoteArgs.submitted = true,
+	            addNoteArgs.canceled = false,
+	            addNoteArgs.note = this.model;
+	        this.onAddNote.emit(addNoteArgs);
 	    };
-	    NotesContainerComponent.prototype.editNote = function (note) {
-	        // Editing from API, UI has been already updated.
-	        this._notesService
-	            .editNote(note)
-	            .subscribe(function (res) {
-	            console.log("The result of editNote is:");
-	            console.log(res);
-	            // TODO: Subscribe to error and display it.
-	        });
+	    NotesAddItemComponent.prototype.cancel = function () {
+	        var addNoteArgs = new AddNoteArgs();
+	        addNoteArgs.submitted = false,
+	            addNoteArgs.canceled = true,
+	            addNoteArgs.note = null;
+	        this.onAddNote.emit(addNoteArgs);
 	    };
-	    NotesContainerComponent.prototype.closeDeleteConfirmationMessage = function () {
+	    NotesAddItemComponent.prototype.restartNote = function () {
+	        this.model = new note_model_1.Note("", "", "", "", "");
 	        this.$(this._elRef.nativeElement)
-	            .find("#deleteConfirmationModal").closeModal();
+	            .find("#schedule").pickadate("picker").clear();
 	    };
-	    __decorate([
-	        core_1.Input(), 
-	        __metadata('design:type', Boolean)
-	    ], NotesContainerComponent.prototype, "isAddNoteSectionEnabled", void 0);
-	    __decorate([
-	        core_1.Input(), 
-	        __metadata('design:type', String)
-	    ], NotesContainerComponent.prototype, "searchString", void 0);
-	    __decorate([
-	        core_1.Input(), 
-	        __metadata('design:type', String)
-	    ], NotesContainerComponent.prototype, "filterType", void 0);
+	    NotesAddItemComponent.prototype.contentDiagnostic = function () {
+	        var content = tinyMCE.get("content").getContent();
+	        console.log(content);
+	    };
 	    __decorate([
 	        core_1.Output(), 
 	        __metadata('design:type', (typeof (_a = typeof core_1.EventEmitter !== 'undefined' && core_1.EventEmitter) === 'function' && _a) || Object)
-	    ], NotesContainerComponent.prototype, "onCloseAddNoteSection", void 0);
-	    NotesContainerComponent = __decorate([
+	    ], NotesAddItemComponent.prototype, "onAddNote", void 0);
+	    NotesAddItemComponent = __decorate([
 	        core_1.Component({
-	            selector: "notes-container",
-	            template: "\n  <notes-add-item *ngIf=\"isAddNoteSectionEnabled\"\n                  (onAddNote)=\"handleAddNoteEvent($event)\">\n  </notes-add-item>\n  \n  <notes-pagination [noteCount]=\"noteCount\"\n                    [searchString]=\"searchString\"\n                    [filterType]=\"filterType\"\n                    (onPageClicked)=\"getNotesWithSkipAndFilter($event)\">\n  </notes-pagination>\n\n  <notes-list [notes]=\"_notes\"\n              (onDeleteNote)=\"openDeleteNoteConfirmation($event)\"\n              (onEditNote)=\"editNote($event)\">\n  </notes-list>\n\n  <!-- Used for delete confirmation -->\n  <div id=\"deleteConfirmationModal\" class=\"modal\">\n    <div class=\"modal-content\">\n      <h4>Delete confirmation</h4>\n      <p>The note with title: {{ _noteToDelete.Title }} will be deleted</p>\n    </div>\n    <div class=\"modal-footer\">\n      <a (click)=\"closeDeleteConfirmationMessage()\"\n         class=\"modal-action modal-close waves-effect waves-green btn btn-flat\">Cancel</a>\n      <a (click)=\"deleteNote()\"\n         class=\"modal-action modal-close waves-effect waves-green btn btn-flat\">Yes</a>\n    </div>\n  </div>\n  "
+	            selector: 'notes-add-item',
+	            styles: ["\n  .ng-valid[required] {\n    border-bottom: 1px solid #42A948; /* green */\n  }\n  .ng-invalid {\n    border-bottom: 1px solid #a94442; /* red */\n  }\n  "],
+	            template: __webpack_require__(450)
 	        }),
-	        __param(2, core_1.Inject("$")), 
-	        __metadata('design:paramtypes', [(typeof (_b = typeof notes_service_1.NotesService !== 'undefined' && notes_service_1.NotesService) === 'function' && _b) || Object, (typeof (_c = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _c) || Object, Object])
-	    ], NotesContainerComponent);
-	    return NotesContainerComponent;
-	    var _a, _b, _c;
+	        __param(1, core_1.Inject("$")), 
+	        __metadata('design:paramtypes', [(typeof (_b = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _b) || Object, Object])
+	    ], NotesAddItemComponent);
+	    return NotesAddItemComponent;
+	    var _a, _b;
 	}());
-	exports.NotesContainerComponent = NotesContainerComponent;
+	exports.NotesAddItemComponent = NotesAddItemComponent;
+	var AddNoteArgs = (function () {
+	    function AddNoteArgs() {
+	    }
+	    return AddNoteArgs;
+	}());
+	exports.AddNoteArgs = AddNoteArgs;
 
 
 /***/ },
 
 /***/ 449:
+/***/ function(module, exports) {
+
+	"use strict";
+	var Note = (function () {
+	    function Note(Title, Category, Priority, Content, OwnerId, ScheduleTime, Id) {
+	        this.Title = Title;
+	        this.Category = Category;
+	        this.Priority = Priority;
+	        this.Content = Content;
+	        this.OwnerId = OwnerId;
+	        this.ScheduleTime = ScheduleTime;
+	        this.Id = Id;
+	    }
+	    return Note;
+	}());
+	exports.Note = Note;
+	// SAMPLE STRUCTURE
+	//{
+	//  "id": "1",
+	//  "title": "C#",
+	//  "category": "Development",
+	//  "priority": "1",
+	//  "content": "Tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod, iaculis eu lacus nunc mi elit, vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel."
+	//} 
+
+
+/***/ },
+
+/***/ 450:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"row z-depth-4\">\r\n  <form class=\"col s12\" (ngSubmit)=\"submit()\" #noteForm=\"ngForm\">\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12\">\r\n        <input id=\"title\" type=\"text\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Title\" name=\"title\"\r\n                #title=\"ngModel\">  \r\n        <label for=\"title\" data-error=\"invalid\" data-success=\"valid\">Title</label>\r\n        <div [hidden]=\"title.valid || title.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Title is required</sup>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <!--<div class=\"row\">\r\n      <div class=\"input-field col s12\">\r\n        <textarea id=\"content\" class=\"materialize-textarea\"\r\n                  [(ngModel)]=\"model.Content\" name=\"content\"></textarea>\r\n        <label for=\"content\">Content</label>\r\n      </div>\r\n    </div>-->\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12\">\r\n        <div id=\"content\"></div>\r\n      </div>\r\n    </div>\r\n\r\n    Diagnostic: model.Content = {{ model.Content }}<br />\r\n    <input type=\"button\" class=\"btn-flat\" value=\"Diagnostic\" (click)=\"contentDiagnostic()\" /><br />\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"category\" type=\"text\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Category\" name=\"category\"\r\n                #category=\"ngModel\">\r\n        <label for=\"category\" data-error=\"invalid\" data-success=\"valid\">Category</label>\r\n        <div [hidden]=\"category.valid || category.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Category is required</sup>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"priority\" type=\"number\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Priority\" name=\"priority\"\r\n                #priority=\"ngModel\">\r\n        <label for=\"priority\" data-error=\"invalid\" data-success=\"valid\">Priority</label>\r\n        <div [hidden]=\"priority.valid || priority.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Priority is required</sup>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"schedule\" type=\"date\" class=\"datepicker\">\r\n        <label for=\"schedule\">Schedule</label>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n      <input class=\"btn-flat\" type=\"submit\" [disabled]=\"!noteForm.form.valid\" value=\"Save\" />\r\n      <input class=\"btn-flat\" type=\"button\" value=\"Restart note\" (click)=\"restartNote()\" />\r\n      <input class=\"btn-flat\" type=\"button\" value=\"Cancel\" (click)=\"cancel()\" />\r\n    </div>\r\n  </form>\r\n</div>";
+
+/***/ },
+
+/***/ 451:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var core_1 = __webpack_require__(11);
+	var notes_service_1 = __webpack_require__(452);
+	var note_model_1 = __webpack_require__(449);
+	var notes_shared_items_details_service_1 = __webpack_require__(453);
+	var router_1 = __webpack_require__(375);
+	var NotesItemDetailsContainerComponent = (function () {
+	    function NotesItemDetailsContainerComponent(_notesService, _activatedRoute, _router, _notesSharedItemsDateils) {
+	        this._notesService = _notesService;
+	        this._activatedRoute = _activatedRoute;
+	        this._router = _router;
+	        this._notesSharedItemsDateils = _notesSharedItemsDateils;
+	        this.activeNote = new note_model_1.Note("", "", "", "", "");
+	    }
+	    NotesItemDetailsContainerComponent.prototype.ngOnInit = function () {
+	        var _this = this;
+	        this._activatedRoute.params.forEach(function (params) {
+	            var id = +params["id"];
+	            _this._notesService
+	                .getNote(id)
+	                .subscribe(function (note) {
+	                _this.activeNote = note;
+	            });
+	        });
+	    };
+	    NotesItemDetailsContainerComponent = __decorate([
+	        core_1.Component({
+	            selector: "notes-item-details-container",
+	            template: "\n  <notes-item-details [note]=\"activeNote\">\n  </notes-item-details>\n  "
+	        }), 
+	        __metadata('design:paramtypes', [(typeof (_a = typeof notes_service_1.NotesService !== 'undefined' && notes_service_1.NotesService) === 'function' && _a) || Object, (typeof (_b = typeof router_1.ActivatedRoute !== 'undefined' && router_1.ActivatedRoute) === 'function' && _b) || Object, (typeof (_c = typeof router_1.Router !== 'undefined' && router_1.Router) === 'function' && _c) || Object, (typeof (_d = typeof notes_shared_items_details_service_1.NotesSharedItemsDateilsService !== 'undefined' && notes_shared_items_details_service_1.NotesSharedItemsDateilsService) === 'function' && _d) || Object])
+	    ], NotesItemDetailsContainerComponent);
+	    return NotesItemDetailsContainerComponent;
+	    var _a, _b, _c, _d;
+	}());
+	exports.NotesItemDetailsContainerComponent = NotesItemDetailsContainerComponent;
+
+
+/***/ },
+
+/***/ 452:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15951,6 +16033,17 @@ webpackJsonp([0],{
 	    NotesService.prototype.getNotes = function () {
 	        return this._http
 	            .get(this._baseUrl + "odata/Notes")
+	            .map(function (res) {
+	            var body = res.json();
+	            // The body has context, count and value
+	            return body || {};
+	        })
+	            .catch(this.handleError);
+	    };
+	    // TODO: return Observable<OdataResponse>
+	    NotesService.prototype.getNote = function (id) {
+	        return this._http
+	            .get(this._baseUrl + ("odata/Notes(" + id + ")"))
 	            .map(function (res) {
 	            var body = res.json();
 	            // The body has context, count and value
@@ -16077,36 +16170,200 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 450:
-/***/ function(module, exports) {
+/***/ 453:
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var Note = (function () {
-	    function Note(Title, Category, Priority, Content, OwnerId, ScheduleTime, Id) {
-	        this.Title = Title;
-	        this.Category = Category;
-	        this.Priority = Priority;
-	        this.Content = Content;
-	        this.OwnerId = OwnerId;
-	        this.ScheduleTime = ScheduleTime;
-	        this.Id = Id;
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var core_1 = __webpack_require__(11);
+	var NotesSharedItemsDateilsService = (function () {
+	    function NotesSharedItemsDateilsService() {
 	    }
-	    return Note;
+	    NotesSharedItemsDateilsService = __decorate([
+	        core_1.Injectable(), 
+	        __metadata('design:paramtypes', [])
+	    ], NotesSharedItemsDateilsService);
+	    return NotesSharedItemsDateilsService;
 	}());
-	exports.Note = Note;
-	// SAMPLE STRUCTURE
-	//{
-	//  "id": "1",
-	//  "title": "C#",
-	//  "category": "Development",
-	//  "priority": "1",
-	//  "content": "Tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod, iaculis eu lacus nunc mi elit, vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel."
-	//} 
+	exports.NotesSharedItemsDateilsService = NotesSharedItemsDateilsService;
 
 
 /***/ },
 
-/***/ 451:
+/***/ 454:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var __param = (this && this.__param) || function (paramIndex, decorator) {
+	    return function (target, key) { decorator(target, key, paramIndex); }
+	};
+	var core_1 = __webpack_require__(11);
+	var notes_service_1 = __webpack_require__(452);
+	var note_model_1 = __webpack_require__(449);
+	var notes_shared_items_details_service_1 = __webpack_require__(453);
+	var NotesContainerComponent = (function () {
+	    function NotesContainerComponent(_notesService, _notesSharedItemsDateils, _elRef, $) {
+	        this._notesService = _notesService;
+	        this._notesSharedItemsDateils = _notesSharedItemsDateils;
+	        this._elRef = _elRef;
+	        this.$ = $;
+	        this.onCloseAddNoteSection = new core_1.EventEmitter();
+	        this._noteToDelete = new note_model_1.Note("", "", "", "", "");
+	        this._isAddNoteSectionDisabled = false;
+	        this.noteCount = 0;
+	    }
+	    NotesContainerComponent.prototype.ngOnInit = function () {
+	        this.getNotesCount();
+	        //this.getNotes();
+	    };
+	    // ngOnChanges manage if a filtering has been made.
+	    NotesContainerComponent.prototype.ngOnChanges = function () {
+	        var _this = this;
+	        // Controlling to not trigger on first ngOnChanges call.
+	        if (this.searchString !== undefined) {
+	            this._notesService
+	                .getNotesCountForFilter(this.searchString, this.filterType)
+	                .subscribe(function (res) {
+	                _this.noteCount = res;
+	                // TODO: Subscribe to error and display it.
+	            });
+	        }
+	    };
+	    NotesContainerComponent.prototype.getNotesCount = function () {
+	        var _this = this;
+	        this._notesService
+	            .getNotesCount()
+	            .subscribe(function (res) {
+	            _this.noteCount = res;
+	            // TODO: Subscribe to error and display it.
+	        });
+	    };
+	    NotesContainerComponent.prototype.getNotesWithSkipAndFilter = function (pageClickedEventArgs) {
+	        var _this = this;
+	        this._notesService
+	            .getNotesWithSkipAndFilter(pageClickedEventArgs)
+	            .subscribe(function (res) {
+	            _this.notes = res;
+	            _this._notesSharedItemsDateils.notes = _this.notes;
+	            // TODO: Subscribe to error and display it.
+	        });
+	    };
+	    // TODO: handle res.value and res["@odata.count"] on NotesService.
+	    // private getNotes() {
+	    //   this._notesService
+	    //     .getNotes()
+	    //     .subscribe(res => {
+	    //       this._notes = res.value;
+	    //       this.noteCount = res["@odata.count"];
+	    //       // TODO: Subscribe to error and display it.
+	    //     });
+	    // }
+	    NotesContainerComponent.prototype.handleAddNoteEvent = function (addNoteArgs) {
+	        var _this = this;
+	        // Send event to notes-home component 
+	        if (addNoteArgs.submitted || addNoteArgs.canceled) {
+	            this.onCloseAddNoteSection.emit(this._isAddNoteSectionDisabled);
+	        }
+	        // Adding to API.
+	        if (addNoteArgs.note) {
+	            this._notesService
+	                .addNote(addNoteArgs.note)
+	                .subscribe(function (note) {
+	                _this.notes.unshift(note);
+	                // TODO: Subscribe to error and display it.
+	            });
+	        }
+	    };
+	    NotesContainerComponent.prototype.openDeleteNoteConfirmation = function (note) {
+	        this._noteToDelete = note;
+	        this.$(this._elRef.nativeElement)
+	            .find("#deleteConfirmationModal").openModal();
+	    };
+	    NotesContainerComponent.prototype.deleteNote = function () {
+	        // Deleting from API.
+	        this._notesService
+	            .deleteNote(this._noteToDelete)
+	            .subscribe(function (res) {
+	            console.log("The result of deleteNote is:");
+	            console.log(res);
+	            // TODO: Subscribe to error and display it.
+	        });
+	        // Deleting from UI. 
+	        console.log(this._noteToDelete);
+	        var indexToDelete;
+	        for (var index in this.notes) {
+	            if (this.notes[index].Id === this._noteToDelete.Id) {
+	                indexToDelete = index;
+	                break;
+	            }
+	        }
+	        this.notes.splice(indexToDelete, 1);
+	        console.log(this.notes);
+	    };
+	    NotesContainerComponent.prototype.editNote = function (note) {
+	        // Editing from API, UI has been already updated.
+	        this._notesService
+	            .editNote(note)
+	            .subscribe(function (res) {
+	            console.log("The result of editNote is:");
+	            console.log(res);
+	            // TODO: Subscribe to error and display it.
+	        });
+	    };
+	    NotesContainerComponent.prototype.closeDeleteConfirmationMessage = function () {
+	        this.$(this._elRef.nativeElement)
+	            .find("#deleteConfirmationModal").closeModal();
+	    };
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', Boolean)
+	    ], NotesContainerComponent.prototype, "isAddNoteSectionEnabled", void 0);
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', String)
+	    ], NotesContainerComponent.prototype, "searchString", void 0);
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', String)
+	    ], NotesContainerComponent.prototype, "filterType", void 0);
+	    __decorate([
+	        core_1.Output(), 
+	        __metadata('design:type', (typeof (_a = typeof core_1.EventEmitter !== 'undefined' && core_1.EventEmitter) === 'function' && _a) || Object)
+	    ], NotesContainerComponent.prototype, "onCloseAddNoteSection", void 0);
+	    NotesContainerComponent = __decorate([
+	        core_1.Component({
+	            selector: "notes-container",
+	            template: "\n  <notes-add-item *ngIf=\"isAddNoteSectionEnabled\"\n                  (onAddNote)=\"handleAddNoteEvent($event)\">\n  </notes-add-item>\n  \n  <notes-pagination [noteCount]=\"noteCount\"\n                    [searchString]=\"searchString\"\n                    [filterType]=\"filterType\"\n                    (onPageClicked)=\"getNotesWithSkipAndFilter($event)\">\n  </notes-pagination>\n\n  <notes-list [notes]=\"notes\"\n              (onDeleteNote)=\"openDeleteNoteConfirmation($event)\"\n              (onEditNote)=\"editNote($event)\">\n  </notes-list>\n\n  <!-- Used for delete confirmation -->\n  <div id=\"deleteConfirmationModal\" class=\"modal\">\n    <div class=\"modal-content\">\n      <h4>Delete confirmation</h4>\n      <p>The note with title: {{ _noteToDelete.Title }} will be deleted</p>\n    </div>\n    <div class=\"modal-footer\">\n      <a (click)=\"closeDeleteConfirmationMessage()\"\n         class=\"modal-action modal-close waves-effect waves-green btn btn-flat\">Cancel</a>\n      <a (click)=\"deleteNote()\"\n         class=\"modal-action modal-close waves-effect waves-green btn btn-flat\">Yes</a>\n    </div>\n  </div>\n  "
+	        }),
+	        __param(3, core_1.Inject("$")), 
+	        __metadata('design:paramtypes', [(typeof (_b = typeof notes_service_1.NotesService !== 'undefined' && notes_service_1.NotesService) === 'function' && _b) || Object, (typeof (_c = typeof notes_shared_items_details_service_1.NotesSharedItemsDateilsService !== 'undefined' && notes_shared_items_details_service_1.NotesSharedItemsDateilsService) === 'function' && _c) || Object, (typeof (_d = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _d) || Object, Object])
+	    ], NotesContainerComponent);
+	    return NotesContainerComponent;
+	    var _a, _b, _c, _d;
+	}());
+	exports.NotesContainerComponent = NotesContainerComponent;
+
+
+/***/ },
+
+/***/ 455:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16260,7 +16517,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 452:
+/***/ 456:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16277,7 +16534,7 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var notes_pagination_component_1 = __webpack_require__(451);
+	var notes_pagination_component_1 = __webpack_require__(455);
 	var NotesPaginationItemComponent = (function () {
 	    function NotesPaginationItemComponent(_elRef, $) {
 	        this._elRef = _elRef;
@@ -16328,111 +16585,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 453:
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-	    return c > 3 && r && Object.defineProperty(target, key, r), r;
-	};
-	var __metadata = (this && this.__metadata) || function (k, v) {
-	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-	};
-	var __param = (this && this.__param) || function (paramIndex, decorator) {
-	    return function (target, key) { decorator(target, key, paramIndex); }
-	};
-	var core_1 = __webpack_require__(11);
-	var note_model_1 = __webpack_require__(450);
-	var NotesAddItemComponent = (function () {
-	    function NotesAddItemComponent(_elRef, $) {
-	        this._elRef = _elRef;
-	        this.$ = $;
-	        this.onAddNote = new core_1.EventEmitter();
-	    }
-	    NotesAddItemComponent.prototype.ngOnInit = function () {
-	        this.model = new note_model_1.Note("", "", "", "", "");
-	        this.$(this._elRef.nativeElement)
-	            .find("#schedule").pickadate({
-	            selectMonths: true,
-	            selectYears: 15 // Creates a dropdown of 15 years to control year
-	        });
-	    };
-	    NotesAddItemComponent.prototype.submit = function () {
-	        var scheduleText = this.$(this._elRef.nativeElement)
-	            .find("#schedule").val();
-	        // Creating a date based on the pickdate element selection or 
-	        // the default current creation time.
-	        var scheduleTime;
-	        if (scheduleText) {
-	            scheduleTime = new Date(scheduleText).getTime();
-	        }
-	        else {
-	            scheduleTime = new Date().getTime();
-	        }
-	        this.model.ScheduleTime = scheduleTime;
-	        var addNoteArgs = new AddNoteArgs();
-	        addNoteArgs.submitted = true,
-	            addNoteArgs.canceled = false,
-	            addNoteArgs.note = this.model;
-	        this.onAddNote.emit(addNoteArgs);
-	    };
-	    NotesAddItemComponent.prototype.cancel = function () {
-	        var addNoteArgs = new AddNoteArgs();
-	        addNoteArgs.submitted = false,
-	            addNoteArgs.canceled = true,
-	            addNoteArgs.note = null;
-	        this.onAddNote.emit(addNoteArgs);
-	    };
-	    NotesAddItemComponent.prototype.restartNote = function () {
-	        this.model = new note_model_1.Note("", "", "", "", "");
-	        this.$(this._elRef.nativeElement)
-	            .find("#schedule").pickadate("picker").clear();
-	    };
-	    Object.defineProperty(NotesAddItemComponent.prototype, "diagnostic", {
-	        get: function () {
-	            return JSON.stringify(this.model);
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    __decorate([
-	        core_1.Output(), 
-	        __metadata('design:type', (typeof (_a = typeof core_1.EventEmitter !== 'undefined' && core_1.EventEmitter) === 'function' && _a) || Object)
-	    ], NotesAddItemComponent.prototype, "onAddNote", void 0);
-	    NotesAddItemComponent = __decorate([
-	        core_1.Component({
-	            selector: 'notes-add-item',
-	            styles: ["\n  .ng-valid[required] {\n    border-bottom: 1px solid #42A948; /* green */\n  }\n  .ng-invalid {\n    border-bottom: 1px solid #a94442; /* red */\n  }\n  "],
-	            template: __webpack_require__(454)
-	        }),
-	        __param(1, core_1.Inject("$")), 
-	        __metadata('design:paramtypes', [(typeof (_b = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _b) || Object, Object])
-	    ], NotesAddItemComponent);
-	    return NotesAddItemComponent;
-	    var _a, _b;
-	}());
-	exports.NotesAddItemComponent = NotesAddItemComponent;
-	var AddNoteArgs = (function () {
-	    function AddNoteArgs() {
-	    }
-	    return AddNoteArgs;
-	}());
-	exports.AddNoteArgs = AddNoteArgs;
-
-
-/***/ },
-
-/***/ 454:
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"row z-depth-4\">\r\n  <form class=\"col s12\" (ngSubmit)=\"submit()\" #noteForm=\"ngForm\">\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12\">\r\n        <input id=\"title\" type=\"text\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Title\" name=\"title\"\r\n                #title=\"ngModel\">  \r\n        <label for=\"title\" data-error=\"invalid\" data-success=\"valid\">Title</label>\r\n        <div [hidden]=\"title.valid || title.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Title is required</sup>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12\">\r\n        <textarea id=\"content\" class=\"materialize-textarea\"\r\n                  [(ngModel)]=\"model.Content\" name=\"content\"></textarea>\r\n        <label for=\"content\">Content</label>\r\n      </div>\r\n    </div>\r\n\r\n    <input type=\"button\" class=\"btn-flat\" value=\"Diagnostic\" (click)=\"contentDiagnostic()\" /><br />\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"category\" type=\"text\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Category\" name=\"category\"\r\n                #category=\"ngModel\">\r\n        <label for=\"category\" data-error=\"invalid\" data-success=\"valid\">Category</label>\r\n        <div [hidden]=\"category.valid || category.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Category is required</sup>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"priority\" type=\"number\" class=\"validate\" required\r\n                [(ngModel)]=\"model.Priority\" name=\"priority\"\r\n                #priority=\"ngModel\">\r\n        <label for=\"priority\" data-error=\"invalid\" data-success=\"valid\">Priority</label>\r\n        <div [hidden]=\"priority.valid || priority.untouched\" \r\n              class=\"alert alert-danger\">\r\n          <sup style=\"color:red;\">Priority is required</sup>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n      <div class=\"input-field col s12 m6\">\r\n        <input id=\"schedule\" type=\"date\" class=\"datepicker\">\r\n        <label for=\"schedule\">Schedule</label>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n      <input class=\"btn-flat\" type=\"submit\" [disabled]=\"!noteForm.form.valid\" value=\"Save\" />\r\n      <input class=\"btn-flat\" type=\"button\" value=\"Restart note\" (click)=\"restartNote()\" />\r\n      <input class=\"btn-flat\" type=\"button\" value=\"Cancel\" (click)=\"cancel()\" />\r\n    </div>\r\n  </form>\r\n</div>";
-
-/***/ },
-
-/***/ 455:
+/***/ 457:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16484,7 +16637,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 456:
+/***/ 458:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16501,18 +16654,28 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var auto_linker_service_1 = __webpack_require__(371);
-	var note_model_1 = __webpack_require__(450);
+	//import { AutoLinkerService }                       from "../common.services/auto-linker.service";
+	var note_model_1 = __webpack_require__(449);
+	var router_1 = __webpack_require__(375);
 	var NotesItemComponent = (function () {
-	    function NotesItemComponent(_elRef, _autoLinker, $) {
+	    function NotesItemComponent(_elRef, 
+	        //private _autoLinker: AutoLinkerService, 
+	        _router, $) {
 	        this._elRef = _elRef;
-	        this._autoLinker = _autoLinker;
+	        this._router = _router;
 	        this.$ = $;
 	        this.isEditable = false;
 	        this.onDeleteNote = new core_1.EventEmitter();
 	        this.onEditNote = new core_1.EventEmitter();
 	        this._scheduleTimeSpanTime = 21600000; // 6 hours
 	    }
+	    Object.defineProperty(NotesItemComponent.prototype, "editContentId", {
+	        get: function () {
+	            return "content-" + this.note.Id;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    NotesItemComponent.prototype.ngOnInit = function () {
 	        var _this = this;
 	        this.cloneNote();
@@ -16567,6 +16730,19 @@ webpackJsonp([0],{
 	                .find("#schedule")
 	                .pickadate("picker")
 	                .set("select", _this.note.ScheduleTime);
+	            if (tinyMCE.execCommand('mceRemoveEditor', false, _this.editContentId)) {
+	                tinymce.init({
+	                    //selector: ".edit-note-content"
+	                    selector: "#" + _this.editContentId,
+	                    plugins: [
+	                        'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+	                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+	                        'save table contextmenu directionality emoticons template paste textcolor'
+	                    ],
+	                    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons'
+	                });
+	            }
+	            tinyMCE.get(_this.editContentId).setContent(_this.note.Content);
 	        }, 0);
 	        this.isEditable = true;
 	    };
@@ -16583,6 +16759,9 @@ webpackJsonp([0],{
 	            scheduleTime = new Date().getTime();
 	        }
 	        this.note.ScheduleTime = scheduleTime;
+	        // Retrieving the content contained into tinymce.
+	        var content = tinyMCE.get(this.editContentId).getContent();
+	        this.note.Content = content;
 	        this.cloneNote();
 	        this.onEditNote.emit(this.note);
 	        // Parsing epoch time to human readable value.
@@ -16609,12 +16788,16 @@ webpackJsonp([0],{
 	            .pickadate("picker")
 	            .set("select", this.note.ScheduleTime);
 	    };
+	    NotesItemComponent.prototype.view = function () {
+	        this._router.navigate(["/notes", this.note.Id]);
+	    };
 	    NotesItemComponent.prototype.cancelEditMode = function () {
 	        this.resetChanges();
 	        this.isEditable = false;
 	    };
 	    NotesItemComponent.prototype.addAnchors = function (content) {
-	        return this._autoLinker.setAnchors(content);
+	        //return this._autoLinker.setAnchors(content);
+	        return content;
 	    };
 	    __decorate([
 	        core_1.Input(), 
@@ -16632,10 +16815,10 @@ webpackJsonp([0],{
 	        core_1.Component({
 	            selector: "notes-item",
 	            styles: ["\n  div span {\n    color: #263238;\n  }  \n  div p {\n    color: #546e7a;\n  }\n  .ng-valid[required] {\n    border-bottom: 1px solid #42A948; /* green */\n  }\n  .ng-invalid {\n    border-bottom: 1px solid #a94442; /* red */\n  }\n  .ontime {\n    color: green;\n  } \n  .nearschedule {\n    color: red;\n  }\n  .red {\n    color: red;\n  }\n  .small-text {\n    font-size: 10px;\n  }\n  #contentDisplayer {\n    white-space: pre-wrap;\n  }\n  "],
-	            template: "\n  <div *ngIf=\"!isEditable\" class=\"card lime lighten-5\">\n    <div class=\"card-content\">\n      <span class=\"card-title\">{{ note.Title }}</span>\n      <p id=\"contentDisplayer\" [innerHTML]=\"addAnchors(note.Content)\">\n      </p>\n      <br />  \n      <p>Category: {{ note.Category }}</p>\n      <p>Priority: {{ note.Priority }}</p>\n      <p>Schedule Time: \n        <span [ngStyle]=\"{'color': scheduleColor}\">\n          <strong> {{ scheduleTimeString }}</strong>\n        </span>\n      </p>\n    </div> \n    <div class=\"card-action lime lighten-5\">\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"Edit\" (click)=\"edit()\" />\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"To reminder\" />\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"Delete\" (click)=\"delete()\" />\n    </div>\n  </div>\n\n  <div *ngIf=\"isEditable\" class=\"card lime lighten-5 z-depth-4\">\n    <div class=\"card-content row\" style=\"background-color:white;\">\n      <!-- This should work, but currently is not, it might be an angular2 issue -->\n      <!--<form class=\"col s12\" (ngSubmit)=\"submit()\" #noteForm=\"ngForm\">-->\n      <form class=\"col s12\" #noteForm=\"ngForm\">\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"title\" type=\"text\" class=\"validate\" required\n                   [(ngModel)]=\"note.Title\" name=\"title\"\n                   #title=\"ngModel\">  \n            <label class=\"active\" for=\"title\" data-error=\"invalid\" data-success=\"valid\">Title</label>\n            <div [hidden]=\"title.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Title is required</sup>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <textarea id=\"content\" class=\"materialize-textarea\"\n                      [(ngModel)]=\"note.Content\" name=\"content\"></textarea>\n            <label class=\"active\" for=\"content\">Content</label>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"input-field col s12 m6\">\n            <input id=\"category\" type=\"text\" class=\"validate\" required\n                  [(ngModel)]=\"note.Category\" name=\"category\"\n                  #category=\"ngModel\">\n            <label class=\"active\" for=\"category\" data-error=\"invalid\" data-success=\"valid\">Category</label>\n            <div [hidden]=\"category.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Category is required</sup>\n            </div>\n          </div>\n\n          <div class=\"input-field col s12 m6\">\n            <input id=\"priority\" type=\"number\" class=\"validate\" required\n                  [(ngModel)]=\"note.Priority\" name=\"priority\"\n                  #priority=\"ngModel\">\n            <label class=\"active\" for=\"priority\" data-error=\"invalid\" data-success=\"valid\">Priority</label>\n            <div [hidden]=\"priority.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Priority is required</sup>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"input-field col s12 m6\">\n            <input id=\"schedule\" type=\"date\" class=\"datepicker\">\n            <label for=\"schedule\">Schedule</label>\n          </div>\n        </div>\n      </form>\n    </div> \n    <div class=\"card-action blue-grey lighten-2\">\n      <!--<input class=\"btn-flat\" type=\"submit\" style=\"color:white;\" [disabled]=\"!noteForm.form.valid\" value=\"Save\" />-->\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" [disabled]=\"!noteForm.form.valid\" \n             value=\"Save\" (click)=\"submit()\" />\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" value=\"Reset\" (click)=\"resetChanges()\" />\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" value=\"Cancel\" (click)=\"cancelEditMode()\" />\n    </div>\n  </div>\n  "
+	            template: "\n  <div class=\"card lime lighten-5\" (click)=\"view()\">\n    <div class=\"card-content\">\n      <p>Title: {{ note.Title }}</p>  \n      <p>Category: {{ note.Category }}</p>\n      <p>Priority: {{ note.Priority }}</p>\n      <p>Schedule Time: \n        <span [ngStyle]=\"{'color': scheduleColor}\">\n          <strong> {{ scheduleTimeString }}</strong>\n        </span>\n      </p>\n    </div> \n  </div>\n  "
 	        }),
 	        __param(2, core_1.Inject("$")), 
-	        __metadata('design:paramtypes', [(typeof (_d = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _d) || Object, (typeof (_e = typeof auto_linker_service_1.AutoLinkerService !== 'undefined' && auto_linker_service_1.AutoLinkerService) === 'function' && _e) || Object, Object])
+	        __metadata('design:paramtypes', [(typeof (_d = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _d) || Object, (typeof (_e = typeof router_1.Router !== 'undefined' && router_1.Router) === 'function' && _e) || Object, Object])
 	    ], NotesItemComponent);
 	    return NotesItemComponent;
 	    var _a, _b, _c, _d, _e;
@@ -16645,7 +16828,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 457:
+/***/ 459:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16679,7 +16862,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 458:
+/***/ 460:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16696,7 +16879,7 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var notes_filter_item_component_1 = __webpack_require__(459);
+	var notes_filter_item_component_1 = __webpack_require__(461);
 	var NotesManagerComponent = (function () {
 	    function NotesManagerComponent(_elRef, $) {
 	        this._elRef = _elRef;
@@ -16755,7 +16938,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 459:
+/***/ 461:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16816,7 +16999,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 460:
+/***/ 462:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -16868,7 +17051,212 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 461:
+/***/ 463:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var __param = (this && this.__param) || function (paramIndex, decorator) {
+	    return function (target, key) { decorator(target, key, paramIndex); }
+	};
+	var core_1 = __webpack_require__(11);
+	//import { AutoLinkerService }                       from "../common.services/auto-linker.service";
+	var note_model_1 = __webpack_require__(449);
+	var router_1 = __webpack_require__(375);
+	var NotesItemDetailsComponent = (function () {
+	    function NotesItemDetailsComponent(_elRef, _activatedRoute, _router, 
+	        //private _autoLinker: AutoLinkerService, 
+	        $) {
+	        this._elRef = _elRef;
+	        this._activatedRoute = _activatedRoute;
+	        this._router = _router;
+	        this.$ = $;
+	        this.isEditable = false;
+	        this.onDeleteNote = new core_1.EventEmitter();
+	        this.onEditNote = new core_1.EventEmitter();
+	        this._scheduleTimeSpanTime = 21600000; // 6 hours
+	    }
+	    Object.defineProperty(NotesItemDetailsComponent.prototype, "editContentId", {
+	        get: function () {
+	            return "content-" + this.note.Id;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    // public ngOnInit () {
+	    //   this.cloneNote();
+	    //   // Adding default values to this.scheduleColor.
+	    //   // this.scheduleColor = "seagreen";
+	    //   // Parsing epoch time to human readable value.
+	    //   let scheduleTime = new Date(this.note.ScheduleTime);
+	    //   this.scheduleTimeString = scheduleTime.toDateString();
+	    //   // Evaluating if the schedule time is on time or near complition.
+	    //   this.evaluateScheduleTime(scheduleTime);
+	    //   // Firing up the scheduler
+	    //   this._scheduleTimeEvaluator = setInterval(() => {
+	    //     this.evaluateScheduleTime(scheduleTime);
+	    //   }, this._scheduleTimeSpanTime); 
+	    // }
+	    NotesItemDetailsComponent.prototype.ngOnChanges = function () {
+	        var _this = this;
+	        if (this.note.Title) {
+	            this.cloneNote();
+	            // Adding default values to this.scheduleColor.
+	            // this.scheduleColor = "seagreen";
+	            // Parsing epoch time to human readable value.
+	            var scheduleTime_1 = new Date(this.note.ScheduleTime);
+	            this.scheduleTimeString = scheduleTime_1.toDateString();
+	            // Evaluating if the schedule time is on time or near complition.
+	            this.evaluateScheduleTime(scheduleTime_1);
+	            // Firing up the scheduler
+	            this._scheduleTimeEvaluator = setInterval(function () {
+	                _this.evaluateScheduleTime(scheduleTime_1);
+	            }, this._scheduleTimeSpanTime);
+	        }
+	    };
+	    NotesItemDetailsComponent.prototype.evaluateScheduleTime = function (scheduleTime) {
+	        this.scheduleColor = "seagreen";
+	        var bufferTime = 2; // Default 2 days.
+	        var actualTime = new Date();
+	        if (actualTime.getDate() + bufferTime >= scheduleTime.getDate()) {
+	            this.scheduleColor = "tomato";
+	        }
+	    };
+	    // I'm not sure about this implementation (it's fired too many times).
+	    // public ngAfterViewChecked () {
+	    //   this.$(this._elRef.nativeElement)
+	    //     .find("#schedule").pickadate({
+	    //       selectMonths: true, // Creates a dropdown to control month
+	    //       selectYears: 15     // Creates a dropdown of 15 years to control year
+	    //     });
+	    // }
+	    NotesItemDetailsComponent.prototype.ngOnDestroy = function () {
+	        clearInterval(this._scheduleTimeEvaluator);
+	    };
+	    NotesItemDetailsComponent.prototype.cloneNote = function () {
+	        this._backupNote = new note_model_1.Note(this.note.Title, this.note.Category, this.note.Priority, this.note.Content, this.note.OwnerId, this.note.ScheduleTime, this.note.Id);
+	    };
+	    NotesItemDetailsComponent.prototype.delete = function () {
+	        this.onDeleteNote.emit(this.note);
+	    };
+	    // A way better implementation than using the previous 
+	    // implementation with ngAfterViewChecked.
+	    NotesItemDetailsComponent.prototype.edit = function () {
+	        var _this = this;
+	        setTimeout(function () {
+	            _this.$(_this._elRef.nativeElement)
+	                .find("#schedule").pickadate({
+	                selectMonths: true,
+	                selectYears: 15 // Creates a dropdown of 15 years to control year
+	            });
+	            _this.$(_this._elRef.nativeElement)
+	                .find("#schedule")
+	                .pickadate("picker")
+	                .set("select", _this.note.ScheduleTime);
+	            if (tinyMCE.execCommand('mceRemoveEditor', false, _this.editContentId)) {
+	                tinymce.init({
+	                    //selector: ".edit-note-content"
+	                    selector: "#" + _this.editContentId,
+	                    plugins: [
+	                        'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+	                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+	                        'save table contextmenu directionality emoticons template paste textcolor'
+	                    ],
+	                    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons'
+	                });
+	            }
+	            tinyMCE.get(_this.editContentId).setContent(_this.note.Content);
+	        }, 0);
+	        this.isEditable = true;
+	    };
+	    NotesItemDetailsComponent.prototype.submit = function () {
+	        var scheduleText = this.$(this._elRef.nativeElement)
+	            .find("#schedule").val();
+	        // Creating a date based on the pickdate element selection or 
+	        // the default current creation time.
+	        var scheduleTime;
+	        if (scheduleText) {
+	            scheduleTime = new Date(scheduleText).getTime();
+	        }
+	        else {
+	            scheduleTime = new Date().getTime();
+	        }
+	        this.note.ScheduleTime = scheduleTime;
+	        // Retrieving the content contained into tinymce.
+	        var content = tinyMCE.get(this.editContentId).getContent();
+	        this.note.Content = content;
+	        this.cloneNote();
+	        this.onEditNote.emit(this.note);
+	        // Parsing epoch time to human readable value.
+	        var scheduleDate = new Date(this.note.ScheduleTime);
+	        this.scheduleTimeString = scheduleDate.toDateString();
+	        this.evaluateScheduleTime(scheduleDate);
+	        // Save the changes on UI and close the editing form.
+	        this.isEditable = false;
+	    };
+	    NotesItemDetailsComponent.prototype.resetChanges = function () {
+	        this.note.Title = this._backupNote.Title;
+	        this.note.Category = this._backupNote.Category;
+	        this.note.Priority = this._backupNote.Priority;
+	        this.note.Content = this._backupNote.Content;
+	        this.note.OwnerId = this._backupNote.OwnerId;
+	        this.note.ScheduleTime = this._backupNote.ScheduleTime;
+	        this.note.Id = this._backupNote.Id;
+	        // Parsing epoch time to human readable value.
+	        var scheduleTime = new Date(this.note.ScheduleTime);
+	        this.scheduleTimeString = scheduleTime.toDateString();
+	        // Restarting datepicker value.
+	        this.$(this._elRef.nativeElement)
+	            .find("#schedule")
+	            .pickadate("picker")
+	            .set("select", this.note.ScheduleTime);
+	    };
+	    NotesItemDetailsComponent.prototype.cancelEditMode = function () {
+	        this.resetChanges();
+	        this.isEditable = false;
+	    };
+	    NotesItemDetailsComponent.prototype.addAnchors = function (content) {
+	        //return this._autoLinker.setAnchors(content);
+	        return content;
+	    };
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', (typeof (_a = typeof note_model_1.Note !== 'undefined' && note_model_1.Note) === 'function' && _a) || Object)
+	    ], NotesItemDetailsComponent.prototype, "note", void 0);
+	    __decorate([
+	        core_1.Output(), 
+	        __metadata('design:type', (typeof (_b = typeof core_1.EventEmitter !== 'undefined' && core_1.EventEmitter) === 'function' && _b) || Object)
+	    ], NotesItemDetailsComponent.prototype, "onDeleteNote", void 0);
+	    __decorate([
+	        core_1.Output(), 
+	        __metadata('design:type', (typeof (_c = typeof core_1.EventEmitter !== 'undefined' && core_1.EventEmitter) === 'function' && _c) || Object)
+	    ], NotesItemDetailsComponent.prototype, "onEditNote", void 0);
+	    NotesItemDetailsComponent = __decorate([
+	        core_1.Component({
+	            selector: "notes-item-details",
+	            styles: ["\n  div span {\n    color: #263238;\n  }  \n  div p {\n    color: #546e7a;\n  }\n  .ng-valid[required] {\n    border-bottom: 1px solid #42A948; /* green */\n  }\n  .ng-invalid {\n    border-bottom: 1px solid #a94442; /* red */\n  }\n  .ontime {\n    color: green;\n  } \n  .nearschedule {\n    color: red;\n  }\n  .red {\n    color: red;\n  }\n  .small-text {\n    font-size: 10px;\n  }\n  #contentDisplayer {\n    white-space: pre-wrap;\n  }\n  "],
+	            template: "\n  <div *ngIf=\"!isEditable\" class=\"card lime lighten-5\">\n    <div class=\"card-content\">\n      <span class=\"card-title\">{{ note.Title }}</span>\n      <p id=\"contentDisplayer\" [innerHTML]=\"addAnchors(note.Content)\">\n      </p>\n      <br />  \n      <p>Category: {{ note.Category }}</p>\n      <p>Priority: {{ note.Priority }}</p>\n      <p>Schedule Time: \n        <span [ngStyle]=\"{'color': scheduleColor}\">\n          <strong> {{ scheduleTimeString }}</strong>\n        </span>\n      </p>\n    </div> \n    <div class=\"card-action lime lighten-5\">\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"Edit\" (click)=\"edit()\" />\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"To reminder\" />\n      <input type=\"button\" class=\"btn-flat\" style=\"color:black;\" value=\"Delete\" (click)=\"delete()\" />\n    </div>\n  </div>\n\n  <div *ngIf=\"isEditable\" class=\"card lime lighten-5 z-depth-4\">\n    <div class=\"card-content row\" style=\"background-color:white;\">\n      <!-- This should work, but currently is not, it might be an angular2 issue -->\n      <!--<form class=\"col s12\" (ngSubmit)=\"submit()\" #noteForm=\"ngForm\">-->\n      <form class=\"col s12\" #noteForm=\"ngForm\">\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"title\" type=\"text\" class=\"validate\" required\n                   [(ngModel)]=\"note.Title\" name=\"title\"\n                   #title=\"ngModel\">  \n            <label class=\"active\" for=\"title\" data-error=\"invalid\" data-success=\"valid\">Title</label>\n            <div [hidden]=\"title.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Title is required</sup>\n            </div>\n          </div>\n        </div>\n\n        <!--<div class=\"row\">\n          <div class=\"input-field col s12\">\n            <textarea id=\"content\" class=\"materialize-textarea\"\n                      [(ngModel)]=\"note.Content\" name=\"content\"></textarea>\n            <label class=\"active\" for=\"content\">Content</label>\n          </div>\n        </div>-->\n\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <div [id]=\"editContentId\"></div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"input-field col s12 m6\">\n            <input id=\"category\" type=\"text\" class=\"validate\" required\n                  [(ngModel)]=\"note.Category\" name=\"category\"\n                  #category=\"ngModel\">\n            <label class=\"active\" for=\"category\" data-error=\"invalid\" data-success=\"valid\">Category</label>\n            <div [hidden]=\"category.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Category is required</sup>\n            </div>\n          </div>\n\n          <div class=\"input-field col s12 m6\">\n            <input id=\"priority\" type=\"number\" class=\"validate\" required\n                  [(ngModel)]=\"note.Priority\" name=\"priority\"\n                  #priority=\"ngModel\">\n            <label class=\"active\" for=\"priority\" data-error=\"invalid\" data-success=\"valid\">Priority</label>\n            <div [hidden]=\"priority.valid\" \n                class=\"alert alert-danger\">\n              <sup style=\"color:red;\">Priority is required</sup>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"row\">\n          <div class=\"input-field col s12 m6\">\n            <input id=\"schedule\" type=\"date\" class=\"datepicker\">\n            <label for=\"schedule\">Schedule</label>\n          </div>\n        </div>\n      </form>\n    </div> \n    <div class=\"card-action blue-grey lighten-2\">\n      <!--<input class=\"btn-flat\" type=\"submit\" style=\"color:white;\" [disabled]=\"!noteForm.form.valid\" value=\"Save\" />-->\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" [disabled]=\"!noteForm.form.valid\" \n             value=\"Save\" (click)=\"submit()\" />\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" value=\"Reset\" (click)=\"resetChanges()\" />\n      <input class=\"btn-flat\" type=\"button\" style=\"color:white;\" value=\"Cancel\" (click)=\"cancelEditMode()\" />\n    </div>\n  </div>\n  "
+	        }),
+	        __param(3, core_1.Inject("$")), 
+	        __metadata('design:paramtypes', [(typeof (_d = typeof core_1.ElementRef !== 'undefined' && core_1.ElementRef) === 'function' && _d) || Object, (typeof (_e = typeof router_1.ActivatedRoute !== 'undefined' && router_1.ActivatedRoute) === 'function' && _e) || Object, (typeof (_f = typeof router_1.Router !== 'undefined' && router_1.Router) === 'function' && _f) || Object, Object])
+	    ], NotesItemDetailsComponent);
+	    return NotesItemDetailsComponent;
+	    var _a, _b, _c, _d, _e, _f;
+	}());
+	exports.NotesItemDetailsComponent = NotesItemDetailsComponent;
+
+
+/***/ },
+
+/***/ 464:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16882,12 +17270,12 @@ webpackJsonp([0],{
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(462));
+	__export(__webpack_require__(465));
 	//# sourceMappingURL=index.js.map
 
 /***/ },
 
-/***/ 462:
+/***/ 465:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16914,68 +17302,68 @@ webpackJsonp([0],{
 	 * Forms providers are not included in default providers; you must import these providers
 	 * explicitly.
 	 */
-	var directives_1 = __webpack_require__(463);
+	var directives_1 = __webpack_require__(466);
 	exports.FORM_DIRECTIVES = directives_1.FORM_DIRECTIVES;
 	exports.REACTIVE_FORM_DIRECTIVES = directives_1.REACTIVE_FORM_DIRECTIVES;
-	var abstract_control_directive_1 = __webpack_require__(474);
+	var abstract_control_directive_1 = __webpack_require__(477);
 	exports.AbstractControlDirective = abstract_control_directive_1.AbstractControlDirective;
-	var abstract_form_group_directive_1 = __webpack_require__(487);
+	var abstract_form_group_directive_1 = __webpack_require__(490);
 	exports.AbstractFormGroupDirective = abstract_form_group_directive_1.AbstractFormGroupDirective;
-	var checkbox_value_accessor_1 = __webpack_require__(464);
+	var checkbox_value_accessor_1 = __webpack_require__(467);
 	exports.CheckboxControlValueAccessor = checkbox_value_accessor_1.CheckboxControlValueAccessor;
-	var control_container_1 = __webpack_require__(485);
+	var control_container_1 = __webpack_require__(488);
 	exports.ControlContainer = control_container_1.ControlContainer;
-	var control_value_accessor_1 = __webpack_require__(465);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.NG_VALUE_ACCESSOR = control_value_accessor_1.NG_VALUE_ACCESSOR;
-	var default_value_accessor_1 = __webpack_require__(466);
+	var default_value_accessor_1 = __webpack_require__(469);
 	exports.DefaultValueAccessor = default_value_accessor_1.DefaultValueAccessor;
-	var ng_control_1 = __webpack_require__(469);
+	var ng_control_1 = __webpack_require__(472);
 	exports.NgControl = ng_control_1.NgControl;
-	var ng_control_status_1 = __webpack_require__(468);
+	var ng_control_status_1 = __webpack_require__(471);
 	exports.NgControlStatus = ng_control_status_1.NgControlStatus;
-	var ng_form_1 = __webpack_require__(475);
+	var ng_form_1 = __webpack_require__(478);
 	exports.NgForm = ng_form_1.NgForm;
-	var ng_model_1 = __webpack_require__(486);
+	var ng_model_1 = __webpack_require__(489);
 	exports.NgModel = ng_model_1.NgModel;
-	var ng_model_group_1 = __webpack_require__(488);
+	var ng_model_group_1 = __webpack_require__(491);
 	exports.NgModelGroup = ng_model_group_1.NgModelGroup;
-	var form_control_directive_1 = __webpack_require__(491);
+	var form_control_directive_1 = __webpack_require__(494);
 	exports.FormControlDirective = form_control_directive_1.FormControlDirective;
-	var form_control_name_1 = __webpack_require__(492);
+	var form_control_name_1 = __webpack_require__(495);
 	exports.FormControlName = form_control_name_1.FormControlName;
-	var form_group_directive_1 = __webpack_require__(494);
+	var form_group_directive_1 = __webpack_require__(497);
 	exports.FormGroupDirective = form_group_directive_1.FormGroupDirective;
-	var form_group_name_1 = __webpack_require__(495);
+	var form_group_name_1 = __webpack_require__(498);
 	exports.FormArrayName = form_group_name_1.FormArrayName;
-	var form_group_name_2 = __webpack_require__(495);
+	var form_group_name_2 = __webpack_require__(498);
 	exports.FormGroupName = form_group_name_2.FormGroupName;
-	var select_control_value_accessor_1 = __webpack_require__(483);
+	var select_control_value_accessor_1 = __webpack_require__(486);
 	exports.NgSelectOption = select_control_value_accessor_1.NgSelectOption;
 	exports.SelectControlValueAccessor = select_control_value_accessor_1.SelectControlValueAccessor;
-	var select_multiple_control_value_accessor_1 = __webpack_require__(484);
+	var select_multiple_control_value_accessor_1 = __webpack_require__(487);
 	exports.SelectMultipleControlValueAccessor = select_multiple_control_value_accessor_1.SelectMultipleControlValueAccessor;
-	var validators_1 = __webpack_require__(496);
+	var validators_1 = __webpack_require__(499);
 	exports.MaxLengthValidator = validators_1.MaxLengthValidator;
 	exports.MinLengthValidator = validators_1.MinLengthValidator;
 	exports.PatternValidator = validators_1.PatternValidator;
 	exports.RequiredValidator = validators_1.RequiredValidator;
-	var form_builder_1 = __webpack_require__(497);
+	var form_builder_1 = __webpack_require__(500);
 	exports.FormBuilder = form_builder_1.FormBuilder;
-	var model_1 = __webpack_require__(477);
+	var model_1 = __webpack_require__(480);
 	exports.AbstractControl = model_1.AbstractControl;
 	exports.FormArray = model_1.FormArray;
 	exports.FormControl = model_1.FormControl;
 	exports.FormGroup = model_1.FormGroup;
-	var validators_2 = __webpack_require__(479);
+	var validators_2 = __webpack_require__(482);
 	exports.NG_ASYNC_VALIDATORS = validators_2.NG_ASYNC_VALIDATORS;
 	exports.NG_VALIDATORS = validators_2.NG_VALIDATORS;
 	exports.Validators = validators_2.Validators;
-	__export(__webpack_require__(498));
+	__export(__webpack_require__(501));
 	//# sourceMappingURL=forms.js.map
 
 /***/ },
 
-/***/ 463:
+/***/ 466:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16987,55 +17375,55 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var checkbox_value_accessor_1 = __webpack_require__(464);
-	var default_value_accessor_1 = __webpack_require__(466);
-	var ng_control_status_1 = __webpack_require__(468);
-	var ng_form_1 = __webpack_require__(475);
-	var ng_model_1 = __webpack_require__(486);
-	var ng_model_group_1 = __webpack_require__(488);
-	var number_value_accessor_1 = __webpack_require__(481);
-	var radio_control_value_accessor_1 = __webpack_require__(482);
-	var form_control_directive_1 = __webpack_require__(491);
-	var form_control_name_1 = __webpack_require__(492);
-	var form_group_directive_1 = __webpack_require__(494);
-	var form_group_name_1 = __webpack_require__(495);
-	var select_control_value_accessor_1 = __webpack_require__(483);
-	var select_multiple_control_value_accessor_1 = __webpack_require__(484);
-	var validators_1 = __webpack_require__(496);
-	var checkbox_value_accessor_2 = __webpack_require__(464);
+	var checkbox_value_accessor_1 = __webpack_require__(467);
+	var default_value_accessor_1 = __webpack_require__(469);
+	var ng_control_status_1 = __webpack_require__(471);
+	var ng_form_1 = __webpack_require__(478);
+	var ng_model_1 = __webpack_require__(489);
+	var ng_model_group_1 = __webpack_require__(491);
+	var number_value_accessor_1 = __webpack_require__(484);
+	var radio_control_value_accessor_1 = __webpack_require__(485);
+	var form_control_directive_1 = __webpack_require__(494);
+	var form_control_name_1 = __webpack_require__(495);
+	var form_group_directive_1 = __webpack_require__(497);
+	var form_group_name_1 = __webpack_require__(498);
+	var select_control_value_accessor_1 = __webpack_require__(486);
+	var select_multiple_control_value_accessor_1 = __webpack_require__(487);
+	var validators_1 = __webpack_require__(499);
+	var checkbox_value_accessor_2 = __webpack_require__(467);
 	exports.CheckboxControlValueAccessor = checkbox_value_accessor_2.CheckboxControlValueAccessor;
-	var default_value_accessor_2 = __webpack_require__(466);
+	var default_value_accessor_2 = __webpack_require__(469);
 	exports.DefaultValueAccessor = default_value_accessor_2.DefaultValueAccessor;
-	var ng_control_1 = __webpack_require__(469);
+	var ng_control_1 = __webpack_require__(472);
 	exports.NgControl = ng_control_1.NgControl;
-	var ng_control_status_2 = __webpack_require__(468);
+	var ng_control_status_2 = __webpack_require__(471);
 	exports.NgControlStatus = ng_control_status_2.NgControlStatus;
-	var ng_form_2 = __webpack_require__(475);
+	var ng_form_2 = __webpack_require__(478);
 	exports.NgForm = ng_form_2.NgForm;
-	var ng_model_2 = __webpack_require__(486);
+	var ng_model_2 = __webpack_require__(489);
 	exports.NgModel = ng_model_2.NgModel;
-	var ng_model_group_2 = __webpack_require__(488);
+	var ng_model_group_2 = __webpack_require__(491);
 	exports.NgModelGroup = ng_model_group_2.NgModelGroup;
-	var number_value_accessor_2 = __webpack_require__(481);
+	var number_value_accessor_2 = __webpack_require__(484);
 	exports.NumberValueAccessor = number_value_accessor_2.NumberValueAccessor;
-	var radio_control_value_accessor_2 = __webpack_require__(482);
+	var radio_control_value_accessor_2 = __webpack_require__(485);
 	exports.RadioControlValueAccessor = radio_control_value_accessor_2.RadioControlValueAccessor;
-	var form_control_directive_2 = __webpack_require__(491);
+	var form_control_directive_2 = __webpack_require__(494);
 	exports.FormControlDirective = form_control_directive_2.FormControlDirective;
-	var form_control_name_2 = __webpack_require__(492);
+	var form_control_name_2 = __webpack_require__(495);
 	exports.FormControlName = form_control_name_2.FormControlName;
-	var form_group_directive_2 = __webpack_require__(494);
+	var form_group_directive_2 = __webpack_require__(497);
 	exports.FormGroupDirective = form_group_directive_2.FormGroupDirective;
-	var form_group_name_2 = __webpack_require__(495);
+	var form_group_name_2 = __webpack_require__(498);
 	exports.FormArrayName = form_group_name_2.FormArrayName;
 	exports.FormGroupName = form_group_name_2.FormGroupName;
-	var select_control_value_accessor_2 = __webpack_require__(483);
+	var select_control_value_accessor_2 = __webpack_require__(486);
 	exports.NgSelectOption = select_control_value_accessor_2.NgSelectOption;
 	exports.SelectControlValueAccessor = select_control_value_accessor_2.SelectControlValueAccessor;
-	var select_multiple_control_value_accessor_2 = __webpack_require__(484);
+	var select_multiple_control_value_accessor_2 = __webpack_require__(487);
 	exports.NgSelectMultipleOption = select_multiple_control_value_accessor_2.NgSelectMultipleOption;
 	exports.SelectMultipleControlValueAccessor = select_multiple_control_value_accessor_2.SelectMultipleControlValueAccessor;
-	var validators_2 = __webpack_require__(496);
+	var validators_2 = __webpack_require__(499);
 	exports.MaxLengthValidator = validators_2.MaxLengthValidator;
 	exports.MinLengthValidator = validators_2.MinLengthValidator;
 	exports.PatternValidator = validators_2.PatternValidator;
@@ -17084,7 +17472,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 464:
+/***/ 467:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17096,7 +17484,7 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var control_value_accessor_1 = __webpack_require__(465);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.CHECKBOX_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return CheckboxControlValueAccessor; }),
@@ -17134,7 +17522,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 465:
+/***/ 468:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17157,7 +17545,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 466:
+/***/ 469:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17169,8 +17557,8 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var lang_1 = __webpack_require__(467);
-	var control_value_accessor_1 = __webpack_require__(465);
+	var lang_1 = __webpack_require__(470);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.DEFAULT_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return DefaultValueAccessor; }),
@@ -17212,7 +17600,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 467:
+/***/ 470:
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17634,7 +18022,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 468:
+/***/ 471:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17646,8 +18034,8 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var lang_1 = __webpack_require__(467);
-	var ng_control_1 = __webpack_require__(469);
+	var lang_1 = __webpack_require__(470);
+	var ng_control_1 = __webpack_require__(472);
 	var NgControlStatus = (function () {
 	    function NgControlStatus(cd) {
 	        this._cd = cd;
@@ -17719,7 +18107,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 469:
+/***/ 472:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17735,8 +18123,8 @@ webpackJsonp([0],{
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var exceptions_1 = __webpack_require__(470);
-	var abstract_control_directive_1 = __webpack_require__(474);
+	var exceptions_1 = __webpack_require__(473);
+	var abstract_control_directive_1 = __webpack_require__(477);
 	/**
 	 * A base class that all control directive extend.
 	 * It binds a {@link Control} object to a DOM element.
@@ -17769,7 +18157,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 470:
+/***/ 473:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17785,9 +18173,9 @@ webpackJsonp([0],{
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var base_wrapped_exception_1 = __webpack_require__(471);
-	var exception_handler_1 = __webpack_require__(472);
-	var exception_handler_2 = __webpack_require__(472);
+	var base_wrapped_exception_1 = __webpack_require__(474);
+	var exception_handler_1 = __webpack_require__(475);
+	var exception_handler_2 = __webpack_require__(475);
 	exports.ExceptionHandler = exception_handler_2.ExceptionHandler;
 	/**
 	 * @stable
@@ -17864,7 +18252,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 471:
+/***/ 474:
 /***/ function(module, exports) {
 
 	/**
@@ -17927,7 +18315,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 472:
+/***/ 475:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17938,9 +18326,9 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var base_wrapped_exception_1 = __webpack_require__(471);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
+	var base_wrapped_exception_1 = __webpack_require__(474);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
 	var _ArrayLogger = (function () {
 	    function _ArrayLogger() {
 	        this.res = [];
@@ -18073,7 +18461,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 473:
+/***/ 476:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18084,7 +18472,7 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var lang_1 = __webpack_require__(467);
+	var lang_1 = __webpack_require__(470);
 	exports.Map = lang_1.global.Map;
 	exports.Set = lang_1.global.Set;
 	// Safari and Internet Explorer do not support the iterable parameter to the
@@ -18448,7 +18836,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 474:
+/***/ 477:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18459,8 +18847,8 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var exceptions_1 = __webpack_require__(470);
-	var lang_1 = __webpack_require__(467);
+	var exceptions_1 = __webpack_require__(473);
+	var lang_1 = __webpack_require__(470);
 	/**
 	 * Base class for control directives.
 	 *
@@ -18554,7 +18942,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 475:
+/***/ 478:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18571,13 +18959,13 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var async_1 = __webpack_require__(476);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
-	var model_1 = __webpack_require__(477);
-	var validators_1 = __webpack_require__(479);
-	var control_container_1 = __webpack_require__(485);
-	var shared_1 = __webpack_require__(478);
+	var async_1 = __webpack_require__(479);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
+	var model_1 = __webpack_require__(480);
+	var validators_1 = __webpack_require__(482);
+	var control_container_1 = __webpack_require__(488);
+	var shared_1 = __webpack_require__(481);
 	exports.formDirectiveProvider = {
 	    provide: control_container_1.ControlContainer,
 	    useExisting: core_1.forwardRef(function () { return NgForm; })
@@ -18696,7 +19084,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 476:
+/***/ 479:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18819,7 +19207,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 477:
+/***/ 480:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18836,11 +19224,11 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var PromiseObservable_1 = __webpack_require__(258);
-	var shared_1 = __webpack_require__(478);
-	var async_1 = __webpack_require__(476);
-	var collection_1 = __webpack_require__(473);
-	var exceptions_1 = __webpack_require__(470);
-	var lang_1 = __webpack_require__(467);
+	var shared_1 = __webpack_require__(481);
+	var async_1 = __webpack_require__(479);
+	var collection_1 = __webpack_require__(476);
+	var exceptions_1 = __webpack_require__(473);
+	var lang_1 = __webpack_require__(470);
 	/**
 	 * Indicates that a FormControl is valid, i.e. that no errors exist in the input value.
 	 */
@@ -19563,7 +19951,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 478:
+/***/ 481:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19574,17 +19962,17 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var collection_1 = __webpack_require__(473);
-	var exceptions_1 = __webpack_require__(470);
-	var lang_1 = __webpack_require__(467);
-	var validators_1 = __webpack_require__(479);
-	var checkbox_value_accessor_1 = __webpack_require__(464);
-	var default_value_accessor_1 = __webpack_require__(466);
-	var normalize_validator_1 = __webpack_require__(480);
-	var number_value_accessor_1 = __webpack_require__(481);
-	var radio_control_value_accessor_1 = __webpack_require__(482);
-	var select_control_value_accessor_1 = __webpack_require__(483);
-	var select_multiple_control_value_accessor_1 = __webpack_require__(484);
+	var collection_1 = __webpack_require__(476);
+	var exceptions_1 = __webpack_require__(473);
+	var lang_1 = __webpack_require__(470);
+	var validators_1 = __webpack_require__(482);
+	var checkbox_value_accessor_1 = __webpack_require__(467);
+	var default_value_accessor_1 = __webpack_require__(469);
+	var normalize_validator_1 = __webpack_require__(483);
+	var number_value_accessor_1 = __webpack_require__(484);
+	var radio_control_value_accessor_1 = __webpack_require__(485);
+	var select_control_value_accessor_1 = __webpack_require__(486);
+	var select_multiple_control_value_accessor_1 = __webpack_require__(487);
 	function controlPath(name, parent) {
 	    var p = collection_1.ListWrapper.clone(parent.path);
 	    p.push(name);
@@ -19693,7 +20081,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 479:
+/***/ 482:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19706,8 +20094,8 @@ webpackJsonp([0],{
 	"use strict";
 	var core_1 = __webpack_require__(11);
 	var toPromise_1 = __webpack_require__(243);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
 	/**
 	 * Providers for validators to be used for {@link FormControl}s in a form.
 	 *
@@ -19845,7 +20233,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 480:
+/***/ 483:
 /***/ function(module, exports) {
 
 	/**
@@ -19878,7 +20266,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 481:
+/***/ 484:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19890,8 +20278,8 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var lang_1 = __webpack_require__(467);
-	var control_value_accessor_1 = __webpack_require__(465);
+	var lang_1 = __webpack_require__(470);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.NUMBER_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return NumberValueAccessor; }),
@@ -19937,7 +20325,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 482:
+/***/ 485:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19949,11 +20337,11 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var collection_1 = __webpack_require__(473);
-	var exceptions_1 = __webpack_require__(470);
-	var lang_1 = __webpack_require__(467);
-	var control_value_accessor_1 = __webpack_require__(465);
-	var ng_control_1 = __webpack_require__(469);
+	var collection_1 = __webpack_require__(476);
+	var exceptions_1 = __webpack_require__(473);
+	var lang_1 = __webpack_require__(470);
+	var control_value_accessor_1 = __webpack_require__(468);
+	var ng_control_1 = __webpack_require__(472);
 	exports.RADIO_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return RadioControlValueAccessor; }),
@@ -20065,7 +20453,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 483:
+/***/ 486:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20077,9 +20465,9 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
-	var control_value_accessor_1 = __webpack_require__(465);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.SELECT_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return SelectControlValueAccessor; }),
@@ -20211,7 +20599,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 484:
+/***/ 487:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20223,9 +20611,9 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
-	var control_value_accessor_1 = __webpack_require__(465);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
+	var control_value_accessor_1 = __webpack_require__(468);
 	exports.SELECT_MULTIPLE_VALUE_ACCESSOR = {
 	    provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
 	    useExisting: core_1.forwardRef(function () { return SelectMultipleControlValueAccessor; }),
@@ -20398,7 +20786,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 485:
+/***/ 488:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20414,7 +20802,7 @@ webpackJsonp([0],{
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var abstract_control_directive_1 = __webpack_require__(474);
+	var abstract_control_directive_1 = __webpack_require__(477);
 	/**
 	 * A directive that contains multiple {@link NgControl}s.
 	 *
@@ -20450,7 +20838,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 486:
+/***/ 489:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20467,17 +20855,17 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var async_1 = __webpack_require__(476);
-	var model_1 = __webpack_require__(477);
-	var validators_1 = __webpack_require__(479);
-	var abstract_form_group_directive_1 = __webpack_require__(487);
-	var control_container_1 = __webpack_require__(485);
-	var control_value_accessor_1 = __webpack_require__(465);
-	var ng_control_1 = __webpack_require__(469);
-	var ng_form_1 = __webpack_require__(475);
-	var ng_model_group_1 = __webpack_require__(488);
-	var shared_1 = __webpack_require__(478);
-	var template_driven_errors_1 = __webpack_require__(489);
+	var async_1 = __webpack_require__(479);
+	var model_1 = __webpack_require__(480);
+	var validators_1 = __webpack_require__(482);
+	var abstract_form_group_directive_1 = __webpack_require__(490);
+	var control_container_1 = __webpack_require__(488);
+	var control_value_accessor_1 = __webpack_require__(468);
+	var ng_control_1 = __webpack_require__(472);
+	var ng_form_1 = __webpack_require__(478);
+	var ng_model_group_1 = __webpack_require__(491);
+	var shared_1 = __webpack_require__(481);
+	var template_driven_errors_1 = __webpack_require__(492);
 	exports.formControlBinding = {
 	    provide: ng_control_1.NgControl,
 	    useExisting: core_1.forwardRef(function () { return NgModel; })
@@ -20607,7 +20995,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 487:
+/***/ 490:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20623,8 +21011,8 @@ webpackJsonp([0],{
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var control_container_1 = __webpack_require__(485);
-	var shared_1 = __webpack_require__(478);
+	var control_container_1 = __webpack_require__(488);
+	var shared_1 = __webpack_require__(481);
 	/**
 	 * This is a base class for code shared between {@link NgModelGroup} and {@link FormGroupName}.
 	 *
@@ -20683,7 +21071,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 488:
+/***/ 491:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20700,11 +21088,11 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var validators_1 = __webpack_require__(479);
-	var abstract_form_group_directive_1 = __webpack_require__(487);
-	var control_container_1 = __webpack_require__(485);
-	var ng_form_1 = __webpack_require__(475);
-	var template_driven_errors_1 = __webpack_require__(489);
+	var validators_1 = __webpack_require__(482);
+	var abstract_form_group_directive_1 = __webpack_require__(490);
+	var control_container_1 = __webpack_require__(488);
+	var ng_form_1 = __webpack_require__(478);
+	var template_driven_errors_1 = __webpack_require__(492);
 	exports.modelGroupProvider = {
 	    provide: control_container_1.ControlContainer,
 	    useExisting: core_1.forwardRef(function () { return NgModelGroup; })
@@ -20744,7 +21132,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 489:
+/***/ 492:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20755,8 +21143,8 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var exceptions_1 = __webpack_require__(470);
-	var error_examples_1 = __webpack_require__(490);
+	var exceptions_1 = __webpack_require__(473);
+	var error_examples_1 = __webpack_require__(493);
 	var TemplateDrivenErrors = (function () {
 	    function TemplateDrivenErrors() {
 	    }
@@ -20779,7 +21167,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 490:
+/***/ 493:
 /***/ function(module, exports) {
 
 	/**
@@ -20801,7 +21189,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 491:
+/***/ 494:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20818,12 +21206,12 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var async_1 = __webpack_require__(476);
-	var collection_1 = __webpack_require__(473);
-	var validators_1 = __webpack_require__(479);
-	var control_value_accessor_1 = __webpack_require__(465);
-	var ng_control_1 = __webpack_require__(469);
-	var shared_1 = __webpack_require__(478);
+	var async_1 = __webpack_require__(479);
+	var collection_1 = __webpack_require__(476);
+	var validators_1 = __webpack_require__(482);
+	var control_value_accessor_1 = __webpack_require__(468);
+	var ng_control_1 = __webpack_require__(472);
+	var shared_1 = __webpack_require__(481);
 	exports.formControlBinding = {
 	    provide: ng_control_1.NgControl,
 	    useExisting: core_1.forwardRef(function () { return FormControlDirective; })
@@ -20899,7 +21287,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 492:
+/***/ 495:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20916,16 +21304,16 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var async_1 = __webpack_require__(476);
-	var validators_1 = __webpack_require__(479);
-	var abstract_form_group_directive_1 = __webpack_require__(487);
-	var control_container_1 = __webpack_require__(485);
-	var control_value_accessor_1 = __webpack_require__(465);
-	var ng_control_1 = __webpack_require__(469);
-	var reactive_errors_1 = __webpack_require__(493);
-	var shared_1 = __webpack_require__(478);
-	var form_group_directive_1 = __webpack_require__(494);
-	var form_group_name_1 = __webpack_require__(495);
+	var async_1 = __webpack_require__(479);
+	var validators_1 = __webpack_require__(482);
+	var abstract_form_group_directive_1 = __webpack_require__(490);
+	var control_container_1 = __webpack_require__(488);
+	var control_value_accessor_1 = __webpack_require__(468);
+	var ng_control_1 = __webpack_require__(472);
+	var reactive_errors_1 = __webpack_require__(496);
+	var shared_1 = __webpack_require__(481);
+	var form_group_directive_1 = __webpack_require__(497);
+	var form_group_name_1 = __webpack_require__(498);
 	exports.controlNameBinding = {
 	    provide: ng_control_1.NgControl,
 	    useExisting: core_1.forwardRef(function () { return FormControlName; })
@@ -21019,7 +21407,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 493:
+/***/ 496:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21030,8 +21418,8 @@ webpackJsonp([0],{
 	 * found in the LICENSE file at https://angular.io/license
 	 */
 	"use strict";
-	var exceptions_1 = __webpack_require__(470);
-	var error_examples_1 = __webpack_require__(490);
+	var exceptions_1 = __webpack_require__(473);
+	var error_examples_1 = __webpack_require__(493);
 	var ReactiveErrors = (function () {
 	    function ReactiveErrors() {
 	    }
@@ -21057,7 +21445,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 494:
+/***/ 497:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21074,13 +21462,13 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var async_1 = __webpack_require__(476);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
-	var validators_1 = __webpack_require__(479);
-	var control_container_1 = __webpack_require__(485);
-	var reactive_errors_1 = __webpack_require__(493);
-	var shared_1 = __webpack_require__(478);
+	var async_1 = __webpack_require__(479);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
+	var validators_1 = __webpack_require__(482);
+	var control_container_1 = __webpack_require__(488);
+	var reactive_errors_1 = __webpack_require__(496);
+	var shared_1 = __webpack_require__(481);
 	exports.formDirectiveProvider = {
 	    provide: control_container_1.ControlContainer,
 	    useExisting: core_1.forwardRef(function () { return FormGroupDirective; })
@@ -21198,7 +21586,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 495:
+/***/ 498:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21215,12 +21603,12 @@ webpackJsonp([0],{
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var core_1 = __webpack_require__(11);
-	var validators_1 = __webpack_require__(479);
-	var abstract_form_group_directive_1 = __webpack_require__(487);
-	var control_container_1 = __webpack_require__(485);
-	var reactive_errors_1 = __webpack_require__(493);
-	var shared_1 = __webpack_require__(478);
-	var form_group_directive_1 = __webpack_require__(494);
+	var validators_1 = __webpack_require__(482);
+	var abstract_form_group_directive_1 = __webpack_require__(490);
+	var control_container_1 = __webpack_require__(488);
+	var reactive_errors_1 = __webpack_require__(496);
+	var shared_1 = __webpack_require__(481);
+	var form_group_directive_1 = __webpack_require__(497);
 	exports.formGroupNameProvider = {
 	    provide: control_container_1.ControlContainer,
 	    useExisting: core_1.forwardRef(function () { return FormGroupName; })
@@ -21328,7 +21716,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 496:
+/***/ 499:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21340,8 +21728,8 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var lang_1 = __webpack_require__(467);
-	var validators_1 = __webpack_require__(479);
+	var lang_1 = __webpack_require__(470);
+	var validators_1 = __webpack_require__(482);
 	exports.REQUIRED = validators_1.Validators.required;
 	exports.REQUIRED_VALIDATOR = {
 	    provide: validators_1.NG_VALIDATORS,
@@ -21451,7 +21839,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 497:
+/***/ 500:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21463,9 +21851,9 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var collection_1 = __webpack_require__(473);
-	var lang_1 = __webpack_require__(467);
-	var model_1 = __webpack_require__(477);
+	var collection_1 = __webpack_require__(476);
+	var lang_1 = __webpack_require__(470);
+	var model_1 = __webpack_require__(480);
 	var FormBuilder = (function () {
 	    function FormBuilder() {
 	    }
@@ -21538,7 +21926,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 498:
+/***/ 501:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21550,9 +21938,9 @@ webpackJsonp([0],{
 	 */
 	"use strict";
 	var core_1 = __webpack_require__(11);
-	var directives_1 = __webpack_require__(463);
-	var radio_control_value_accessor_1 = __webpack_require__(482);
-	var form_builder_1 = __webpack_require__(497);
+	var directives_1 = __webpack_require__(466);
+	var radio_control_value_accessor_1 = __webpack_require__(485);
+	var form_builder_1 = __webpack_require__(500);
 	/**
 	 * Shorthand set of providers used for building Angular forms.
 	 * @experimental
@@ -21611,7 +21999,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 499:
+/***/ 502:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21626,20 +22014,20 @@ webpackJsonp([0],{
 	};
 	var core_1 = __webpack_require__(11);
 	var common_1 = __webpack_require__(205);
-	var contacts_routing_1 = __webpack_require__(500);
-	var contacts_home_component_1 = __webpack_require__(501);
-	var contacts_container_component_1 = __webpack_require__(502);
-	var contacts_pagination_component_1 = __webpack_require__(505);
-	var contacts_pagination_item_component_1 = __webpack_require__(506);
-	var contacts_add_item_component_1 = __webpack_require__(507);
-	var contacts_list_component_1 = __webpack_require__(508);
-	var contacts_item_component_1 = __webpack_require__(509);
-	var contacts_help_component_1 = __webpack_require__(510);
-	var contacts_manager_component_1 = __webpack_require__(511);
-	var contacts_filter_container_component_1 = __webpack_require__(513);
-	var contacts_filter_item_component_1 = __webpack_require__(512);
-	var contacts_service_1 = __webpack_require__(503);
-	var forms_1 = __webpack_require__(461);
+	var contacts_routing_1 = __webpack_require__(503);
+	var contacts_home_component_1 = __webpack_require__(504);
+	var contacts_container_component_1 = __webpack_require__(505);
+	var contacts_pagination_component_1 = __webpack_require__(508);
+	var contacts_pagination_item_component_1 = __webpack_require__(509);
+	var contacts_add_item_component_1 = __webpack_require__(510);
+	var contacts_list_component_1 = __webpack_require__(511);
+	var contacts_item_component_1 = __webpack_require__(512);
+	var contacts_help_component_1 = __webpack_require__(513);
+	var contacts_manager_component_1 = __webpack_require__(514);
+	var contacts_filter_container_component_1 = __webpack_require__(516);
+	var contacts_filter_item_component_1 = __webpack_require__(515);
+	var contacts_service_1 = __webpack_require__(506);
+	var forms_1 = __webpack_require__(464);
 	var ContactsModule = (function () {
 	    function ContactsModule() {
 	    }
@@ -21676,12 +22064,12 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 500:
+/***/ 503:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var router_1 = __webpack_require__(375);
-	var contacts_home_component_1 = __webpack_require__(501);
+	var contacts_home_component_1 = __webpack_require__(504);
 	exports.routes = [
 	    { path: "contacts", component: contacts_home_component_1.ContactsHomeComponent }
 	];
@@ -21690,7 +22078,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 501:
+/***/ 504:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21735,7 +22123,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 502:
+/***/ 505:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21752,8 +22140,8 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var contacts_service_1 = __webpack_require__(503);
-	var contact_model_1 = __webpack_require__(504);
+	var contacts_service_1 = __webpack_require__(506);
+	var contact_model_1 = __webpack_require__(507);
 	var ContactsContainerComponent = (function () {
 	    function ContactsContainerComponent(_contactsService, _elRef, $) {
 	        this._contactsService = _contactsService;
@@ -21886,7 +22274,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 503:
+/***/ 506:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22014,7 +22402,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 504:
+/***/ 507:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22035,7 +22423,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 505:
+/***/ 508:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22189,7 +22577,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 506:
+/***/ 509:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22206,7 +22594,7 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var contacts_pagination_component_1 = __webpack_require__(505);
+	var contacts_pagination_component_1 = __webpack_require__(508);
 	var ContactsPaginationItemComponent = (function () {
 	    function ContactsPaginationItemComponent(_elRef, $) {
 	        this._elRef = _elRef;
@@ -22257,7 +22645,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 507:
+/***/ 510:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22271,7 +22659,7 @@ webpackJsonp([0],{
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var core_1 = __webpack_require__(11);
-	var contact_model_1 = __webpack_require__(504);
+	var contact_model_1 = __webpack_require__(507);
 	var ContactsAddItemComponent = (function () {
 	    function ContactsAddItemComponent() {
 	        this.onAddContact = new core_1.EventEmitter();
@@ -22329,7 +22717,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 508:
+/***/ 511:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22381,7 +22769,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 509:
+/***/ 512:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22395,7 +22783,7 @@ webpackJsonp([0],{
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var core_1 = __webpack_require__(11);
-	var contact_model_1 = __webpack_require__(504);
+	var contact_model_1 = __webpack_require__(507);
 	var ContactsItemComponent = (function () {
 	    function ContactsItemComponent() {
 	        this.isEditable = false;
@@ -22462,7 +22850,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 510:
+/***/ 513:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22496,7 +22884,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 511:
+/***/ 514:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22513,7 +22901,7 @@ webpackJsonp([0],{
 	    return function (target, key) { decorator(target, key, paramIndex); }
 	};
 	var core_1 = __webpack_require__(11);
-	var contacts_filter_item_component_1 = __webpack_require__(512);
+	var contacts_filter_item_component_1 = __webpack_require__(515);
 	var ContactsManagerComponent = (function () {
 	    function ContactsManagerComponent(_elRef, $) {
 	        this._elRef = _elRef;
@@ -22572,7 +22960,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 512:
+/***/ 515:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22633,7 +23021,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 513:
+/***/ 516:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22685,7 +23073,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 514:
+/***/ 517:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22723,7 +23111,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 515:
+/***/ 518:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22761,7 +23149,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 516:
+/***/ 519:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
