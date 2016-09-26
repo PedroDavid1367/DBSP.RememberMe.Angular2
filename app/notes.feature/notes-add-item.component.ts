@@ -30,12 +30,13 @@ export class NotesAddItemComponent implements OnInit {
     this.onAddNote = new EventEmitter<AddNoteArgs>();
   }
 
-  public ngOnInit() {
+  public ngOnInit () {
     this.model = new Note("", "", "", "", "");
 
     if(tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
       tinymce.init({
         selector: '#content',
+        height: 500,
         plugins: [
           'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
           'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
@@ -52,7 +53,7 @@ export class NotesAddItemComponent implements OnInit {
       });
   }
 
-  public submit() {
+  public submit () {
     let scheduleText = this.$(this._elRef.nativeElement)
       .find("#schedule").val();
     // Creating a date based on the pickdate element selection or 
@@ -77,7 +78,7 @@ export class NotesAddItemComponent implements OnInit {
     this.onAddNote.emit(addNoteArgs);
   }
 
-  public cancel() {
+  public cancel () {
     let addNoteArgs = new AddNoteArgs();
     addNoteArgs.submitted = false,
     addNoteArgs.canceled = true,
@@ -91,12 +92,6 @@ export class NotesAddItemComponent implements OnInit {
 
     this.$(this._elRef.nativeElement)
       .find("#schedule").pickadate("picker").clear();
-  }
-
-  public contentDiagnostic() {
-    let content = tinyMCE.get("content").getContent()
-
-    console.log(content);
   }
 }
 

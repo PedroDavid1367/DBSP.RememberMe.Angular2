@@ -6,5 +6,8 @@ export class NotesSharedItemsDateilsService {
 
   public notes: Note[];
 
-  constructor () { }
+  public constructor () { 
+
+    this.notes = [];
+  }
 }

@@ -39,7 +39,7 @@ declare let tinyMCE: any;
   }
   `],
   template: `
-  <div *ngIf="!isEditable" class="card lime lighten-5">
+  <div *ngIf="!isEditable && note.Title" class="card lime lighten-5">
     <div class="card-content">
       <span class="card-title">{{ note.Title }}</span>
       <p id="contentDisplayer" [innerHTML]="addAnchors(note.Content)">
@@ -172,12 +172,13 @@ export class NotesItemDetailsComponent implements OnChanges, OnDestroy {
   //   this.scheduleTimeString = scheduleTime.toDateString();
   //   // Evaluating if the schedule time is on time or near complition.
   //   this.evaluateScheduleTime(scheduleTime);
-  //   // Firing up the scheduler
+  //   // Firing up the scheduler every 6 hours.
   //   this._scheduleTimeEvaluator = setInterval(() => {
   //     this.evaluateScheduleTime(scheduleTime);
   //   }, this._scheduleTimeSpanTime); 
   // }
 
+  // I think this is going to be for a reminder.
   public ngOnChanges () {
     if (this.note.Title) {
       this.cloneNote();
@@ -188,7 +189,7 @@ export class NotesItemDetailsComponent implements OnChanges, OnDestroy {
       this.scheduleTimeString = scheduleTime.toDateString();
       // Evaluating if the schedule time is on time or near complition.
       this.evaluateScheduleTime(scheduleTime);
-      // Firing up the scheduler
+      // Firing up the scheduler every 6 hours.
       this._scheduleTimeEvaluator = setInterval(() => {
         this.evaluateScheduleTime(scheduleTime);
       }, this._scheduleTimeSpanTime); 
@@ -250,8 +251,8 @@ export class NotesItemDetailsComponent implements OnChanges, OnDestroy {
 
       if(tinyMCE.execCommand('mceRemoveEditor', false, this.editContentId)) {
         tinymce.init({
-          //selector: ".edit-note-content"
           selector: "#" + this.editContentId,
+          height: 500,
           plugins: [
             'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
             'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',

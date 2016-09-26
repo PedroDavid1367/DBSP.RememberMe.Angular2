@@ -1,5 +1,6 @@
 <div class="row z-depth-4">
-  <form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">
+  <!--<form class="col s12" (ngSubmit)="submit()" #noteForm="ngForm">-->
+  <form class="col s12" #noteForm="ngForm">
     <div class="row">
       <div class="input-field col s12">
         <input id="title" type="text" class="validate" required
@@ -23,12 +24,9 @@
 
     <div class="row">
       <div class="input-field col s12">
-        <div id="content"></div>
+        <textarea id="content"></textarea>
       </div>
     </div>
-
-    Diagnostic: model.Content = {{ model.Content }}<br />
-    <input type="button" class="btn-flat" value="Diagnostic" (click)="contentDiagnostic()" /><br />
 
     <div class="row">
       <div class="input-field col s12 m6">
@@ -62,7 +60,9 @@
     </div>
 
     <div class="row">
-      <input class="btn-flat" type="submit" [disabled]="!noteForm.form.valid" value="Save" />
+      <!--<input class="btn-flat" type="submit" [disabled]="!noteForm.form.valid" value="Save" />-->
+      <input class="btn-flat" type="button" value="Save" (click)="submit()" 
+             [disabled]="!noteForm.form.valid" />
       <input class="btn-flat" type="button" value="Restart note" (click)="restartNote()" />
       <input class="btn-flat" type="button" value="Cancel" (click)="cancel()" />
     </div>

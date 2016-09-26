@@ -18,6 +18,7 @@ import { NotesService }             from "./notes.service";
 import { NotesItemDetailsComponent }  from "./notes-item-details.component"; 
 import { NotesItemDetailsContainerComponent }  from "./notes-item-details-container.component"; 
 import { NotesSharedItemsDateilsService }  from "./notes-shared-items-details.service";
+import { NotesAddItemContainerComponent }      from "./notes-add-item-container.component";
 
 import { FormsModule }  from "@angular/forms";
 
@@ -33,6 +34,7 @@ import { FormsModule }  from "@angular/forms";
     NotesPaginationComponent,
     NotesPaginationItemComponent,
     NotesAddItemComponent,
+    NotesAddItemContainerComponent,
     NotesListComponent,
     NotesItemComponent,
     NotesHelpComponent,

@@ -8,20 +8,20 @@ export class OidcTokenManagerService {
   private _config = {
     client_id: "remembermeimplicit",
 
-    // redirect_uri: "http://localhost:8888/callback", 
-    // post_logout_redirect_uri: "http://localhost:8888/home",
-    // authority: "http://localhost:1693/identity",   
-    // silent_redirect_uri: "http://localhost:8888/silent-refresh",
+    redirect_uri: "http://localhost:8888/callback", 
+    post_logout_redirect_uri: "http://localhost:8888/home",
+    authority: "http://localhost:1693/identity",   
+    silent_redirect_uri: "http://localhost:8888/silent-refresh",
 
     // redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
     // post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
     // authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
     // silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
 
-    redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
-    post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
-    authority: "http://localhost:1693/identity", 
-    silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
+    // redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/callback",
+    // post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
+    // authority: "http://localhost:1693/identity", 
+    // silent_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/silent-refresh",
 
     response_type: "id_token token",
     scope: "openid profile addresses notesmanagement roles", 

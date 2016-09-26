@@ -1,7 +1,7 @@
 import { Routes, RouterModule }                from "@angular/router";
 import { NotesHomeComponent }                  from "./notes-home.component";
 import { NotesHomegGuard }                     from "./notes-home.guard";
-import { NotesAddItemComponent }               from "./notes-add-item.component";
+import { NotesAddItemContainerComponent }      from "./notes-add-item-container.component";
 import { NotesItemDetailsContainerComponent }  from "./notes-item-details-container.component";
 
 export const routes: Routes = [
@@ -12,7 +12,7 @@ export const routes: Routes = [
     children: [
       {
         path: "",
-        component: NotesAddItemComponent
+        component: NotesAddItemContainerComponent
       },
       {
         path: ":id",

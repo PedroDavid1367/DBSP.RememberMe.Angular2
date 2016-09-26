@@ -1,6 +1,8 @@
-import { Component }                from "@angular/core";
-import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
-import { SearchStringEventArgs }    from "./notes-filter-item.component";
+import { Component, OnInit, ElementRef, Inject, OnChanges,
+  Input, Output, EventEmitter }            from "@angular/core";
+import { OidcTokenManagerService }         from "../common.services/oidc-token-manager.service";
+import { SearchStringEventArgs }           from "./notes-filter-item.component";
+import { Router, ActivatedRoute, Params }  from "@angular/router";
 
 @Component({
   selector: 'notes-home',
@@ -40,7 +42,7 @@ import { SearchStringEventArgs }    from "./notes-filter-item.component";
   </div>
   `
 })
-export class NotesHomeComponent {
+export class NotesHomeComponent implements OnInit {
 
   public isAddNoteSectionEnabled: boolean;
   public isFilterNoteSectionEnabled: boolean;
@@ -48,9 +50,27 @@ export class NotesHomeComponent {
   public filterType: string; 
 
   // Sending search for all notes (default).
-  public constructor () {
+  public constructor (private _activatedRoute: ActivatedRoute,
+    private _router: Router) {
+
     this.searchString = "";
     this.filterType = "Title"; 
+  }
+
+  public ngOnInit () {
+    // this._activatedRoute.params.forEach((params: Params) => {
+    //   this.selectedId = params['id'];
+    //   this.service.getCrises()
+    //     .then(crises => this.crises = crises);
+    // });
+    this._activatedRoute.params.forEach((params: Params) => {
+      if (params["foo"]) {
+        console.log("It seems foo exists");    
+      } else {
+        console.log("foo is not initiated");
+      }
+    });
+    console.log("notes-home initiated");
   }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
