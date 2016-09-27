@@ -71,7 +71,7 @@ export class NotesItemDetailsContainerComponent {
         // TODO: Subscribe to error and display it.
       });
 
-    // Deleting the notes item entry. 
+    // Deleting the notes item entry (left panel). 
     let indexToDelete;
     for (let index in this.notes) {
       if (this.notes[index].Id === this.noteToDelete.Id) {
@@ -82,12 +82,12 @@ export class NotesItemDetailsContainerComponent {
     this.notes.splice(indexToDelete, 1);
 
     // Navigating to notes home. 
-    //this._router.navigate(["/notes"]);
-    this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+    this._router.navigate(["/notes"]);
+    //this._router.navigate(['../'], { relativeTo: this._activatedRoute });
   }
 
   public editNote(note: Note) {
-    // Editing from API, UI has been already updated.
+    // Editing from API.
     this._notesService
       .editNote(note)
       .subscribe(res => {
@@ -95,6 +95,19 @@ export class NotesItemDetailsContainerComponent {
         console.log(res);
         // TODO: Subscribe to error and display it.
       });
+
+    // Updating the notes item entry (left panel). 
+    let indexToUpdate;
+    for (let index in this.notes) {
+      if (this.notes[index].Id === this.noteToDelete.Id) {
+        indexToUpdate = index;
+        break;
+      }
+    }
+    this.notes.splice(indexToUpdate, 1, note);
+
+    // Navigating to updated home. 
+    this._router.navigate(["/notes", note.Id]);
   }
 
   public closeDeleteConfirmationMessage() {

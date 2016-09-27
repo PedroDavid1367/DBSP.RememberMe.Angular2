@@ -58,19 +58,6 @@ export class NotesHomeComponent implements OnInit {
   }
 
   public ngOnInit () {
-    // this._activatedRoute.params.forEach((params: Params) => {
-    //   this.selectedId = params['id'];
-    //   this.service.getCrises()
-    //     .then(crises => this.crises = crises);
-    // });
-    this._activatedRoute.params.forEach((params: Params) => {
-      if (params["foo"]) {
-        console.log("It seems foo exists");    
-      } else {
-        console.log("foo is not initiated");
-      }
-    });
-    console.log("notes-home initiated");
   }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
