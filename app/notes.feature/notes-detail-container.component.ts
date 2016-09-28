@@ -8,7 +8,7 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
 @Component({
   selector: "notes-detail-container",
   template: `
-  <notes-add-item *ngIf="!note.Title"
+  <notes-add-item *ngIf="isAddNoteSectionEnabled"
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
 
@@ -35,6 +35,7 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
 export class NotesDetailContainerComponent {
 
   @Input() public note: Note;
+  @Input() public isAddNoteSectionEnabled: boolean;
   @Output() private onAddNote: EventEmitter<AddNoteArgs>;
 
   public constructor(private _notesService: NotesService,

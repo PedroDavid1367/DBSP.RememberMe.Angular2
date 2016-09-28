@@ -29,6 +29,7 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
       <notes-item-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                             [searchString]="searchString"
                             [filterType]="filterType"
+                            [noteToAdd]="noteToAdd"
                             (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
       </notes-item-container>
     </div>
@@ -36,7 +37,8 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
 
   <div class="col s12 m8">
     <div class="col s12">
-      <notes-detail-container [note]="testedNote"
+      <notes-detail-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
+                              [note]="noteToDisplay"
                               (onAddNote)="sendToNotesItemContainer($event)">                   
       </notes-detail-container>
     </div>
@@ -49,13 +51,17 @@ export class NotesHomeComponent {
   public isFilterNoteSectionEnabled: boolean;
   public searchString: string;
   public filterType: string;
-  public testedNote: Note; 
+  public noteToDisplay: Note;
+  public noteToAdd: Note; 
 
   // Sending search for all notes (default).
   public constructor () {
+    // The default is the add notes view opened when the app is started.
+    this.isAddNoteSectionEnabled = true;
     this.searchString = "";
     this.filterType = "Title";
-    this.testedNote = new Note("", "", "", "", "");
+    this.noteToDisplay = new Note("", "", "", "", "");
+    //this.noteToAdd = new Note("", "", "", "", "");
   }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
@@ -72,6 +78,11 @@ export class NotesHomeComponent {
   }
 
   public sendToNotesItemContainer (addNoteArgs: AddNoteArgs) {
-    
+    // Closing the add note view either because a note has been submitted or canceled.
+    this.isAddNoteSectionEnabled = false;
+    if (addNoteArgs.note) {
+      this.noteToAdd = addNoteArgs.note;
+      this.noteToDisplay = addNoteArgs.note;
+    }
   }
 }

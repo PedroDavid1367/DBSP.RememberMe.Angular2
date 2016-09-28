@@ -39,6 +39,7 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
   @Input() public isAddNoteSectionEnabled: boolean;
   @Input() private searchString: string;
   @Input() private filterType: string;
+  @Input() public noteToAdd: Note;
   @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
   public _notes: Note[];
   public _noteToDelete: Note;
@@ -71,6 +72,15 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
         .subscribe(res => {
           this.noteCount = res;
           // TODO: Subscribe to error and display it.
+      });
+    }
+
+    if (this.noteToAdd) {
+      this._notesService
+      .addNote(this.noteToAdd)
+      .subscribe(note => {
+        this._notes.unshift(note);
+        // TODO: Subscribe to error and display it.
       });
     }
   }
