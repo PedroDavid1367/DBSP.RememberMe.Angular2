@@ -6,27 +6,20 @@ import { Note }                                    from "./note.model";
   template: `
   <notes-item *ngFor="let note of notes"
               [note]="note"
-              (onDeleteNote)="sendNoteToDelete($event)"
-              (onEditNote)="sendNoteToEdit($event)">
+              (onSelected)="sendToContainer($event)">
   </notes-item>
   `
 })
 export class NotesItemListComponent {
 
   @Input() public notes: Note[];
-  @Output() private onDeleteNote: EventEmitter<Note>;
-  @Output() private onEditNote: EventEmitter<Note>;
+  @Output() private onNoteSelected: EventEmitter<Note>;
 
   public constructor () {
-    this.onDeleteNote = new EventEmitter<Note>();
-    this.onEditNote = new EventEmitter<Note>();
+    this.onNoteSelected = new EventEmitter<Note>();
   }
 
-  public sendNoteToDelete(note: Note) {
-    this.onDeleteNote.emit(note);
-  }
-
-  public sendNoteToEdit(note: Note) {
-    this.onEditNote.emit(note);
+  public sendToContainer(note: Note) {
+    this.onNoteSelected.emit(note);
   }
 }

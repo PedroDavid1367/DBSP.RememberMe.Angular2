@@ -2,7 +2,6 @@ import { Component }                from "@angular/core";
 import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
 import { SearchStringEventArgs }    from "./notes-filter-item.component";
 import { Note }                                    from "./note.model";
-import { AddNoteArgs }                             from "./notes-add-item.component";
 
 @Component({
   selector: 'notes-home',
@@ -26,11 +25,11 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
                     (onSendSearchString)="toNotesContainer($event)">                   
       </notes-filter-container>
 
-      <notes-item-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
-                            [searchString]="searchString"
+      <notes-item-container [searchString]="searchString"
                             [filterType]="filterType"
                             [noteToAdd]="noteToAdd"
-                            (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
+                            [noteToDelete]="noteToDelete"
+                            (onNoteSelected)="sendToNotesDetailContainer($event)">                   
       </notes-item-container>
     </div>
   </div>
@@ -39,7 +38,8 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
     <div class="col s12">
       <notes-detail-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                               [note]="noteToDisplay"
-                              (onAddNote)="sendToNotesItemContainer($event)">                   
+                              (onAddNote)="sendAddNoteArgsToNotesItemContainer($event)"
+                              (onDeleteNote)="sendNoteToNotesItemContainer($event)">                   
       </notes-detail-container>
     </div>
   </div>
@@ -52,19 +52,20 @@ export class NotesHomeComponent {
   public searchString: string;
   public filterType: string;
   public noteToDisplay: Note;
-  public noteToAdd: Note; 
+  public noteToAdd: Note;
+  public noteToDelete: Note; 
 
   // Sending search for all notes (default).
   public constructor () {
-    // The default is the add notes view opened when the app is started.
-    this.isAddNoteSectionEnabled = true;
     this.searchString = "";
     this.filterType = "Title";
     this.noteToDisplay = new Note("", "", "", "", "");
-    //this.noteToAdd = new Note("", "", "", "", "");
   }
 
   public setIsAddNoteSectionEnabled (isAddNoteSectionEnabled: boolean) {
+    // Reseting noteToDisplay to default value (it will prevent the note detail being displayed). 
+    this.noteToDisplay = new Note("", "", "", "", "");
+    // Enabling add note section.
     this.isAddNoteSectionEnabled = isAddNoteSectionEnabled;
   }
 
@@ -77,12 +78,21 @@ export class NotesHomeComponent {
     this.filterType = searchStringEventArgs.filterType;
   }
 
-  public sendToNotesItemContainer (addNoteArgs: AddNoteArgs) {
-    // Closing the add note view either because a note has been submitted or canceled.
+  public sendAddNoteArgsToNotesItemContainer (note: Note) {
+    // Disabling add note section because a note has been created.
     this.isAddNoteSectionEnabled = false;
-    if (addNoteArgs.note) {
-      this.noteToAdd = addNoteArgs.note;
-      this.noteToDisplay = addNoteArgs.note;
-    }
+    this.noteToAdd = note;
+    this.noteToDisplay = note;
+  }
+
+  public sendNoteToNotesItemContainer (note: Note) {
+    // Reseting noteToDisplay to default value (it will prevent the note detail being displayed). 
+    this.noteToDisplay = new Note("", "", "", "", "");
+    this.noteToDelete = note;
+  }
+
+  public sendToNotesDetailContainer (note: Note) {
+    this.isAddNoteSectionEnabled = false;
+    this.noteToDisplay = note;
   }
 }

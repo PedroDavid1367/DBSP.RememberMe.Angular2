@@ -8,7 +8,6 @@ import { NotesContainerComponent }  from "./notes-container.component";
 import { NotesPaginationComponent } from "./notes-pagination.component";
 import { NotesPaginationItemComponent }  from "./notes-pagination-item.component";
 import { NotesAddItemComponent }    from "./notes-add-item.component";
-import { NotesListComponent }       from "./notes-list.component";
 import { NotesItemComponent }       from "./notes-item.component";
 import { NotesHelpComponent }       from "./notes-help.component";
 import { NotesManagerComponent }    from "./notes-manager.component";
@@ -34,7 +33,6 @@ import { FormsModule }  from "@angular/forms";
     NotesPaginationComponent,
     NotesPaginationItemComponent,
     NotesAddItemComponent,
-    NotesListComponent,
     NotesItemComponent,
     NotesHelpComponent,
     NotesManagerComponent,

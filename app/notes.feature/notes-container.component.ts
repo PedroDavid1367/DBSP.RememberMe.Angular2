@@ -18,10 +18,10 @@ import { PageClickedEventArgs }                    from "./notes-pagination.comp
                     (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
-  <notes-list [notes]="_notes"
+  <!--<notes-list [notes]="_notes"
               (onDeleteNote)="openDeleteNoteConfirmation($event)"
               (onEditNote)="editNote($event)">
-  </notes-list>
+  </notes-list>-->
 
   <!-- Used for delete confirmation -->
   <div id="deleteConfirmationModal" class="modal">

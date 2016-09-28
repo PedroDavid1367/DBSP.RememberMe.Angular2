@@ -1,14 +1,13 @@
 import { Component, OnInit, ElementRef, Inject, OnChanges,
   Input, Output, EventEmitter }                    from "@angular/core";
-import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
-import { Router, ActivatedRoute, Params }          from "@angular/router";
 import { AddNoteArgs }                             from "./notes-add-item.component";
+import { NotesService }                            from "./notes.service";
 
 @Component({
   selector: "notes-detail-container",
   template: `
-  <notes-add-item *ngIf="isAddNoteSectionEnabled"
+  <notes-add-item *ngIf="addNoteSectionEnabled"
                   (onAddNote)="handleAddNoteEvent($event)">
   </notes-add-item>
 
@@ -21,7 +20,7 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
   <div id="deleteConfirmationModal" class="modal">
     <div class="modal-content">
       <h4>Delete confirmation</h4>
-      <p>The note with title: {{ note.Title }} will be deleted</p>
+      <p *ngIf="noteToDelete">The note with title: {{ noteToDelete.Title }} will be deleted</p>
     </div>
     <div class="modal-footer">
       <a (click)="closeDeleteConfirmationMessage()"
@@ -32,26 +31,51 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
   </div>
   `
 })
-export class NotesDetailContainerComponent {
+export class NotesDetailContainerComponent implements OnInit, OnChanges {
 
   @Input() public note: Note;
   @Input() public isAddNoteSectionEnabled: boolean;
-  @Output() private onAddNote: EventEmitter<AddNoteArgs>;
+  @Output() private onDeleteNote: EventEmitter<Note>;
+  @Output() private onAddNote: EventEmitter<Note>;
+  public notesDetailEnabled: boolean;
+  public addNoteSectionEnabled: boolean;
+  public noteToDelete: Note;
 
-  public constructor(private _notesService: NotesService,
+  constructor(private _notesService: NotesService,
     private _elRef: ElementRef,
     @Inject("$") private $: any) {
 
-    this.onAddNote = new EventEmitter<AddNoteArgs>();
+    this.onAddNote = new EventEmitter<Note>();
+    this.onDeleteNote = new EventEmitter<Note>();
   }
 
   public ngOnInit () {
+    // The default is the add notes view opened when the app is started.
+    this.addNoteSectionEnabled = true;
   }
 
   public ngOnChanges () {
+    this.addNoteSectionEnabled = this.isAddNoteSectionEnabled;
   }
 
-  public openDeleteNoteConfirmation(note: Note) {
+  public handleAddNoteEvent(addNoteArgs: AddNoteArgs) { 
+    if (addNoteArgs.canceled) {
+      this.addNoteSectionEnabled = false;
+    }
+    // Adding to API.
+    if (addNoteArgs.note) {
+      this._notesService
+      .addNote(addNoteArgs.note)
+      .subscribe(note => {
+        // Sending to Home component so it knows what to do for adding to UI.
+        this.onAddNote.emit(note);
+        // TODO: Subscribe to error and display it.
+      });
+    }
+  }
+
+  private openDeleteNoteConfirmation(note: Note) {
+    this.noteToDelete = note;
     this.$(this._elRef.nativeElement)
       .find("#deleteConfirmationModal").openModal();
   }
@@ -62,9 +86,15 @@ export class NotesDetailContainerComponent {
   }
 
   public deleteNote() {
-  }
-
-  public handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
-    this.onAddNote.emit(addNoteArgs);
+    // Deleting from API.
+    this._notesService
+      .deleteNote(this.noteToDelete)
+      .subscribe(res => {
+        console.log("The result of deleteNote is:");
+        console.log(res);
+        // TODO: Subscribe to error and display it.
+      });
+    // Sending to home component so it knows how to delete from UI.
+    this.onDeleteNote.emit(this.noteToDelete);
   }
 }

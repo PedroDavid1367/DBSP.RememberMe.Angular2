@@ -162,28 +162,10 @@ export class NotesDetailComponent implements OnChanges, OnDestroy {
     return "content-" + this.note.Id;
   }
 
-  // public ngOnInit () {
-
-  //   this.cloneNote();
-  //   // Adding default values to this.scheduleColor.
-  //   // this.scheduleColor = "seagreen";
-  //   // Parsing epoch time to human readable value.
-  //   let scheduleTime = new Date(this.note.ScheduleTime);
-  //   this.scheduleTimeString = scheduleTime.toDateString();
-  //   // Evaluating if the schedule time is on time or near complition.
-  //   this.evaluateScheduleTime(scheduleTime);
-  //   // Firing up the scheduler every 6 hours.
-  //   this._scheduleTimeEvaluator = setInterval(() => {
-  //     this.evaluateScheduleTime(scheduleTime);
-  //   }, this._scheduleTimeSpanTime); 
-  // }
-
   // I think this is going to be for a reminder.
   public ngOnChanges () {
     if (this.note.Title) {
       this.cloneNote();
-      // Adding default values to this.scheduleColor.
-      // this.scheduleColor = "seagreen";
       // Parsing epoch time to human readable value.
       let scheduleTime = new Date(this.note.ScheduleTime);
       this.scheduleTimeString = scheduleTime.toDateString();
@@ -204,15 +186,6 @@ export class NotesDetailComponent implements OnChanges, OnDestroy {
       this.scheduleColor = "tomato";
     }
   }
-
-  // I'm not sure about this implementation (it's fired too many times).
-  // public ngAfterViewChecked () {
-  //   this.$(this._elRef.nativeElement)
-  //     .find("#schedule").pickadate({
-  //       selectMonths: true, // Creates a dropdown to control month
-  //       selectYears: 15     // Creates a dropdown of 15 years to control year
-  //     });
-  // }
 
   public ngOnDestroy () {
     clearInterval(this._scheduleTimeEvaluator);

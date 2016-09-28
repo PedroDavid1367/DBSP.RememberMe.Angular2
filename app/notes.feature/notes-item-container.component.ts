@@ -15,34 +15,18 @@ import { PageClickedEventArgs }                    from "./notes-pagination.comp
   </notes-pagination>
 
   <notes-item-list [notes]="_notes"
-                   (onDeleteNote)="openDeleteNoteConfirmation($event)"
-                   (onEditNote)="editNote($event)">
+                   (onNoteSelected)="sendNoteToHomeComponent($event)">
   </notes-item-list>
-
-  <!-- Used for delete confirmation -->
-  <div id="deleteConfirmationModal" class="modal">
-    <div class="modal-content">
-      <h4>Delete confirmation</h4>
-      <p>The note with title: {{ _noteToDelete.Title }} will be deleted</p>
-    </div>
-    <div class="modal-footer">
-      <a (click)="closeDeleteConfirmationMessage()"
-         class="modal-action modal-close waves-effect waves-green btn btn-flat">Cancel</a>
-      <a (click)="deleteNote()"
-         class="modal-action modal-close waves-effect waves-green btn btn-flat">Yes</a>
-    </div>
-  </div>
   `
 })
 export class NotesItemContainerComponent implements OnInit, OnChanges {
 
-  @Input() public isAddNoteSectionEnabled: boolean;
   @Input() private searchString: string;
   @Input() private filterType: string;
   @Input() public noteToAdd: Note;
-  @Output() private onCloseAddNoteSection: EventEmitter<boolean>;
+  @Input() public noteToDelete: Note;
+  @Output() private onNoteSelected: EventEmitter<Note>;
   public _notes: Note[];
-  public _noteToDelete: Note;
   private _isAddNoteSectionDisabled: boolean;
   public noteCount: number;
 
@@ -52,8 +36,7 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
     private _elRef: ElementRef,
     @Inject("$") private $: any) {
 
-    this.onCloseAddNoteSection = new EventEmitter<boolean>();
-    this._noteToDelete = new Note("", "", "", "", "");
+    this.onNoteSelected = new EventEmitter<Note>();
     this._isAddNoteSectionDisabled = false;
     this.noteCount = 0;
   }
@@ -61,6 +44,10 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
   public ngOnInit () {
     this.getNotesCount();
     //this.getNotes();
+  }
+
+  public sendNoteToHomeComponent (note: Note) {
+    this.onNoteSelected.emit(note);
   }
 
   // ngOnChanges manage if a filtering has been made.
@@ -76,12 +63,19 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
     }
 
     if (this.noteToAdd) {
-      this._notesService
-      .addNote(this.noteToAdd)
-      .subscribe(note => {
-        this._notes.unshift(note);
-        // TODO: Subscribe to error and display it.
-      });
+      this._notes.unshift(this.noteToAdd);
+    }
+
+    if (this.noteToDelete) {
+      // Deleting from UI. 
+      let indexToDelete;
+      for (let index in this._notes) {
+        if (this._notes[index].Id === this.noteToDelete.Id) {
+          indexToDelete = index;
+          break;
+        }
+      }
+      this._notes.splice(indexToDelete, 1);
     }
   }
 
@@ -115,11 +109,6 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
   // }
  
   private handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
-    // Send event to notes-home component 
-    if (addNoteArgs.submitted || addNoteArgs.canceled) {
-      this.onCloseAddNoteSection.emit(this._isAddNoteSectionDisabled);
-    }
-
     // Adding to API.
     if (addNoteArgs.note) {
       this._notesService
@@ -131,36 +120,6 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
     }
   }
 
-
-  public openDeleteNoteConfirmation(note: Note) {
-    this._noteToDelete = note;
-    this.$(this._elRef.nativeElement)
-      .find("#deleteConfirmationModal").openModal();
-  }
-
-  public deleteNote() {
-    // Deleting from API.
-    this._notesService
-      .deleteNote(this._noteToDelete)
-      .subscribe(res => {
-        console.log("The result of deleteNote is:");
-        console.log(res);
-        // TODO: Subscribe to error and display it.
-      });
-
-    // Deleting from UI. 
-    console.log(this._noteToDelete);
-    let indexToDelete;
-    for (let index in this._notes) {
-      if (this._notes[index].Id === this._noteToDelete.Id) {
-        indexToDelete = index;
-        break;
-      }
-    }
-    this._notes.splice(indexToDelete, 1);
-    console.log(this._notes);
-  }
-
   public editNote(note: Note) {
     // Editing from API, UI has been already updated.
     this._notesService
@@ -170,10 +129,5 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
         console.log(res);
         // TODO: Subscribe to error and display it.
       });
-  }
-
-  public closeDeleteConfirmationMessage() {
-    this.$(this._elRef.nativeElement)
-      .find("#deleteConfirmationModal").closeModal();
   }
 }
