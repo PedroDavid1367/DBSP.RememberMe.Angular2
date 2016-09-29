@@ -20,15 +20,11 @@ import { Note }                                    from "./note.model";
                      (onSendSearchString)="toNotesContainer($event)">               
       </notes-manager>
 
-      <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
-                    (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-                    (onSendSearchString)="toNotesContainer($event)">                   
-      </notes-filter-container>
-
       <notes-item-container [searchString]="searchString"
                             [filterType]="filterType"
                             [noteToAdd]="noteToAdd"
                             [noteToDelete]="noteToDelete"
+                            [noteToEdit]="noteToEdit"
                             (onNoteSelected)="sendToNotesDetailContainer($event)">                   
       </notes-item-container>
     </div>
@@ -36,10 +32,22 @@ import { Note }                                    from "./note.model";
 
   <div class="col s12 m8">
     <div class="col s12">
+      <filter-container *ngIf="isFilterNoteSectionEnabled"
+                        (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)">
+      </filter-container>
+
+      <br />
+
+      <!--<notes-filter-container *ngIf="isFilterNoteSectionEnabled"
+                    (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
+                    (onSendSearchString)="toNotesContainer($event)">                   
+      </notes-filter-container>-->
+
       <notes-detail-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                               [note]="noteToDisplay"
                               (onAddNote)="sendAddNoteArgsToNotesItemContainer($event)"
-                              (onDeleteNote)="sendNoteToNotesItemContainer($event)">                   
+                              (onDeleteNote)="sendNoteToNotesItemContainer($event)"
+                              (onEditNote)="sendNoteToNotesItemContainerForEditing($event)">                   
       </notes-detail-container>
     </div>
   </div>
@@ -53,7 +61,8 @@ export class NotesHomeComponent {
   public filterType: string;
   public noteToDisplay: Note;
   public noteToAdd: Note;
-  public noteToDelete: Note; 
+  public noteToDelete: Note;
+  public noteToEdit: Note; 
 
   // Sending search for all notes (default).
   public constructor () {
@@ -94,5 +103,9 @@ export class NotesHomeComponent {
   public sendToNotesDetailContainer (note: Note) {
     this.isAddNoteSectionEnabled = false;
     this.noteToDisplay = note;
+  }
+
+  public sendNoteToNotesItemContainerForEditing (note: Note) {
+    this.noteToEdit = note;
   }
 }

@@ -9,7 +9,9 @@ import { Note }                                    from "./note.model";
   }
   `],
   template: `
-  <div class="card lime lighten-5" (click)="sendSelectedAction()">
+  <div [ngClass]="{'card': true, 'lime': true, 'lighten-5': true, 'z-depth-0': selected, 'lighten-4': selected}"
+       [ngStyle]="{'color': selectedColor()}" 
+       (click)="sendSelectedAction()">
     <div class="card-content">
       <p>Title: {{ note.Title }}</p>
       <p>Category: {{ note.Category }}</p>
@@ -21,6 +23,7 @@ import { Note }                                    from "./note.model";
 export class NotesItemComponent {
 
   @Input() public note: Note;
+  @Input() public selected: boolean;
   @Output() private onSelected: EventEmitter<Note>;
 
   public constructor () {
@@ -29,5 +32,11 @@ export class NotesItemComponent {
 
   public sendSelectedAction () {
     this.onSelected.emit(this.note);
+  }
+
+  public selectedColor () {
+    if (this.selected) {
+      return "seagreen";
+    }
   }
 }

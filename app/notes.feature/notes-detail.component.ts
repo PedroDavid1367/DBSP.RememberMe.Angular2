@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
+import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked, OnInit,
   ElementRef, Inject, OnChanges }                     from "@angular/core";
 //import { AutoLinkerService }                       from "../common.services/auto-linker.service";
 import { Note }                                    from "./note.model";
@@ -134,7 +134,7 @@ declare let tinyMCE: any;
   </div>
   `
 })
-export class NotesDetailComponent implements OnChanges, OnDestroy {
+export class NotesDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public note: Note;
   @Output() private onDeleteNote: EventEmitter<Note>;
@@ -160,6 +160,9 @@ export class NotesDetailComponent implements OnChanges, OnDestroy {
 
   public get editContentId () {
     return "content-" + this.note.Id;
+  }
+
+  public ngOnInit () {
   }
 
   // I think this is going to be for a reminder.

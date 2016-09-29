@@ -19,6 +19,9 @@ import { NotesItemContainerComponent }       from "./notes-item-container.compon
 import { NotesDetailComponent }       from "./notes-detail.component";
 import { NotesDetailContainerComponent }       from "./notes-detail-container.component";
 
+import { FilterContainerComponent }     from "./filter-container.component";
+import { FilterItemComponent }     from "./filter-item.component";
+
 import { FormsModule }  from "@angular/forms";
 
 @NgModule({
@@ -41,7 +44,9 @@ import { FormsModule }  from "@angular/forms";
     NotesItemListComponent,
     NotesItemContainerComponent,
     NotesDetailComponent,
-    NotesDetailContainerComponent
+    NotesDetailContainerComponent,
+    FilterContainerComponent,
+    FilterItemComponent
   ],
   providers: [
     NotesService,

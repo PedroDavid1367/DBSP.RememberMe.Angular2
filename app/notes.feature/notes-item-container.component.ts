@@ -25,6 +25,7 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
   @Input() private filterType: string;
   @Input() public noteToAdd: Note;
   @Input() public noteToDelete: Note;
+  @Input() public noteToEdit: Note;
   @Output() private onNoteSelected: EventEmitter<Note>;
   public _notes: Note[];
   private _isAddNoteSectionDisabled: boolean;
@@ -77,6 +78,18 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
       }
       this._notes.splice(indexToDelete, 1);
     }
+
+    if (this.noteToEdit) {
+      // Updating from UI. 
+      let indexToUpdate;
+      for (let index in this._notes) {
+        if (this._notes[index].Id === this.noteToEdit.Id) {
+          indexToUpdate = index;
+          break;
+        }
+      }
+      this._notes.splice(indexToUpdate, 1, this.noteToEdit);
+    }
   }
 
   private getNotesCount() {
@@ -96,17 +109,6 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
         // TODO: Subscribe to error and display it.
       });
   }
-
-  // TODO: handle res.value and res["@odata.count"] on NotesService.
-  // private getNotes() {
-  //   this._notesService
-  //     .getNotes()
-  //     .subscribe(res => {
-  //       this._notes = res.value;
-  //       this.noteCount = res["@odata.count"];
-  //       // TODO: Subscribe to error and display it.
-  //     });
-  // }
  
   private handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
     // Adding to API.

@@ -37,6 +37,7 @@ export class NotesDetailContainerComponent implements OnInit, OnChanges {
   @Input() public isAddNoteSectionEnabled: boolean;
   @Output() private onDeleteNote: EventEmitter<Note>;
   @Output() private onAddNote: EventEmitter<Note>;
+  @Output() private onEditNote: EventEmitter<Note>;
   public notesDetailEnabled: boolean;
   public addNoteSectionEnabled: boolean;
   public noteToDelete: Note;
@@ -45,8 +46,9 @@ export class NotesDetailContainerComponent implements OnInit, OnChanges {
     private _elRef: ElementRef,
     @Inject("$") private $: any) {
 
-    this.onAddNote = new EventEmitter<Note>();
     this.onDeleteNote = new EventEmitter<Note>();
+    this.onAddNote = new EventEmitter<Note>();
+    this.onEditNote = new EventEmitter<Note>();
   }
 
   public ngOnInit () {
@@ -96,5 +98,18 @@ export class NotesDetailContainerComponent implements OnInit, OnChanges {
       });
     // Sending to home component so it knows how to delete from UI.
     this.onDeleteNote.emit(this.noteToDelete);
+  }
+
+  public editNote(note: Note) {
+    // Editing from API, UI has been already updated.
+    this._notesService
+      .editNote(note)
+      .subscribe(res => {
+        console.log("The result of editNote is:");
+        console.log(res);
+        // TODO: Subscribe to error and display it.
+      });
+    // Sending to home component so it know how to edit from the item list.
+    this.onEditNote.emit(note);
   }
 }

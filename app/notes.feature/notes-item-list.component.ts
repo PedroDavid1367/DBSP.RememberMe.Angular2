@@ -5,6 +5,7 @@ import { Note }                                    from "./note.model";
   selector: 'notes-item-list',
   template: `
   <notes-item *ngFor="let note of notes"
+              [selected]="note.Selected"
               [note]="note"
               (onSelected)="sendToContainer($event)">
   </notes-item>
@@ -20,6 +21,15 @@ export class NotesItemListComponent {
   }
 
   public sendToContainer(note: Note) {
+    this.notes.forEach(n => {
+      n.Selected = false;
+    });
+    this.notes.filter(n => {
+      return n.Id === note.Id;
+    })
+    .map( n => {
+      n.Selected = true;
+    });
     this.onNoteSelected.emit(note);
   }
 }
