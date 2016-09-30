@@ -33,7 +33,8 @@ import { Note }                                    from "./note.model";
   <div class="col s12 m8">
     <div class="col s12">
       <filter-container *ngIf="isFilterNoteSectionEnabled"
-                        (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)">
+                        (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
+                        (onSendSearchString)="toNotesContainer($event)">
       </filter-container>
 
       <br />
