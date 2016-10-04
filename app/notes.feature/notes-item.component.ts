@@ -1,44 +1,16 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked,
-  ElementRef, Inject, OnInit }                     from "@angular/core";
-//import { AutoLinkerService }                       from "../common.services/auto-linker.service";
+import { Component, Input, Output, EventEmitter }  from "@angular/core";
 import { Note }                                    from "./note.model";
 import { Router }                                  from "@angular/router";
-
-declare let tinymce: any;
-declare let tinyMCE: any;
 
 @Component({
   selector: "notes-item",
   styles: [`
-  div span {
-    color: #263238;
-  }  
-  div p {
-    color: #546e7a;
-  }
-  .ng-valid[required] {
-    border-bottom: 1px solid #42A948; /* green */
-  }
-  .ng-invalid {
-    border-bottom: 1px solid #a94442; /* red */
-  }
-  .ontime {
-    color: green;
-  } 
-  .nearschedule {
-    color: red;
-  }
-  .red {
-    color: red;
-  }
-  .small-text {
-    font-size: 10px;
-  }
-  #contentDisplayer {
-    white-space: pre-wrap;
+  div.card {
+    cursor:pointer;
   }
   `],
   template: `
+<<<<<<< HEAD
   <div class="card lime lighten-5" (click)="view()">
     <div class="card-content">
       <p>Title: {{ note.Title }}</p>  
@@ -49,13 +21,23 @@ declare let tinyMCE: any;
           <strong> {{ scheduleTimeString }}</strong>
         </span>
       </p>
+=======
+  <div [ngClass]="{'card': true, 'lime': true, 'lighten-5': true, 'z-depth-0': selected, 'lighten-4': selected}"
+       [ngStyle]="{'color': selectedColor()}" 
+       (click)="sendSelectedAction()">
+    <div class="card-content">
+      <p>Title: {{ note.Title }}</p>
+      <p>Category: {{ note.Category }}</p>
+      <p>Priority: {{ note.Priority }}</p>
+>>>>>>> pf-01-enhancing-old-view
     </div> 
   </div>
   `
 })
-export class NotesItemComponent implements OnInit, OnDestroy {
+export class NotesItemComponent {
 
   @Input() public note: Note;
+<<<<<<< HEAD
   @Output() private onDeleteNote: EventEmitter<Note>;
   @Output() private onEditNote: EventEmitter<Note>;
   public isEditable: boolean = false;
@@ -112,11 +94,16 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   //       selectYears: 15     // Creates a dropdown of 15 years to control year
   //     });
   // }
+=======
+  @Input() public selected: boolean;
+  @Output() private onSelected: EventEmitter<Note>;
+>>>>>>> pf-01-enhancing-old-view
 
-  public ngOnDestroy () {
-    clearInterval(this._scheduleTimeEvaluator);
+  public constructor () {
+    this.onSelected = new EventEmitter<Note>();
   }
 
+<<<<<<< HEAD
   private cloneNote () {
     this._backupNote = new Note(
       this.note.Title,
@@ -226,5 +213,15 @@ export class NotesItemComponent implements OnInit, OnDestroy {
   public addAnchors (content: string) {
     //return this._autoLinker.setAnchors(content);
     return content;
+=======
+  public sendSelectedAction () {
+    this.onSelected.emit(this.note);
+  }
+
+  public selectedColor () {
+    if (this.selected) {
+      return "seagreen";
+    }
+>>>>>>> pf-01-enhancing-old-view
   }
 }

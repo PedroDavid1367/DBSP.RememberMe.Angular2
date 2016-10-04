@@ -19,10 +19,14 @@ import { NotesSharedItemsDateilsService }          from "./notes-shared-items-de
                     (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
+<<<<<<< HEAD
   <notes-list [notes]="notes"
+=======
+  <!--<notes-list [notes]="_notes"
+>>>>>>> pf-01-enhancing-old-view
               (onDeleteNote)="openDeleteNoteConfirmation($event)"
               (onEditNote)="editNote($event)">
-  </notes-list>
+  </notes-list>-->
 
   <!-- Used for delete confirmation -->
   <div id="deleteConfirmationModal" class="modal">

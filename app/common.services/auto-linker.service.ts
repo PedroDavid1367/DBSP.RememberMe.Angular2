@@ -1,6 +1,6 @@
 ﻿let Autolinker = require( "autolinker" );
 
-import { Injectable} from '@angular/core';
+import { Injectable}  from '@angular/core';
 
 @Injectable()
 export class AutoLinkerService {

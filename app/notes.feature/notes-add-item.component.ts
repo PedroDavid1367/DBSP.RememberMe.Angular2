@@ -36,6 +36,7 @@ export class NotesAddItemComponent implements OnInit {
     if(tinyMCE.execCommand('mceRemoveEditor', false, 'content')) {
       tinymce.init({
         selector: '#content',
+        height: 500,
         plugins: [
           'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
           'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
