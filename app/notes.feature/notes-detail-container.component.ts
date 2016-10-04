@@ -101,7 +101,7 @@ export class NotesDetailContainerComponent implements OnInit, OnChanges {
   }
 
   public editNote(note: Note) {
-    // Editing from API, UI has been already updated.
+    // Editing from API.
     this._notesService
       .editNote(note)
       .subscribe(res => {

@@ -122,7 +122,10 @@ export class NotesService {
   }
 
   // TODO: return Observable<OdataResponse>
-  public editNote (note: any): Observable<any> {
+  public editNote (note: Note): Observable<any> {
+    // Setting Selected to undefined since this attribut is only relevant for the UI.
+    // Actually the API hasn't this attribute.
+    note.Selected = undefined;
     return this._http
       .patch(`${this._baseUrl}odata/Notes(${note.Id})`, note)
       .map(res => {

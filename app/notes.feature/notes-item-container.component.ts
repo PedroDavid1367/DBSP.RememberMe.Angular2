@@ -55,38 +55,54 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
   public ngOnChanges () {
     // Controlling to not trigger on first ngOnChanges call.
     if (this.searchString !== undefined) {
-      this._notesService
-        .getNotesCountForFilter(this.searchString, this.filterType)
-        .subscribe(res => {
-          this.noteCount = res;
-          // TODO: Subscribe to error and display it.
-      });
+      this.searchStringIsDefined(this.searchString, this.filterType);
     }
     if (this.noteToAdd) {
-      this.notes.unshift(this.noteToAdd);
+      this.addNoteToUI(this.noteToAdd);
     }
     if (this.noteToDelete) {
-      // Deleting from UI. 
+      this.deleteNoteFromUI(this.noteToDelete);
+    }
+    if (this.noteToEdit) {
+      this.updateNoteFromUI(this.noteToEdit);
+    }
+  }
+
+  private searchStringIsDefined (searchString: string, filterType: string) {
+    this._notesService
+      .getNotesCountForFilter(searchString, filterType)
+      .subscribe(res => {
+        this.noteCount = res;
+        // TODO: Subscribe to error and display it.
+      });
+  }
+
+  private addNoteToUI (noteToAdd: Note) {
+     this.notes.unshift(noteToAdd);
+  }
+
+  private deleteNoteFromUI (noteToDelete: Note) {
+    // Deleting from UI. 
       let indexToDelete;
       for (let index in this.notes) {
-        if (this.notes[index].Id === this.noteToDelete.Id) {
+        if (this.notes[index].Id === noteToDelete.Id) {
           indexToDelete = index;
           break;
         }
       }
       this.notes.splice(indexToDelete, 1);
-    }
-    if (this.noteToEdit) {
-      // Updating from UI. 
+  }
+
+  private updateNoteFromUI (noteToEdit: Note) {
+    // Updating from UI. 
       let indexToUpdate;
       for (let index in this.notes) {
-        if (this.notes[index].Id === this.noteToEdit.Id) {
+        if (this.notes[index].Id === noteToEdit.Id) {
           indexToUpdate = index;
           break;
         }
       }
-      this.notes.splice(indexToUpdate, 1, this.noteToEdit);
-    }
+      this.notes.splice(indexToUpdate, 1, noteToEdit);
   }
 
   private getNotesCount () {
