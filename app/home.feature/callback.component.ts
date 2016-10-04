@@ -24,6 +24,10 @@ export class CallbackComponent implements OnInit {
     // post_logout_redirect_uri: "http://dbsp-rememberme-angular2.azurewebsites.net/home",
     // authority: "http://dbsp-rememberme-identity.azurewebsites.net/identity",
 
+    // redirect_uri: "http://localhost:8888/callback",
+    // post_logout_redirect_uri: "http://localhost:8888/home",
+    // authority: "http://localhost/sts/identity",
+
     load_user_profile: false,
   };
 
@@ -41,7 +45,7 @@ export class CallbackComponent implements OnInit {
     this._mgr.processTokenCallbackAsync()
       .then(() => this._router.navigate(["home"]))
       .catch(err => {
-        // Try to use a modal instead of an alert.
+        // Use a modal instead of an alert.
         alert("Problem Getting Token : " + (err.message || err));
         this._router.navigate(["home"]);
       });
