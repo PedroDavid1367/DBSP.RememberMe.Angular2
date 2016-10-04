@@ -3,8 +3,6 @@ import { Router, ROUTER_DIRECTIVES }              from "@angular/router";
 import { OidcTokenManagerService }                from "./common.services/oidc-token-manager.service";
 
 import { NotesHelpComponent }  from "./notes.feature/notes-help.component";
-//import { OAuthService }               from "angular2-oauth2/oauth-service";
-//let $ = require("jquery");
 
 /*
  * Currently the main application component (i.e this) has the functionality to login or logout.
@@ -36,7 +34,7 @@ export class AppComponent implements OnInit {
   public contactsIsActive: boolean;
   private mgr;
 
-  constructor(private _oidcmanager: OidcTokenManagerService,
+  public constructor (private _oidcmanager: OidcTokenManagerService,
     private _elRef: ElementRef,
     private _router: Router,
     @Inject("$") private $: any) {
@@ -44,9 +42,8 @@ export class AppComponent implements OnInit {
     this.mgr = this._oidcmanager.mgr;
   }
 
-  public ngOnInit() {
+  public ngOnInit () {
     this.homeIsActive = true;
-
     this.$(this._elRef.nativeElement)
       .find(".button-collapse")
       .sideNav({
@@ -54,15 +51,8 @@ export class AppComponent implements OnInit {
       });
   }
 
-  public logOutOfIdSrv() {
+  public logOutOfIdSrv () {
     this.mgr.redirectForLogout();
-  }
-
-  // This might be removed since logOutOfIdSrv()
-  // is the current way of logging out.
-  public logout() {
-    this.mgr.removeToken();
-    window.location.href = "index.html";
   }
 
   public login() {

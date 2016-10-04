@@ -3,7 +3,7 @@ import { Component, OnInit, OnChanges, ElementRef, Inject, DoCheck,
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model";
 import { AddNoteArgs }                             from "./notes-add-item.component";
-import { PageData }  from "./notes-pagination.component";
+import { PageData }                                from "./notes-pagination.component";
 
 @Component({
   selector: "notes-pagination-item",

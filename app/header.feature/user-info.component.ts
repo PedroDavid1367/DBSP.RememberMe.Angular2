@@ -35,7 +35,7 @@ export class UserInfoComponent implements OnInit {
     this.mgr = this._oidcmanager.mgr;
   }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 }
 

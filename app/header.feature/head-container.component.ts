@@ -25,7 +25,7 @@ export class HeadContainerComponent implements OnInit {
     this.mgr = this._oidcmanager.mgr;
   }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 }
 

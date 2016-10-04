@@ -2,7 +2,7 @@
 
 declare let OidcClient: any;
 
-import { Component, OnInit }        from '@angular/core';
+import { Component, OnInit }        from "@angular/core";
 import { Router }                   from "@angular/router";
 import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
 
@@ -33,15 +33,14 @@ export class CallbackComponent implements OnInit {
 
   private _mgr: any; 
 
-  constructor(private _router: Router,
-    private _oidcTokenManager: OidcTokenManagerService)
-  {
+  public constructor (private _router: Router,
+    private _oidcTokenManager: OidcTokenManagerService) {
+
     this._mgr = _oidcTokenManager.mgr;
     this._mgr.oidcClient = new OidcClient(this._config);
   }
 
-  ngOnInit()
-  {
+  public ngOnInit () {
     this._mgr.processTokenCallbackAsync()
       .then(() => this._router.navigate(["home"]))
       .catch(err => {

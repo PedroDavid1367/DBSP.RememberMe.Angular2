@@ -67,7 +67,6 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
     this.paginationOptions.pagesData.forEach(pd => {
       pd.selected = false;
     });
-
     // Setting up selected PageData.selected to true.
     this.paginationOptions.pagesData.filter(pd => {
       return pd.index == pageData.index;  
@@ -108,7 +107,7 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
 
   // This method needs a better name since it not just is fired when
   // a click's been made, it's also fired on the first ngOnChanges.
-  private sendNotesToContainer(skip: number) {
+  private sendNotesToContainer (skip: number) {
     let pageClickedEventArgs = new PageClickedEventArgs();
     pageClickedEventArgs.skip = skip;
     pageClickedEventArgs.searchString = this.searchString;
@@ -119,14 +118,12 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
   // This should be in a service.
   private paginationOptionsFactory () {
     let paginationOptions = new PaginationOptions();
-
     let pageNumber = 0;
     if ((this.noteCount % this._pageSize) === 0 ) {
       pageNumber = this.noteCount / this._pageSize;  
     } else {
       pageNumber = Math.floor(this.noteCount / this._pageSize) + 1;
     }
-
     let pagesData: PageData[] = [];
     for (let x = 0; x < pageNumber; x++) {
       let pageData = new PageData();
@@ -135,10 +132,8 @@ export class NotesPaginationComponent implements OnInit, OnChanges {
       pageData.selected = x == 0 ? true : false;
       pagesData[x] = pageData;
     }
-
     paginationOptions.pageNumber = pageNumber;
     paginationOptions.pagesData = pagesData;
-
     return paginationOptions;
   }
 }

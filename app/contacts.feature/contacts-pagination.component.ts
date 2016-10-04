@@ -18,9 +18,9 @@ import { ContactsPaginationItemComponent }         from "./contacts-pagination-i
       <a><i class="material-icons">chevron_left</i></a>
     </li>
     <contacts-pagination-item *ngFor="let _pageData of paginationOptions.pagesData"
-                           [clicked]="_pageData.selected"
-                           [pageData]="_pageData"
-                           (onSelect)="selectPage($event)">
+                              [clicked]="_pageData.selected"
+                              [pageData]="_pageData"
+                              (onSelect)="selectPage($event)">
     </contacts-pagination-item>
     <li class="waves-effect" (click)="moveRight()">
       <a><i class="material-icons">chevron_right</i></a>
@@ -65,7 +65,6 @@ export class ContactsPaginationComponent implements OnInit, OnChanges {
     this.paginationOptions.pagesData.forEach(pd => {
       pd.selected = false;
     });
-
     // Setting up selected PageData.selected to true.
     this.paginationOptions.pagesData.filter(pd => {
       return pd.index == pageData.index;  
@@ -117,14 +116,12 @@ export class ContactsPaginationComponent implements OnInit, OnChanges {
   // This should be in a service.
   private paginationOptionsFactory () {
     let paginationOptions = new PaginationOptions();
-
     let pageNumber = 0;
     if ((this.contactCount % this._pageSize) === 0 ) {
       pageNumber = this.contactCount / this._pageSize;  
     } else {
       pageNumber = Math.floor(this.contactCount / this._pageSize) + 1;
     }
-
     let pagesData: PageData[] = [];
     for (let x = 0; x < pageNumber; x++) {
       let pageData = new PageData();
@@ -133,10 +130,8 @@ export class ContactsPaginationComponent implements OnInit, OnChanges {
       pageData.selected = x == 0 ? true : false;
       pagesData[x] = pageData;
     }
-
     paginationOptions.pageNumber = pageNumber;
     paginationOptions.pagesData = pagesData;
-
     return paginationOptions;
   }
 }

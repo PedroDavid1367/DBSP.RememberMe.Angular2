@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter,
   Inject, ElementRef }   from "@angular/core";
 import { NotesService }                            from "./notes.service";
 import { Note }                                    from "./note.model"; 
-import { SearchStringEventArgs }                   from "./notes-filter-item.component";
+import { SearchStringEventArgs }                   from "./notes-filter-container.component";
 
 @Component({
   selector: 'notes-manager',

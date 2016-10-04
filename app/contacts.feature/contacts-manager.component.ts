@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter,
-  Inject, ElementRef }   from "@angular/core";
-import { ContactsService }                            from "./contacts.service";
-import { Contact }                                    from "./contact.model"; 
+  Inject, ElementRef }                             from "@angular/core";
+import { ContactsService }                         from "./contacts.service";
+import { Contact }                                 from "./contact.model"; 
 import { SearchStringEventArgs }                   from "./contacts-filter-item.component";
 
 @Component({
@@ -40,12 +40,12 @@ export class ContactsManagerComponent implements OnInit {
   
   // Disabling native click event so that anchor element 
   // is not able to navigate to "#" 
-  public ngOnInit() {
+  public ngOnInit () {
     this.$(this._elRef.nativeElement)
       .find("a").click(() => false);
   }
 
-  public openAddContactSection() {
+  public openAddContactSection () {
     this.onOpenAddContactSection.emit(this._isAddContactSectionEnabled)
   }
 

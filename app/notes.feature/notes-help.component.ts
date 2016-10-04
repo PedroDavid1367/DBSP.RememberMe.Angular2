@@ -21,6 +21,6 @@ import { Component, OnInit, ElementRef, Inject }  from "@angular/core";
 })
 export class NotesHelpComponent implements OnInit {
 
-  ngOnInit() {
+  public ngOnInit () {
   }
 }

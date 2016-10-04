@@ -5,9 +5,9 @@ import { Contact }                                from "./contact.model";
   selector: 'contacts-list',
   template: `
   <contacts-item *ngFor="let contact of contacts"
-              [contact]="contact"
-              (onDeleteContact)="sendContactToDelete($event)"
-              (onEditContact)="sendContactToEdit($event)">
+                 [contact]="contact"
+                 (onDeleteContact)="sendContactToDelete($event)"
+                 (onEditContact)="sendContactToEdit($event)">
   </contacts-item>
   `
 })
@@ -22,11 +22,11 @@ export class ContactsListComponent {
     this.onEditContact = new EventEmitter<Contact>();
   }
 
-  public sendContactToDelete(contact: Contact) {
+  public sendContactToDelete (contact: Contact) {
     this.onDeleteContact.emit(contact);
   }
 
-  public sendContactToEdit(contact: Contact) {
+  public sendContactToEdit (contact: Contact) {
     this.onEditContact.emit(contact);
   }
 }

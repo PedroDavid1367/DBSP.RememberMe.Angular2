@@ -15,7 +15,7 @@ export class NotesService {
   public getNotes (): Observable<any> {
     return this._http
       // .get(this._baseUrl + "odata/Notes?$count=true")
-      .get(this._baseUrl + "odata/Notes")
+      .get(`${this._baseUrl}odata/Notes`)
       .map(res => {
         let body = res.json();
         // The body has context, count and value
@@ -27,7 +27,7 @@ export class NotesService {
   // TODO: return Observable<OdataResponse>
   public getNote (id: number): Observable<any> {
     return this._http
-      .get(this._baseUrl + `odata/Notes(${id})`)
+      .get(`${this._baseUrl}odata/Notes(${id})`)
       .map(res => {
         let body = res.json();
         // The body has context, count and value
@@ -38,7 +38,7 @@ export class NotesService {
 
   public getNotesWithSkip (skip: number) {
     return this._http
-      .get(this._baseUrl + `odata/Notes?$skip=${skip}`)
+      .get(`${this._baseUrl}odata/Notes?$skip=${skip}`)
       .map(res => {
         let body = res.json();
         // The body has context and value
@@ -51,7 +51,6 @@ export class NotesService {
     let skip = pageClickedEventArgs.skip;
     let searchString = pageClickedEventArgs.searchString;
     let filterType = pageClickedEventArgs.filterType;
-
     if (filterType === "Priority") {
       let testedNumber = parseInt(searchString);
       if (testedNumber !== NaN) {
@@ -65,7 +64,6 @@ export class NotesService {
           .catch(this.handleError);
       }
     }
-
     return this._http
       .get(`${this._baseUrl}odata/Notes?$skip=${skip}&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {
@@ -90,7 +88,6 @@ export class NotesService {
           .catch(this.handleError);
       }
     }
-
     return this._http
       .get(`${this._baseUrl}odata/Notes?$count=true&$filter=contains(${filterType},'${searchString}')`)
       .map(res => {
@@ -145,10 +142,8 @@ export class NotesService {
   }
 
   private handleError (error: any) {
-    // In a real world app, we might use a remote logging infrastructure
-    // We'd also dig deeper into the error to get a better message
     let errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+      error.status ? `${error.status} - ${error.statusText}` : "Server error";
     console.error(errMsg); // log to console instead
     return Observable.throw(errMsg);
   }

@@ -42,23 +42,14 @@ export class HttpInterceptorService extends Http {
     return this.intercept(super.delete(url, options));
   }
 
-  //public get(url) {
-  //  return this._http.get(url, {
-  //    headers: this.checkApiCall(url)
-  //  });
-  //}
-
   private checkApiCall(url: string, options?: RequestOptionsArgs): RequestOptionsArgs {
     let apiUrl = this._baseUrl + "/api";
-
     if (options == null) {
       options = new RequestOptions();
     }
-
     if (options.headers == null) {
       options.headers = new Headers();
     }
-
     if (!this._mgr.expired && RegExp(apiUrl).test(url)) {
       options.headers.set('Accept', 'text/json');
       options.headers.set('Authorization', 'Bearer ' + this._oidcToken.mgr.access_token);
@@ -68,7 +59,6 @@ export class HttpInterceptorService extends Http {
 
   intercept(observable: Observable<Response>): Observable<Response> {
     let apiUrl = this._baseUrl + "/api";
-
     return observable.catch((err, source) => {
       if (err.status == 401 && RegExp(apiUrl).test(err.url)) {
         this._mgr.redirectForToken();
@@ -79,14 +69,3 @@ export class HttpInterceptorService extends Http {
     });
   }
 }
-
-//bootstrap(MyApp, [
-//  HTTP_PROVIDERS,
-//  ROUTER_PROVIDERS,
-//  provide(LocationStrategy, { useClass: HashLocationStrategy }),
-//  provide(Http, {
-//    useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions, router: Router) => new HttpInterceptor(xhrBackend, requestOptions, router),
-//    deps: [XHRBackend, RequestOptions, Router]
-//  })
-//])
-//  .catch(err => console.error(err));

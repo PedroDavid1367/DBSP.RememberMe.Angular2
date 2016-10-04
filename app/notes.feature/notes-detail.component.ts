@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, AfterViewChecked, OnInit,
-  ElementRef, Inject, OnChanges }                     from "@angular/core";
-//import { AutoLinkerService }                       from "../common.services/auto-linker.service";
+  ElementRef, Inject, OnChanges }                  from "@angular/core";
 import { Note }                                    from "./note.model";
 import { Router, ActivatedRoute, Params }          from "@angular/router";
 
@@ -78,14 +77,6 @@ declare let tinyMCE: any;
           </div>
         </div>
 
-        <!--<div class="row">
-          <div class="input-field col s12">
-            <textarea id="content" class="materialize-textarea"
-                      [(ngModel)]="note.Content" name="content"></textarea>
-            <label class="active" for="content">Content</label>
-          </div>
-        </div>-->
-
         <div class="row">
           <div class="input-field col s12">
             <div [id]="editContentId"></div>
@@ -125,7 +116,6 @@ declare let tinyMCE: any;
       </form>
     </div> 
     <div class="card-action blue-grey lighten-2">
-      <!--<input class="btn-flat" type="submit" style="color:white;" [disabled]="!noteForm.form.valid" value="Save" />-->
       <input class="btn-flat" type="button" style="color:white;" [disabled]="!noteForm.form.valid" 
              value="Save" (click)="submit()" />
       <input class="btn-flat" type="button" style="color:white;" value="Reset" (click)="resetChanges()" />
@@ -150,7 +140,6 @@ export class NotesDetailComponent implements OnInit, OnChanges, OnDestroy {
   public constructor (private _elRef: ElementRef,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    //private _autoLinker: AutoLinkerService, 
     @Inject("$") private $: any) {
 
     this.onDeleteNote = new EventEmitter<Note>();
@@ -219,32 +208,28 @@ export class NotesDetailComponent implements OnInit, OnChanges, OnDestroy {
           selectMonths: true, // Creates a dropdown to control month
           selectYears: 15     // Creates a dropdown of 15 years to control year
         });
-
       this.$(this._elRef.nativeElement)
         .find("#schedule")
         .pickadate("picker")
         .set("select", this.note.ScheduleTime);
-
-      if(tinyMCE.execCommand('mceRemoveEditor', false, this.editContentId)) {
+      if(tinyMCE.execCommand("mceRemoveEditor", false, this.editContentId)) {
         tinymce.init({
           selector: "#" + this.editContentId,
           height: 500,
           plugins: [
-            'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
-            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-            'save table contextmenu directionality emoticons template paste textcolor'
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor"
           ],
-          toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons'
+          toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons"
         });
       }
-      
       tinyMCE.get(this.editContentId).setContent(this.note.Content);
-
     }, 0);
     this.isEditable = true;
   }
 
-  public submit() {
+  public submit () {
     let scheduleText = this.$(this._elRef.nativeElement)
       .find("#schedule").val();
     // Creating a date based on the pickdate element selection or 
@@ -256,19 +241,15 @@ export class NotesDetailComponent implements OnInit, OnChanges, OnDestroy {
       scheduleTime = new Date().getTime();
     }
     this.note.ScheduleTime = scheduleTime;
-
     // Retrieving the content contained into tinymce.
     let content = tinyMCE.get(this.editContentId).getContent();
     this.note.Content = content;
-
     this.cloneNote();
     this.onEditNote.emit(this.note);
-
     // Parsing epoch time to human readable value.
     let scheduleDate = new Date(this.note.ScheduleTime);
     this.scheduleTimeString = scheduleDate.toDateString();
     this.evaluateScheduleTime(scheduleDate);
-
     // Save the changes on UI and close the editing form.
     this.isEditable = false; 
   }
@@ -297,7 +278,6 @@ export class NotesDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public addAnchors (content: string) {
-    //return this._autoLinker.setAnchors(content);
     return content;
   }
 }

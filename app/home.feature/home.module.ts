@@ -1,7 +1,7 @@
 import { NgModule }                from "@angular/core";
 
 import { routing }                 from "./home.routing";
-import { HomeComponent }        from "./home.component";
+import { HomeComponent }           from "./home.component";
 import { CallbackComponent }       from "./callback.component";
 import { LocalLogoutComponent }    from "./local-logout.component";
 import { NotFoundComponent }       from "./not-found.component";  // Not yet implemented.

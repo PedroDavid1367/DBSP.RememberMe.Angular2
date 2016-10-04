@@ -99,7 +99,6 @@ export class ContactsContainerComponent implements OnInit, OnChanges {
     if (addContactArgs.submitted || addContactArgs.canceled) {
       this.onCloseAddContactSection.emit(this._isAddContactSectionDisabled);
     }
-
     // Adding to API.
     if (addContactArgs.contact) {
       this._contactsService

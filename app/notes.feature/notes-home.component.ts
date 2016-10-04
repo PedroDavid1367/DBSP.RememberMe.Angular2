@@ -1,7 +1,7 @@
 import { Component }                from "@angular/core";
 import { OidcTokenManagerService }  from "../common.services/oidc-token-manager.service";
-import { SearchStringEventArgs }    from "./notes-filter-item.component";
-import { Note }                                    from "./note.model";
+import { SearchStringEventArgs }    from "./notes-filter-container.component";
+import { Note }                     from "./note.model";
 
 @Component({
   selector: 'notes-home',
@@ -32,17 +32,12 @@ import { Note }                                    from "./note.model";
 
   <div class="col s12 m8">
     <div class="col s12">
-      <filter-container *ngIf="isFilterNoteSectionEnabled"
-                        (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-                        (onSendSearchString)="toNotesContainer($event)">
-      </filter-container>
+      <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
+                              (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
+                              (onSendSearchString)="toNotesContainer($event)">
+      </notes-filter-container>
 
       <br />
-
-      <!--<notes-filter-container *ngIf="isFilterNoteSectionEnabled"
-                    (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-                    (onSendSearchString)="toNotesContainer($event)">                   
-      </notes-filter-container>-->
 
       <notes-detail-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
                               [note]="noteToDisplay"

@@ -14,20 +14,20 @@ import { PageClickedEventArgs }                    from "./notes-pagination.comp
                     (onPageClicked)="getNotesWithSkipAndFilter($event)">
   </notes-pagination>
 
-  <notes-item-list [notes]="_notes"
+  <notes-item-list [notes]="notes"
                    (onNoteSelected)="sendNoteToHomeComponent($event)">
   </notes-item-list>
   `
 })
 export class NotesItemContainerComponent implements OnInit, OnChanges {
 
-  @Input() private searchString: string;
-  @Input() private filterType: string;
+  @Input() public searchString: string;
+  @Input() public filterType: string;
   @Input() public noteToAdd: Note;
   @Input() public noteToDelete: Note;
   @Input() public noteToEdit: Note;
   @Output() private onNoteSelected: EventEmitter<Note>;
-  public _notes: Note[];
+  public notes: Note[];
   private _isAddNoteSectionDisabled: boolean;
   public noteCount: number;
 
@@ -62,37 +62,34 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
           // TODO: Subscribe to error and display it.
       });
     }
-
     if (this.noteToAdd) {
-      this._notes.unshift(this.noteToAdd);
+      this.notes.unshift(this.noteToAdd);
     }
-
     if (this.noteToDelete) {
       // Deleting from UI. 
       let indexToDelete;
-      for (let index in this._notes) {
-        if (this._notes[index].Id === this.noteToDelete.Id) {
+      for (let index in this.notes) {
+        if (this.notes[index].Id === this.noteToDelete.Id) {
           indexToDelete = index;
           break;
         }
       }
-      this._notes.splice(indexToDelete, 1);
+      this.notes.splice(indexToDelete, 1);
     }
-
     if (this.noteToEdit) {
       // Updating from UI. 
       let indexToUpdate;
-      for (let index in this._notes) {
-        if (this._notes[index].Id === this.noteToEdit.Id) {
+      for (let index in this.notes) {
+        if (this.notes[index].Id === this.noteToEdit.Id) {
           indexToUpdate = index;
           break;
         }
       }
-      this._notes.splice(indexToUpdate, 1, this.noteToEdit);
+      this.notes.splice(indexToUpdate, 1, this.noteToEdit);
     }
   }
 
-  private getNotesCount() {
+  private getNotesCount () {
     this._notesService
       .getNotesCount()
       .subscribe(res => {
@@ -101,28 +98,28 @@ export class NotesItemContainerComponent implements OnInit, OnChanges {
       });
   }
   
-  private getNotesWithSkipAndFilter(pageClickedEventArgs: PageClickedEventArgs) {
+  private getNotesWithSkipAndFilter (pageClickedEventArgs: PageClickedEventArgs) {
     this._notesService
       .getNotesWithSkipAndFilter(pageClickedEventArgs)
       .subscribe(res => {
-        this._notes = res;
+        this.notes = res;
         // TODO: Subscribe to error and display it.
       });
   }
  
-  private handleAddNoteEvent(addNoteArgs: AddNoteArgs) {
+  private handleAddNoteEvent (addNoteArgs: AddNoteArgs) {
     // Adding to API.
     if (addNoteArgs.note) {
       this._notesService
       .addNote(addNoteArgs.note)
       .subscribe(note => {
-        this._notes.unshift(note);
+        this.notes.unshift(note);
         // TODO: Subscribe to error and display it.
       });
     }
   }
 
-  public editNote(note: Note) {
+  public editNote (note: Note) {
     // Editing from API, UI has been already updated.
     this._notesService
       .editNote(note)

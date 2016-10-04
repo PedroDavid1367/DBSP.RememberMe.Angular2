@@ -1,5 +1,5 @@
 import { Routes, RouterModule }      from "@angular/router";
-import { ContactsHomeComponent }        from "./contacts-home.component";
+import { ContactsHomeComponent }     from "./contacts-home.component";
 
 export const routes: Routes = [
   { path: "contacts", component: ContactsHomeComponent }

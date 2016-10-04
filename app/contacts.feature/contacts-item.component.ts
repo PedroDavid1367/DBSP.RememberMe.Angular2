@@ -14,55 +14,14 @@ import { Contact }                                 from "./contact.model";
   .ng-valid[required] {
     border-bottom: 1px solid #42A948; /* green */
   }
-
   .ng-invalid {
     border-bottom: 1px solid #a94442; /* red */
   }
-
   div.dbsp-footer {
     padding-top: 20px;
   }  
   `],
   template: `
-  <!--<div *ngIf="!isEditable" class="card lime lighten-5">
-    <div class="card-content">
-      <span class="card-title">{{ contact.Name }}</span>
-    </div> 
-    <div class="card-action lime lighten-5">
-      <input type="button" class="btn-flat" style="color:black;" value="Edit" (click)="edit()" />
-      <input type="button" class="btn-flat" style="color:black;" value="Delete" (click)="delete()" />
-    </div>
-  </div>
-
-  <div *ngIf="isEditable" class="card lime lighten-5 z-depth-4">
-    <div class="card-content row" style="background-color:white;">
-      <form class="col s12" #contactForm="ngForm">
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="title" type="text" class="validate" required
-                   [(ngModel)]="contact.Title" name="title"
-                   #title="ngModel">  
-            <label class="active" for="title" data-error="invalid" data-success="valid">Title</label>
-            <div [hidden]="title.valid" 
-                class="alert alert-danger">
-              <sup style="color:red;">Title is required</sup>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          Diagnostic: contactForm.form.valid = {{ contactForm.form.valid }}
-        </div>
-      </form>
-    </div> 
-    <div class="card-action blue-grey lighten-2">
-      <input class="btn-flat" type="button" style="color:white;" [disabled]="!contactForm.form.valid" 
-             value="Save" (click)="submit()" />
-      <input class="btn-flat" type="button" style="color:white;" value="Reset" (click)="resetChanges()" />
-      <input class="btn-flat" type="button" style="color:white;" value="Cancel" (click)="cancelEditMode()" />
-    </div>
-  </div>-->
-
   <div *ngIf="!isEditable" class="row card-panel blue-grey lighten-5">
     <div class="blue-grey-text text-darken-4 col s12 m12">
       Name: {{ contact.Name }}
@@ -154,11 +113,11 @@ export class ContactsItemComponent implements OnInit{
     this.onEditContact = new EventEmitter<Contact>();
   }
 
-  public ngOnInit() {
+  public ngOnInit () {
     this.cloneContact();
   }
 
-  private cloneContact() {
+  private cloneContact () {
     this._backupContact = new Contact(
       this.contact.Name,
       this.contact.Email,
@@ -170,24 +129,23 @@ export class ContactsItemComponent implements OnInit{
     );
   }
 
-  public delete() {
+  public delete () {
     this.onDeleteContact.emit(this.contact);
   }
 
-  public edit() {
+  public edit () {
     this.isEditable = true;
   }
 
-  public submit() {
+  public submit () {
     // TODO: Send to parent to save in the db.
     this.cloneContact();
     this.onEditContact.emit(this.contact);
-
     // Save the changes on UI and close the editing form.
     this.isEditable = false; 
   }
 
-  public resetChanges() {
+  public resetChanges () {
     this.contact.Name = this._backupContact.Name;
     this.contact.Email = this._backupContact.Email;
     this.contact.Phone = this._backupContact.Phone;
@@ -197,7 +155,7 @@ export class ContactsItemComponent implements OnInit{
     this.contact.Id = this._backupContact.Id;
   }
 
-  public cancelEditMode() {
+  public cancelEditMode () {
     this.resetChanges();
     this.isEditable = false;
   }

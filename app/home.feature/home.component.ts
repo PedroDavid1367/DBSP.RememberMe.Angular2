@@ -8,9 +8,9 @@ let $ = require("jquery");
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private _elRef: ElementRef) { }
+  public constructor (private _elRef: ElementRef) { }
 
-  ngOnInit() {
+  public ngOnInit () {
   }
 }
 

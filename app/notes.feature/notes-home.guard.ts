@@ -8,10 +8,8 @@ export class NotesHomegGuard implements CanActivate {
   private _mgr: any;
   private _isValid: boolean = false;
 
-  constructor(private _oidcTokenManager: OidcTokenManagerService) {
-
+  public constructor (private _oidcTokenManager: OidcTokenManagerService) {
     this._mgr = _oidcTokenManager.mgr;
-    
     if (this._mgr.expired) {
       this._mgr.redirectForToken();
     } else {
@@ -19,7 +17,7 @@ export class NotesHomegGuard implements CanActivate {
     }
   }
 
-  canActivate(
+  public canActivate (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
 

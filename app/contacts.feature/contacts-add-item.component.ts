@@ -8,7 +8,6 @@ import { Contact }                                 from "./contact.model";
   .ng-valid[required] {
     border-bottom: 1px solid #42A948; /* green */
   }
-
   .ng-invalid {
     border-bottom: 1px solid #a94442; /* red */
   }
@@ -70,7 +69,7 @@ import { Contact }                                 from "./contact.model";
 })
 export class ContactsAddItemComponent implements OnInit {
 
-  // onAddContact event actually emits an AddContactsArgs that represents
+  // onAddContact eventEmitter actually emits an AddContactsArgs that represents
   // either a contact submission or a contact cancelation. 
   @Output() private onAddContact: EventEmitter<AddContactsArgs>; 
   public model: Contact;
@@ -79,33 +78,31 @@ export class ContactsAddItemComponent implements OnInit {
     this.onAddContact = new EventEmitter<AddContactsArgs>();
   }
 
-  public ngOnInit() {
+  public ngOnInit () {
     this.model = new Contact("", "", "", "", "", "");
   }
 
-  public submit() {
+  public submit () {
     let addContactArgs = new AddContactsArgs();
     addContactArgs.submitted = true,
     addContactArgs.canceled = false,
     addContactArgs.contact = this.model
-    
     this.onAddContact.emit(addContactArgs);
   }
 
-  public cancel() {
+  public cancel () {
     let addContactArgs = new AddContactsArgs();
     addContactArgs.submitted = false,
     addContactArgs.canceled = true,
     addContactArgs.contact = null
-    
     this.onAddContact.emit(addContactArgs);
   }
 
-  public resetContact() {
+  public resetContact () {
     this.model = new Contact("", "", "", "", "", "");
   }
 
-  public get diagnostic(): string {
+  public get diagnostic (): string {
     return JSON.stringify(this.model);
   }
 }

@@ -1,10 +1,13 @@
 ﻿require("../js.libs/oidc-token-manager.js");
 declare let OidcTokenManager: any;
 
-import { Injectable}  from '@angular/core';
+import { Injectable}  from "@angular/core";
 
 @Injectable()
 export class OidcTokenManagerService {
+
+  private _mgr: any;
+
   private _config = {
     client_id: "remembermeimplicit",
 
@@ -28,9 +31,7 @@ export class OidcTokenManagerService {
     silent_renew: true
   };
 
-  private _mgr: any;
-
-  constructor() {
+  public constructor () {
     this._mgr = new OidcTokenManager(this._config);
   }
 

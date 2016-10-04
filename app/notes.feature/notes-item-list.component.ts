@@ -20,7 +20,7 @@ export class NotesItemListComponent {
     this.onNoteSelected = new EventEmitter<Note>();
   }
 
-  public sendToContainer(note: Note) {
+  public sendToContainer (note: Note) {
     this.notes.forEach(n => {
       n.Selected = false;
     });

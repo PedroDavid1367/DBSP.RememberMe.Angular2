@@ -12,31 +12,31 @@ import { SearchStringEventArgs }                   from "./contacts-filter-item.
   template: `
   <div class="blue-grey lighten-4 z-depth-1">
     <contacts-filter-item [filterType]="'Name'"
-                       (onSendSearchString)="sendSearchString($event)">
+                          (onSendSearchString)="sendSearchString($event)">
     </contacts-filter-item>
 
     <br />
 
     <contacts-filter-item [filterType]="'Email'"
-                       (onSendSearchString)="sendSearchString($event)">
+                          (onSendSearchString)="sendSearchString($event)">
     </contacts-filter-item>
 
     <br />
 
     <contacts-filter-item [filterType]="'Phone'"
-                       (onSendSearchString)="sendSearchString($event)">
+                          (onSendSearchString)="sendSearchString($event)">
     </contacts-filter-item>
 
     <br />
 
     <contacts-filter-item [filterType]="'Organization'"
-                       (onSendSearchString)="sendSearchString($event)">
+                          (onSendSearchString)="sendSearchString($event)">
     </contacts-filter-item>
 
     <br />
 
     <contacts-filter-item [filterType]="'Misc'"
-                       (onSendSearchString)="sendSearchString($event)">
+                          (onSendSearchString)="sendSearchString($event)">
     </contacts-filter-item>
 
     <br />
@@ -65,7 +65,6 @@ export class ContactsFilterContainerComponent implements OnInit {
   }
 
   public ngOnInit () {
-
   }
 
   public closeContactsFilterSection () {
