@@ -49,7 +49,7 @@ import { AddNoteArgs }                             from "./notes-add-item.compon
         <div class="row">
           <input class="btn-flat" type="submit" [disabled]="!filterForm.form.valid" value="Filter" />
           <input class="btn-flat" type="button" value="Reset" (click)="reset()" />
-          <input class="btn-flat" type="button" value="Cancel" (click)="cancel()" />
+          <input class="btn-flat" type="button" value="Close" (click)="close()" />
         </div>
       </form>
     </div>
@@ -94,7 +94,7 @@ export class FilterContainerComponent implements OnInit {
     this.searchString = "";
   }
 
-  public cancel () {
+  public close () {
     this.onCloseFilterNoteSection.emit(this._isFilterNoteSectionEnabled);
   }
 }
