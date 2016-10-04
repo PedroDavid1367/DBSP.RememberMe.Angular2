@@ -20,18 +20,6 @@ import { Note }                                    from "./note.model";
                      (onSendSearchString)="toNotesContainer($event)">               
       </notes-manager>
 
-<<<<<<< HEAD
-      <notes-filter-container *ngIf="isFilterNoteSectionEnabled"
-                    (onCloseFilterNoteSection)="setIsFilterNoteSectionEnabled($event)"
-                    (onSendSearchString)="toNotesContainer($event)">                   
-      </notes-filter-container>
-
-      <notes-container [isAddNoteSectionEnabled]="isAddNoteSectionEnabled"
-                       [searchString]="searchString"
-                       [filterType]="filterType"
-                       (onCloseAddNoteSection)="setIsAddNoteSectionEnabled($event)">                   
-      </notes-container>
-=======
       <notes-item-container [searchString]="searchString"
                             [filterType]="filterType"
                             [noteToAdd]="noteToAdd"
@@ -62,14 +50,6 @@ import { Note }                                    from "./note.model";
                               (onDeleteNote)="sendNoteToNotesItemContainer($event)"
                               (onEditNote)="sendNoteToNotesItemContainerForEditing($event)">                   
       </notes-detail-container>
->>>>>>> pf-01-enhancing-old-view
-    </div>
-  </div>
-
-
-  <div class="col s12 m8">
-    <div class="col s12">
-      <router-outlet></router-outlet>
     </div>
   </div>
   `
